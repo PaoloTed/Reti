@@ -1,0 +1,31 @@
+=== PAGINA 1 ===
+HTTP GET e risposta con pacchetti multipli
+(esercitaz. tratta da libro di testo)
+Vediamo adesso cosa succede quando si scarica un file HTML abbastanza lungo. Eseguite le seguenti
+operazioni:
+1. Avviare il browser web e assicurati che la cache del browser sia vuota, come spiegato sopra.
+2. Avviare il packet sniffer Wireshark.
+3. Inserire nel browser il seguente URL:
+http://www.columbia.edu/~fdc/sample.html
+4. Fermare la cattura dei pacchetti in Wireshark.
+5. Nella finestra del filtro di visualizzazione (display filter) inserire "http" per visualizzare solo i
+messaggi HTTP catturati.
+Nella finestra dell’elenco dei pacchetti dovreste vedere il messaggio HTTP GET inviato dal browser,
+seguito da una risposta TCP composta da più pacchetti relativi alla richiesta HTTP. Assicurati che il
+filtro di Wireshark sia rimosso per far sí che la risposta TCP multipla venga visualizzata completamente
+nell’elenco dei pacchetti.
+Ricordate che il messaggio di risposta HTTP è composto da una riga di stato, seguita da righe di
+header, una riga vuota e infine il corpo dell’entità (entity body). Nel nostro caso, il corpo dell’entità è
+l’intero file HTML richiesto. Poiché il file HTML è piuttosto lungo e non può entrare in un solo
+pacchetto TCP, la risposta HTTP viene suddivisa in più segmenti TCP, ognuno contenuto in un
+pacchetto TCP diverso. Nelle versioni recenti di Wireshark ogni segmento TCP è mostrato come un
+pacchetto separato, e il fatto che la risposta HTTP sia stata suddivisa è indicato nella colonna Info con
+la dicitura “TCP segment of a reassembled PDU”.
+Rispondete alle seguenti domande:
+(a)Quanti messaggi HTTP GET ha inviato il browser? Qual è il numero del pacchetto nella traccia
+che contiene il messaggio GET per il file richiesto?
+(b)Qual è il numero del pacchetto nella traccia che contiene il codice di stato e la frase associata
+alla risposta alla richiesta HTTP GET?
+(c)Qual è il codice di stato e la frase presenti nella risposta?
+(d)Quanti segmenti TCP contenenti dati sono stati necessarî per trasportare la singola risposta
+HTTP e il testo della pagina richiesta?

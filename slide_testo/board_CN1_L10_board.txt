@@ -1,0 +1,10 @@
+=== PAGINA 1 ===
+A livello di trasporto dal punto di vista
+logico c'è comunicazione punto-punto, e
+il SW viene eseguito sugli host. A livello di
+rete si risolve il problema dell'instradamento
+dei pacchetti considerando la topologia della
+rete; il SW viene eseguito prevalentemente
+sui nodi della rete.
+A livello di trasporto la comunicazione è tra processi.
+A livello di rete è tra host.

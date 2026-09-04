@@ -1,0 +1,41 @@
+=== PAGINA 1 ===
+Esercizio: Analisi di pacchetti DNS con Wireshark
+In questo esercizio si utilizza Wireshark per catturare e analizzare il traffico DNS
+generato da comandi nslookup. L’obiettivo è comprendere la struttura dei messaggi
+DNS e identificare le informazioni chiave contenute nelle richieste e nelle risposte DNS.
+Parte 1 – Analisi di una richiesta DNS standard
+1. Apri Wireshark e inizia la cattura dei pacchetti sulla tua interfaccia di rete
+principale.
+2. Nel terminale o prompt dei comandi, esegui il comando:
+nslookup <nome _a_piacere>
+3. Interrompi la cattura dopo che il comando ha terminato l’esecuzione.
+4. Filtra i pacchetti in Wireshark digitando nel filtro: dns
+Rispondi alle seguenti domande basandoti sulla richiesta e sulla risposta DNS catturate:
+ Qual è il porto di destinazione del messaggio di richiesta DNS?
+ Qual è il porto sorgente del messaggio di risposta DNS?
+ A quale indirizzo IP viene inviato il messaggio di richiesta DNS? È l’indirizzo del tuo
+server DNS predefinito locale?
+ Esamina il messaggio di richiesta DNS: quale tipo di query DNS è (A, AAAA,
+CNAME, ecc.)? Il messaggio di richiesta contiene già qualche risposta?
+ Analizza il messaggio di risposta corrispondente: quante domande contiene?
+Quante risposte sono presenti?
+Parte 2 – Analisi di una richiesta DNS di tipo NS
+1. Riavvia la cattura in Wireshark.
+2. Digita il seguente comando nel terminale:
+
+=== PAGINA 2 ===
+nslookup –type=NS <nome_a_piacere>
+3. Interrompi la cattura e applica di nuovo il filtro dns.
+Rispondi alle seguenti domande osservando i messaggi DNS relativi a questa richiesta:
+ A quale indirizzo IP viene inviata la richiesta DNS? È l’indirizzo del tuo server DNS
+predefinito locale?
+ Esamina il messaggio di richiesta DNS: quante domande contiene? Ci sono
+risposte già incluse nel messaggio?
+ Osserva il messaggio di risposta DNS (in particolare quello con tipo “NS”):
+• Quante risposte contiene?
+• Quali informazioni contengono le risposte?
+• Quanti record aggiuntivi sono restituiti?
+• Che tipo di informazioni aggiuntive sono incluse in questi record?
+Suggerimento
+Provare a interrogare name server in alto nella gerarchia (inclusi i root server) con
+l'opzione -norecurse, e successivamente senza, confrontando i risultati.

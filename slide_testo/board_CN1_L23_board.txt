@@ -1,0 +1,26 @@
+=== PAGINA 1 ===
+Quando una stazione trasmette, tutte le altre
+ricevono il frame trasmesso.
+Trasmissione di un segnale di banda
+base (bassa freq.) attorno a una piú alta
+frequenza portante (quella del segnale blu
+in figura).
+TX quando c'è un frame da trasmettere
+In caso di collisione:
+- attesa di lungh. casuale
+- ritrasmissione
+La staz. centrale ripete ogni frame ricevuto
+(trasmesso da altra staz.). Quindi ogni stazione, se
+non ci sono collisioni, riceve il frame che essa ha
+trasmesso subito prima.
+
+
+[TABELLA pagina 2]
+
+ |  |  |  | 
+
+ |  |  |  | 
+
+ |  |  |  | 
+
+ |  |  |  | 

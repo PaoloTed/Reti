@@ -1,0 +1,10 @@
+=== PAGINA 1 ===
+Strato di trasporto: trasmissione affidabile di dati, punto-punto.
+Lo strato di rete non può occuparsi della affidabilità fino in fondo
+perché esso si preoccupa di instradare (routing) i pacchetti IP attraverso
+la topologia della rete.
+
+
+[TABELLA pagina 1]
+
+ |  |  |  |  |  | 

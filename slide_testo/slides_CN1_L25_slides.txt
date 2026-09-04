@@ -1,0 +1,524 @@
+=== PAGINA 1 ===
+Computer Networks I
+Reti di Calcolatori I
+Network Security:
+Fundamentals
+Lecture 25
+
+=== PAGINA 2 ===
+Network Security
+Some Application Protocols (remind)
+• Some application may exchange sensitive information (e.g., user’s
+credentials, personal data, etc.).
+• On public networks, messages should be secured.
+Application Description
+DHCP Dynamic Host Configuration Protocol, assigns IP addresses
+DNS Domain Name System, translate website names to IP addresses
+HTTP/HTTPS HyperText Transfer Protocol (Secure), transfer web pages
+SMTP/SMTPS Simple Mail Transfer Protocol (Secure), sends email messages
+SNMP Simple Network Management Protocol, manages network devices
+Telnet/SSH Teletype Network (Secure SHell), allows command-line interfacing with remote hosts
+FTP/FTPS File Transfer Protocol (Secure), used to transfer files
+
+
+[TABELLA pagina 2]
+
+Application | Description
+
+DHCP | Dynamic Host Configuration Protocol, assigns IP addresses
+
+DNS | Domain Name System, translate website names to IP addresses
+
+HTTP/HTTPS | HyperText Transfer Protocol (Secure), transfer web pages
+
+SMTP/SMTPS | Simple Mail Transfer Protocol (Secure), sends email messages
+
+SNMP | Simple Network Management Protocol, manages network devices
+
+Telnet/SSH | Teletype Network (Secure SHell), allows command-line interfacing with remote hosts
+
+FTP/FTPS | File Transfer Protocol (Secure), used to transfer files
+
+=== PAGINA 3 ===
+Network Security
+Introduction
+• The network security is the field that
+studies possible attacks to networks and mobile network
+possible ways to prevent them. nationa l o r globa l I S P
+• Networking is part of our lives (Internet
+c
+p
+o
+o
+n
+w
+n
+e
+e
+r
+c
+s
+ti
+u
+o
+p
+n
+p
+i
+l
+s
+y )
+c o
+an
+n
+d
+si d
+a
+e
+l
+r
+a
+e
+r
+d
+ge
+a
+q
+lm
+u
+o
+a
+s
+n
+t
+ti
+a
+t
+s
+y
+w
+of
+a t
+o
+e
+u
+r
+r
+o r
+sensible data travels on networks.
+d atacenter
+n etwork
+• There are several types of attacks having
+different purposes and different mechanics.
+• Attacks evolve along with the technology and enterprise
+network
+the networks’ audience.
+
+
+[TABELLA pagina 3]
+
+ |  |  | n
+rk | t
+
+ |  |  |  | 
+
+c
+w | o | e |  | 
+
+=== PAGINA 4 ===
+Network Security
+Attacks: Malwares
+• A malware is malicious software that can be transferred to a computer
+through the network (e.g., downloaded file, e-mail attachment, etc.).
+• Once malware infects our device it can harm in different ways:
+• Forcing a system to show commercial advertisements (adware).
+• Showing false alarm messages to induce users to download malwares (scareware).
+• Deleting (wiper) or encrypting (ransomware) our files.
+• Collecting private information such as passwords, security numbers, etc. (spyware).
+• For example, keyloggers are software recording (logging) the keys struck on a keyboard.
+• Getting root privileges of our system (rootkits).
+• Turn a device into a slave or foothold to attack other devices (zombie or botnet).
+
+=== PAGINA 5 ===
+Network Security
+Attacks: Malwares
+• Todays malware are often self-replicating: once it infects one host, from
+that host it seeks entry into other hosts over the Internet, and from the
+newly infected hosts, it seeks entry into yet more hosts.
+• Malware can spread in the form of a virus or a worm:
+• Viruses are malware that require some form of user interaction to infect the
+user’s device.
+• For example, an e-mail attachment containing malicious executable code that self-replicates by
+sending similar mails to users’ contacts.
+• These are typically disguised as legitimate software components (trojan horses).
+• Worms are malware that can enter a device without any explicit user interaction.
+• For example, a user may be running a vulnerable network application which accepts the
+worm without intervention. The worm than scans the network for hosts running a similar
+application.
+
+=== PAGINA 6 ===
+Network Security
+Attacks: DoS
+• Denial-of-Service (DoS) attacks are quite common and are designed to
+render a network, a host, or other piece of infrastructure (e.g., Web
+servers, DNS, etc.) unusable by legitimate users.
+• There are 3 types of DoS attacks:
+1. Vulnerability attack: sending suitable messages to
+vulnerable applications or OSs in order to let them
+stop or crash.
+2. Bandwidth flooding: sending a large quantity of
+packets to the targeted host, preventing legitimate
+packets from reaching the server.
+3. Connection flooding: establishing a large number
+of half-open or fully open TCP connections at the
+Example of a DDoS (Distributed
+target host, so it stops accepting legitimate DoS) attack using a botnet of
+zombies (or slaves).
+connections.
+
+=== PAGINA 7 ===
+Network Security
+Attacks: Packets Sniffing
+• Packets sniffing involves a passive receiver (sniffer) that records a copy of
+relevant packets from a target host trying to steal sensitive information (aka
+eavesdropping).
+• Sniffers can be deployed in all kind of broadcast networks (wired or wireless) simply by
+copying packets that are meant for different destinations instead of discarding them.
+• As for non-broadcast networks, a sniffer can be put into a malware (spyware) and used
+to infect network devices (e.g., routers) so that all forwarded traffic is also copied.
+• Since sniffers are passive (no additional traffic is injected into the network)
+these are very difficult to detect.
+• To prevent sniffing cryptography approaches can be used.
+
+=== PAGINA 8 ===
+Network Security
+Attacks: Packets Sniffing
+• There are several sniffers freely
+available on Internet. A notable
+example of packet sniffer is
+Wireshark (ex Ethereal).
+• As seen in our lab sessions.
+GUI of Wireshark
+from Wikipedia
+
+=== PAGINA 9 ===
+Network Security
+Attacks: IP Spoofing
+• IP spoofing is a technique that allow malevolent hosts to inject into a network packets with
+false source addresses (forged).
+• It can be used in combination with applications vulnerability to attack specific hosts being
+masqueraded as another user.
+• It can also be used for DoS attacks (alternative to botnets) as messages from different source IPs are
+more difficult to filter.
+• Spoofing (and sniffing) can also be used for man-in-the-middle (MitM or MiM) attacks, in
+which the attacker is placed in between 2 communicating hosts disguised as both.
+• The 2 hosts think they are communicating each other, while they are actually communicating with
+the attacker.
+• To prevent spoofing, we can use message integrity checks and end-point authentication,
+allowing us to determine if the message has not been modified or if the message originates
+from the right source.
+
+=== PAGINA 10 ===
+Network Security
+Basics of Network Security
+• Given the previous attack types, we can now define the set of proprieties that
+a secure communication should guarantee:
+• Confidentiality: only the sender and intended receiver should be able to understand
+the contents of the transmitted message (sniffing avoidance).
+• Message integrity: the content of the communication must not be altered, either
+maliciously or by accident.
+• End-point authentication: both the sender and receiver should be able to confirm the
+identity of the other party involved in the communication (spoofing avoidance).
+• Operational security: to rely on a network infrastructure that prevents malicious hosts
+to sneak into the communication.
+• The first 3 proprieties are software-based the last one (operational security)
+typically relies on specific hardware (firewalls, intrusion detection systems).
+
+=== PAGINA 11 ===
+Network Security
+Cryptography
+Plaintext
+• A cryptographic technique allows a sender to disguise
+data so that it becomes incomprehensible for an
+Host A
+intruder.
+Encryption
+• Intruders can gain no information from the intercepted
+data, but the receiver must be able to recover the original Ciphertext
+data from the disguised data.
+Sniffing
+Channel
+• In its initial form the message is called plaintext (or
+Intruder
+cleartext) and is readable for everyone.
+Decryption
+• Before to inject the message into the channel a host Host B
+uses an encryption algorithm to transform the
+message into a non-readable form called ciphertext
+Plaintext
+which must be decrypted when received.
+
+
+[TABELLA pagina 11]
+
+
+
+
+
+
+
+=== PAGINA 12 ===
+Network Security
+Cryptography: Keys
+Plaintext
+• In many modern cryptographic systems, including
+key
+those used on the Internet, the encryption
+Host A
+technique is known and standard for everyone
+Encryption
+(including the intruder). The unknown part of the
+Ciphertext
+algorithm are the encryption/decryption keys.
+Sniffing
+Channel
+• A key is an alphanumerical string that must be
+provided to the encryption/decryption algorithm in
+order to encrypt/decrypt the messages.
+Decryption
+key Host B
+• Encryption and decryption keys can be identical
+Plaintext
+(symmetric) or different (asymmetric).
+
+
+[TABELLA pagina 12]
+
+
+
+
+
+
+
+
+[TABELLA pagina 12]
+
+Decryption
+key
+
+key
+
+=== PAGINA 13 ===
+Network Security
+Cryptography: Symmetric
+Plaintext
+• In symmetric cryptography there is only one key
+A-key
+that is used for both encryption and decryption.
+Host A
+Encryption
+• Encryption: the plaintext message along with the Ciphertext
+key is passed to the encryption algorithm to
+Sniffing
+Channel
+generate a ciphertext that can be safely sent
+through the network.
+• Decryption: the cyphertext message along with the Decryption
+A-key Host B
+key is passed to the decryption algorithm to
+recreate the initial plaintext message (readable).
+Plaintext
+
+
+[TABELLA pagina 13]
+
+
+
+
+
+
+
+
+[TABELLA pagina 13]
+
+Decryption
+A-key
+
+A-key
+
+=== PAGINA 14 ===
+Network Security
+Cryptography: Key Exchange
+Plaintext
+• The problem with symmetric cryptography, or
+A-key
+single-key cryptography, is that it requires the
+Host A
+secret key to be communicated (key exchange
+Encryption
+Plaintext
+problem).
+• Hosts can use a secure channel to exchange the key.
+• Hosts can use some protocol that allows them to Sniffing
+Channel
+“converge” on a shared key.
+Intruder
+• If two parties cannot establish a secure initial key
+Decryption
+exchange, they won't be able to communicate
+Host B
+securely without the risk of messages being
+intercepted and decrypted by a third party who
+Plaintext
+acquired the key during the initial key exchange.
+
+
+[TABELLA pagina 14]
+
+ | Network Security
+Cryptography: Key Exchange
+
+
+[TABELLA pagina 14]
+
+
+
+
+
+
+
+=== PAGINA 15 ===
+Network Security
+Cryptography: Asymmetric
+Plaintext
+• In asymmetric cryptography there is a two-key system
+(public and private keys).
+Host A
+• A message that is encrypted with one key must be decrypted
+Encryption
+with the other and vice versa.
+• The idea is that the public key can be sent over non-
+Sniffing
+Channel
+secure channels or shared in public, while the private key
+is only available to its owner.
+Intruder
+Plaintext
+• A typical approach is to use public key for encryption and
+Decryption
+private key for decryption:
+B-key Host B
+• If the intruder sniffs the public key, it is still impossible for
+priv
+him/her to decrypt messages.
+B-key
+Plaintext
+• Host A will use B-key-public to encrypt messages that can only pub
+be seen through B-key-private, which is only into B’s hands.
+
+
+[TABELLA pagina 15]
+
+ | Network Security
+Cryptography: Asymmetric
+
+
+[TABELLA pagina 15]
+
+
+
+
+
+
+
+
+[TABELLA pagina 15]
+
+Decryption
+B-key
+
+B-key
+
+=== PAGINA 16 ===
+Network Security
+Certification Authority
+• In public key cryptography it could be useful to verify if a public key really belong to
+the entity with whom you want to communicate.
+• Otherwise, we could have someone’s else key (attacker) and we could encrypt messages that
+are readable by illegitimate entities.
+• Binding a public key to a particular entity is typically done by a Certification
+Authority (CA), whose job is to validate identities and issue certificates. A CA has the
+following roles:
+1. A CA verifies that an entity is who it says it is. There is no protocol for that, one must trust
+the CA to have performed a suitably rigorous identity verification.
+• It works like a natural selection process: if a CA is unreliable no on will trust it.
+• There are several federal or statal CA that provide a reasonable reliability, but we still have to trust them.
+2. Once the CA verifies the identity of the entity, the CA creates a certificate that binds the
+public key of the entity to the identity. The certificate contains the public key and a globally
+unique identifier of the owner (for example, a name or an IP address).
+
+=== PAGINA 17 ===
+Network Security
+Message Integrity
+• Message integrity (also known as message authentication) is the problem of
+checking if:
+1. The message has not been tempered with.
+2. The message has been indeed originated by the expected host.
+• We can create a check-item similarly as the checksum or CRC. Typically, a hash
+function is used to create such item.
+• Remind: a hash function is any function that can be used to map data of arbitrary size
+into fixed-size values.
+• A cryptographic hash function is a function H that converts a message x into a
+fixed-size string H(x) so that it is very hard (computationally infeasible) to find
+another message y such that H(y) = H(x).
+
+=== PAGINA 18 ===
+Network Security
+Message Integrity
+• As in checksum or CRC, a first strategy can be to
+Host A Host B
+attach this hash into the message:
+1. Host A creates message m and calculates the
+Create h = H(m)
+hash h = H(m).
+(m, h)
+2. Host A appends h to the message m, creating an
+extended message (m, h), and sends the extended If h = H(m)
+the message is
+message to B. intact
+3. Host B receives the message (m, h) and calculates Intruder
+H(m). If H(m) = h, the message is intact.
+(m, h)
+(m’, h’)
+• This approach is obviously flawed. An intruder
+Spoofing
+Still h’ = H(m’)
+may spoof the whole message (m,h), creating a
+new “ad hoc” one (m’,h’) that is still consistent
+with the hashing function H.
+
+=== PAGINA 19 ===
+Network Security
+Message Integrity
+• To avoid this, A and B need a shared secret s (a shared key or a
+password) which is a string known only to them. Host A Host B
+• This basically works as a symmetric encryption where s is the unique
+private key.
+• Assuming such s exists then:
+1. Host A creates a message m + s (as a concatenation of message and
+secret) and calculates the hash h = H(m + s) aka a message
+authentication code (MAC). Intruder
+Create h = H(m+s)
+2. Host A appends the MAC to the message m, creating an extended
+message (m, H(m + s)), and sends the extended message to B.
+(m, h)
+3. Host B receives the extended message (m, h) and knowing s,
+(m’, h’)
+calculates the MAC H(m + s). If H(m + s) = h, the message is intact.
+Spoofing
+Now h’ != H(m’+s)
+Message is wrong!
+• As in all symmetric approaches, also here we need to exchange
+such secret.
+• This secret can be exchanged combining asymmetric cryptography
+and certificates.

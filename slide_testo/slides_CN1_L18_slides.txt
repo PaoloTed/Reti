@@ -1,0 +1,395 @@
+=== PAGINA 1 ===
+Computer Networks I
+Reti di Calcolatori I
+The Network Layer:
+DHCP, LANs, IPv6
+Lecture 18
+
+=== PAGINA 2 ===
+Network Layer
+Internet Protocol: IP Assignment
+• Within a block of addresses, IP addresses must be assigned to individual interfaces.
+• A system administrator can configure the IP addresses in two ways:
+• Manually: by assigning one-to-one IP addresses to hosts.
+• Automatically: the network autonomously assigns free IP to incoming hosts.
+• The second approach (most common) can be done by using the Dynamic Host Configuration
+Protocol (DHCP).
+• In addition to host IP address, DHCP provides a host with the information needed to join the
+network, such as subnet mask, the address of the default gateway (to go outside of the
+network), and the address of the local DNS server.
+• The DHCP is plug-and-play, and it is typically used in our homes.
+
+=== PAGINA 3 ===
+Network Layer
+Internet Protocol: DHCP
+• The DHCP is a client-server protocol: a newly
+arriving host (client) connects to the DHCP server to
+receive network information. DHCP service may be
+provided by a computer or by the router itself.
+• Formally, DHCP is an application-layer protocol.
+• Let’s look to the previous example of 3 subnets
+connected by a single router.
+• Here we assume the network on the right
+(233.1.2.0/24) to be equipped with a DHCP server.
+• When a new host joins the network, it trades the IP
+address with the DHCP server.
+
+=== PAGINA 4 ===
+Network Layer
+Internet Protocol: DHCP
+• Adding a new host is mainly a 4-steps process:
+1. DHCP server discovery: the new host sends in broadcast a
+DHCP discovery message (UDP on port 67) to find the
+DHCP server.
+• Destination IP: 255.255.255.255 (broadcast).
+• Source IP: 0.0.0.0 (this host).
+• Random transaction ID.
+2. DHCP server offer: since multiple DHCP servers may be
+present, when a discovery message is received, a server
+responds with a broadcast message (on port 68) offering
+a possible network configuration (yiaddr filed – Your
+Internet ADDRess).
+• Destination IP: 255.255.255.255 (broadcast).
+• Source IP: 223.1.2.5 (DHCP server).
+3. DHCP request: the new client selects the accepted offer
+by echoing back the offer message.
+4. DHCP ACK: final ACK message confirming the transaction.
+
+=== PAGINA 5 ===
+Network Layer
+Internet Protocol: DHCP
+• In this case everything works smoothly
+because the DHCP and the arriving host
+are in the same subnet.
+• If a server exists but in a different subnet,
+we need a DHCP relay agent to forward
+DHCP messages (a router can do that).
+• In this example we can configure our
+router to be a relay agent so that also
+hosts from subnets 223.1.1.0/24 and
+223.1.3.0/24 are served by our DHCP.
+
+=== PAGINA 6 ===
+Network Layer
+Route
+• In Linux we can use the ip command to see the network configuration
+provided by the DHCP.
+• Usage:
+• See our current configuration
+(IP address, mask):
+• $ ip addr
+• See our default gateway:
+• $ ip route
+
+=== PAGINA 7 ===
+Network Layer
+Internet Protocol: Visibility
+• In Internet there are billions of connected devices that must be
+associated with unique IP addresses to be reached by anyone.
+Internet
+(or WAN)
+• Is it really necessary to have all devices visible to anyone?
+• For example: is it good to have my printer reachable (usable) by
+Router
+anyone on Internet?
+• There are clear issues in having all devices reachable from
+outside local networks:
+LAN
+• IP addresses are finite. (Private Network)
+• If devices are locally connected it is often unreasonable (or
+undesirable) to expose all of them on Internet.
+• Local administrators should be fully aware of the overlying IP block
+structure in order to assign unused addresses (which is often not up
+to them, e.g., in home networks).
+
+=== PAGINA 8 ===
+Network Layer
+Internet Protocol: NAT
+• The Network Address Translation (NAT) service allows
+to remap the IP addresses of packets within a
+Internet
+(or WAN)
+network into different ones (network masquerading).
+138.76.29.Y
+NAT
+• This is performed by using a translation table
+Router
+10.0.0.X
+associating multiple local IPs/ports (of the LAN) into a
+global IP/port (of the WAN). This service can be
+offered by routers.
+LAN
+(Private Network)
+• The masqueraded local network is also called private
+network or realm with private addresses. Private IP
+addresses are valid only inside the private network.
+
+=== PAGINA 9 ===
+Network Layer
+Internet Protocol: NAT
+• This is an example of a NAT-enabled router connecting a network to internet.
+• The four interfaces in the local network have the same subnet address of 10.0.0.0/24. The
+router behaves as a message passer that overrides the IPs with the one specified in the table:
+• Outgoing packets have their source IPs/ports overwritten with a single WAN-side IP (138.76.29.7) and a
+fresh port (5001).
+• Incoming packets have their destination IPs/ports overwritten with the specific LAN-side IP of the host
+(10.0.0.1) and the initial port (3345)
+• It is important to notice that, since hosts are
+unaware of the other hosts’ traffic, the NAT
+cannot use the initial port because multiple
+hosts may select the same port
+simultaneously.
+• Since the port is 16bits, NATs can manage
+over 60000 simultaneous connections.
+
+=== PAGINA 10 ===
+Network Layer
+Ping
+• To check if a host is reachable on a network, we can use the ping command
+(ping is the same on Linux/Windows machines).
+• Ping (Packet Internet Groper) is a utility based on the ICMP (Internet Control
+Message Protocol) transport protocol and sends a “echo request” packet to a
+host that automatically answers with a “echo reply” message.
+• Ping also provide the time elapsed between request/reply, measuring the RTT.
+• Usage:
+• To check the reachability:
+• $ ping [target address]
+
+=== PAGINA 11 ===
+Network Layer
+Nmap (pt.2)
+• Besides port scanning, the nmap command can also be used to map/scan the
+devices on the network.
+• It relies on ping (ICMP) to discover hosts on the network.
+• Usage:
+• Ping-based hosts discovery:
+• $ sudo nmap -sn [gate address]/[subnet bits]
+
+
+[TABELLA pagina 11]
+
+
+
+
+
+=== PAGINA 12 ===
+Network Layer
+Internet Protocol: Reserved IP addresses
+• Since local administrators should be free to organize a private network without
+interferences, by convention there are some reserved IP blocks, i.e., that ISPs/ICANN
+cannot assign to any organization. Some common such blocks are:
+• 10.0.0.0 – 10.255.255.255 (reserved for private networks).
+• 192.168.0.0 – 192.168.255.255 (reserved for private networks).
+• 127.0.0.0 – 127.255.255.255 (indicate this machine, i.e., loopback).
+• Typically, 127.0.0.1 is used.
+• 0.0.0.0 (indicates current network).
+• Addresses having 0 in the host-part fall under this definition.
+• 255.255.255.255 (indicates broadcast).
+• Addresses having 255 in the host-part fall under this definition. .
+• The necessity to reserve IPs is given by the fact that private addresses may be the
+same as public (non-private) ones, so routing within the network would be
+ambiguous.
+
+=== PAGINA 13 ===
+Network Layer
+Internet Protocol: LAN Setup Example
+• Let’s see and example in which we want to create a new
+local subnetwork (LAN) into a pre-existing network (WAN).
+Internet
+(or WAN)
+• The network administrator of the WAN provides us the
+unknown
+following information:
+WAN
+• The IP of the WAN: 150.100.0.0/16.
+Router
+WAN
+• The IP of the getaway (leading to external WAN/Internet):
+150.100.50.1 150.100.0.0/16
+150.100.50.1
+• A free IP for our network: 150.100.50.10
+LAN
+Router
+• We have now to configure our router and our devices to LAN
+192.168.1.0/24
+setup the new LAN.
+• We are considering a NAT-enabled router.
+• We decide that the IP of the new LAN will be: 192.168.1.0/24
+(reserved for local networks).
+
+=== PAGINA 14 ===
+Network Layer
+Internet Protocol: LAN Setup Example
+• Our local router has 2 interfaces, one for the
+WAN-side and another for the LAN-side.
+• Let’s start by configuring our local router’s
+WAN-side settings.
+150.100.50.10
+255.255.0.0
+• On the router we have to specify the
+150.100.50.1
+following parameters:
+• The IP address of the router in the WAN.
+• The subnet of the WAN.
+• The gateway.
+• One or more DNS.
+• Notice that we can also specify a dynamic IP if
+the WAN has a DHCP service.
+
+=== PAGINA 15 ===
+Network Layer
+Internet Protocol: LAN Setup Example
+• Now let’s configure the LAN-side settings.
+• We have to give an IP to the LAN-side
+192.168.1.1
+interface of the router:
+• Since our network will be addressed as
+192.168.1.0/24, we will give 192.168.1.1/24
+to the router (it is typical to give .1 to it).
+• In this example, our router also provide
+DHCP service, we can then specify:
+192.168.1.100 192.168.1.250
+• Address pool (for DHCP hosts).
+• Lease time (timeout of the IP assignment, 192.168.1.1
+after that, the IP can be reused).
+• Gateway and DNS to be communicated to
+the hosts.
+
+=== PAGINA 16 ===
+Network Layer
+Internet Protocol: LAN Setup Example
+• This is a simple example of how
+to configure this connection on a
+new host (Linux Mint).
+• There are different methods to
+choose:
+• Automatic (DHCP): uses DHCP to
+automatically configure the
+connection (you will get an IP from
+192.168.1.100 to 192.168.1.250).
+• Manual: setup the connection by
+manually setting the configuration.
+
+=== PAGINA 17 ===
+Network Layer
+Internet Protocol: LAN Setup Example
+• In a manual setting we need to
+know the network configuration
+(and the available IPs).
+• We have to specify the main
+information for connection
+setup:
+• IP address of the host (static/fixed).
+• Subnet mask.
+• Gateway.
+• DNS (one or more).
+
+=== PAGINA 18 ===
+Network Layer
+Internet Protocol: LAN Setup Example
+• In this created LAN we can connect new hosts
+to the LAN by specifying a manual IP address
+Internet
+(or WAN)
+(outside the DHCP pool) or an automatic IP
+address (inside the DHCP pool).
+unknown
+WAN
+Router
+WAN
+• The connected hosts will send their packets to
+150.100.50.1 150.100.0.0/16
+the local router (unaware of the outside WAN).
+150.100.50.10
+LAN
+Router
+• We have the local router configured to forward LAN
+192.168.1.1 192.168.1.0/24
+packets to the WAN router (and possibly to the
+192.168.1.10
+Internet).
+
+=== PAGINA 19 ===
+Network Layer
+Internet Protocol: IPv6
+• In the early 1990s, the Internet Engineering Task Force (IETF), which is an ONG
+founded in 1986, began an effort to develop a successor to the IPv4 protocol to
+face the 32-bit IPv4 address shortage.
+• IPv6 was designed to ensure more addresses available, but it was also an
+opportunity to update other aspects of IPv4, based on the accumulated
+operational experience.
+• It is not sure when exactly all the available IPv4 would be exhausted (it was
+speculated to be 2008 or 2018, but we have still some IPs left).
+• But what about IPv5? It was proposed in 1979 and was based on the experimental
+Internet Stream Protocol (ST). It was still relying on 32bit addresses, so it was
+dropped mainly because of addresses shortage.
+
+=== PAGINA 20 ===
+Network Layer
+Internet Protocol: IPv6 Datagram
+• IPv6 has the following advantages:
+• Expanded addressing capabilities: from 32 to 128 bits
+(i.e., 3.4028237e+38), which ensures that the world won’t
+run out of IP addresses, as every grain of sand on the
+planet can be IP-addressable.
+• A fixed-length 40-byte header: some of IPv4 fields have
+been dropped or made optional.
+• Flow labeling: packets from some applications (e.g.,
+audio/video streaming) can be grouped into a unique
+with flow having specific identification.
+• The precise role and usage of flows is still discussed.
+
+=== PAGINA 21 ===
+Network Layer
+Internet Protocol: IPv6 Datagram
+• IPv6 datagram is composed by the following fields:
+• Version (4 bits): identifies the IP version number. Not surprisingly,
+IPv6 carries a value of 6 in this field.
+• Traffic class (8 bits): like the TOS field in IPv4, can be used to give
+priority to datagrams (e.g., voice-over-IP over SMTP, etc.).
+• Flow label (20 bits): identify a flow of datagrams.
+• Payload length (16 bits): the number of bytes of the payload (40-
+bytes header excluded).
+• Next header (8 bits): identifies the upper-level protocol to which
+the contents (data field) of this datagram will be delivered (for
+example, to TCP or UDP). Similar to protocol field in the IPv4
+header.
+• Hop limit (8 bits): Specifies the time-to-live as in TTL field of IPv4
+(decremented every forward).
+• Source and destination addresses (128+128 bits): the IPv6 128-bit
+addresses.
+• Data (variable): the payload portion of the datagram.
+
+=== PAGINA 22 ===
+Network Layer
+Internet Protocol: IPv6 Datagram
+• What is missing from IPv4:
+• Fragmentation-related fields: IPv6 does not allow
+fragmentation and reassembly on intermediate routers,
+but only on hosts.
+• If an IPv6 datagram received by a router is too large to be
+forwarded, the router simply drops the datagram and sends a
+“Packet Too Big” error message back to the sender. The sender
+can then resend the data, using a smaller IP datagram size. IPv4
+• Header checksum: it takes time on routers, and it is
+redundant as link-layer protocols typically perform
+checksum on the whole packet.
+• Options: are no longer a part of the standard IP header,
+some options can be specified into next header field
+(along with TCP/UDP identifiers).
+IPv6
+
+=== PAGINA 23 ===
+Network Layer
+Internet Protocol: From IPv4 to IPv6
+• There is one big issue with IPv6: it is not backward-compatible. IPv4-capable
+systems are unable to handle IPv6 datagrams.
+• How will Internet adopt IPv6?
+• The flag day approach: in a given time and date all Internet machines would be
+turned off and upgraded from IPv4 to IPv6. A similar approach have been used when
+TCP was introduced but it was a mess (even for the small internet network of the
+time). A flag day involving billions of devices is even more unthinkable today.
+• The tunneling approach: the use of specific routers (tunnels) in charge of mapping
+IPv4 datagrams into IPv6 datagrams and vice versa in almost-transparent way. This is
+probably the most realistic approach, already used in practice.
+• While the adoption of IPv6 was initially slow, it is accelerating.

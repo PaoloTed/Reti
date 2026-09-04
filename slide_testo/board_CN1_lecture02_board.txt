@@ -1,0 +1,10 @@
+=== PAGINA 1 ===
+Codice Teams:
+b0000mt
+
+=== PAGINA 3 ===
+Nelle reti c'e' comunicazione tra due
+macchine a ogni strato, coi relativi
+protocolli. Tutte queste trasmissioni
+sono virtuali, salvo quella a livello fisico,
+che comporta dei fenomeni fisici.

@@ -1,0 +1,87 @@
+=== PAGINA 1 ===
+Traceoute; protocolli ICMP e IP
+Quando un pacchetto viene inviato su una rete, il valore TTL del pacchetto diminuisce di uno
+per ogni router (o salto) che attraversa. Traceroute utilizza deliberatamente un valore TTL
+basso (1, per cominciare) per garantire che il pacchetto "scada" al primo router.
+Il router che riceve il pacchetto con TTL scaduto invia al mittente un messaggio ICMP (Internet
+Control Message Protocol) di tipo "Time Exceeded" (Tempo scaduto).
+Traceroute invia quindi una sequenza di pacchetti incrementando il valore TTL di uno per ogni
+pacchetto successivo; in questo modo, ogni pacchetto scade al router successivo lungo il
+percorso, che invia il proprio messaggio ICMP indicando detta scadenza.
+Grazie alla raccolta degli indirizzi IP sorgente di questi messaggi ICMP, traceroute identifica ogni
+router sul percorso tra l'host locale e la destinazione, creando una mappa del percorso di rete.
+Questo processo continua fino a raggiungere la destinazione o fino al raggiungimento del
+numero massimo di salti configurato (di default 30).
+L'output del comando mostra una lista ordinata di "hop" che corrispondono ai router
+attraversati, con il relativo indirizzo IP o nome host e i tempi di risposta misurati per ogni
+salto.
+Se un determinato router non risponde in tempo, viene mostrato un asterisco (*) al suo posto
+per quel tentativo. Ciò può indicare congestione, filtri o dispositivi che non rispondono ai
+pacchetti ICMP.
+I pacchetti in uscita dal cliente (mittente) di Traceroute hanno come porto di destinazione un
+numero alto scelto a caso. Se uno di questi pacchetti raggiunge il destinatario, detto
+destinatario normalmente non trova un processo con quel numero di porto e risponde con un
+pacchetto ICMP che contiene il messaggio “Destination Unreachable (Port Unreachable)”. Quando
+il cliente riceve questo pacchetto, Traceroute termina e non vengono più inviati segmenti UDP.
+In certi casi i pacchetti non ricevono risposta né dal destinatario né dai router intermedî per
+scadenza del TTL; allora Traceroute indica ciò con degli asterischi (v. sopra).
+Usa il comando traceroute su Linux per inviare datagrammi di dimensioni diverse a un server.
+Il valore nel comando (v. qui sotto) indica la dimensione in byte dei datagram inviato da
+Traceroute.
+Esempio:
+traceroute italia.it
+traceroute italia.it 3000
+traceroute 8.8.8.8
+traceroute 8.8.8.8 3000
+
+=== PAGINA 2 ===
+Quando si specifica una dimensione del datagramma nel comando traceroute, si indica la
+dimensione del payload del datagramma UDP che traceroute invia verso l'host destinazione.
+Questa dimensione comprende la parte di dati del pacchetto che viaggia attraverso la rete, oltre
+agli header UDP e IP che incapsulano il payload. Ad esempio, per impostazione predefinita
+traceroute invia pacchetti UDP con una dimensione totale (inclusi gli header) di circa 40 byte
+(20 byte di header IP, 8 byte di header UDP e 12 byte di payload). Aumentando questa
+dimensione si inviano pacchetti più grandi. Datagrammi più grandi possono necessitare di
+frammentazione IP se eccedono la Maximum Transmission Unit (MTU) del percorso di rete.
+Pertanto, la dimensione specificata si riferisce ai pacchetti inviati da traceroute come sonde e
+non ai messaggi ICMP ricevuti, che differiscono in dimensione perché includono una parte del
+pacchetto originale che ha generato la risposta di "time exceeded". Questa dimensione è
+importante per testare come le reti gestiscono pacchetti di dimensioni diverse, inclusa la
+frammentazione.
+1. Elementi di IPv4
+1. Seleziona il primo segmento UDP inviato dal tuo computer tramite traceroute (senza
+specificare la dimensione dei datagram) al server scelto. Espandi la sezione Internet
+Protocol dei dettagli del pacchetto. Qual è l'indirizzo IP del tuo host?
+2. Qual è il valore del campo time-to-live (TTL) nell'intestazione IPv4 di questo pacchetto?
+3. Qual è il valore del protocollo del livello superiore specificato nell'intestazione IPv4?
+4. Quanti byte ci sono nell'intestazione IP?
+5. Quanti byte sono nel payload del datagramma IP? Spiega come hai determinato questo
+numero.
+6. Questo datagramma IP è stato frammentato? Spiega come hai determinato se è
+frammentato o meno.
+Sequenza di segmenti UDP inviati dal computer
+Per i pacchetti inviati al server, usa il filtro Wireshark:
+ip.src==<tuo_indirizzo_IP> && ip.dst==<IP_server> && udp
+Rispondi alle seguenti domande:
+7. Quali campi rimangono costanti? Perché?
+8. Descrivi il pattern che osservi nel campo Identification dei pacchetti IP inviati.
+ICMP restituiti dai router intermedi
+Visualizza i pacchetti ICMP con il filtro:
+ip.dst==<tuo_indirizzo_IP> && icmp
+
+=== PAGINA 3 ===
+11. Qual è il protocollo del livello superiore specificato nei datagrammi IP inviati dai router?
+12.I valori nel campo Identification dei segmenti ICMP sono simili a quelli osservati nei
+pacchetti UDP?
+13.I valori del TTL nei pacchetti ICMP sono simili tra loro?
+2. Frammentazione IP
+Impostiamo la dimensione del datagramma a 3000 byte per inviare un segmento UDP grande
+che richiede frammentazione (v. comandi sopra).
+Per i pacchetti inviati al server destinatario, usa il filtro Wireshark:
+ip.src==<tuo_indirizzo_IP> && ip.dst==<IP_server> && ip
+Rispondi alle segg. domande:
+14.Trova il primo datagramma IP contenente il primo frammento del segmento di 3000
+byte inviato. È stato frammentato su più datagrammi?
+15.Quale informazione nell'intestazione IP indica la frammentazione?
+16.Come si distingue un frammento iniziale da quelli successivi?
+17.Quanti byte contiene il datagramma IP (header + payload)?

@@ -1,0 +1,34 @@
+=== PAGINA 1 ===
+Uno dei possibili attacchi
+al Diffie-Hellman key exchange.
+T (attaccante "intrruder") finge di essere B con A
+e di essere A con B, intercettando i messaggi. In questo
+caso può essere utile per l'attaccante utilizzare la tec-
+nica dello spoofing.
+Il problema dei protocolli a chiave simmetrica è quello della
+distribuzione delle chiavi. Infatti in presenza di N utenti occorrono
+N 2 chiavi (una per ogni coppia).
+
+=== PAGINA 2 ===
+PRINCIPIO DI KERCHOFF: solo le chiavi sono segrete; tutti gli algoritmi devono
+essere pubblici.
+
+=== PAGINA 3 ===
+Un pad non deve mai essere
+usato piú di una volta.
+Il one-time pad introduce una grande quantità di ridondanza
+e previene qualsiasi informazione del testo in chiaro P dal
+riflettersi nel testo cifrato C.
+1. Problema della condivisione/distribuzione del pad (chiave)
+2. Errori di sincronizzazione (se il messaggio ha un offset la tx fallisce.
+3. Il punto vero è che l'uso di un pad richiede la trasmissione/condivisione sicura
+del pad, che ha la stessa dimensione del messaggio. In quel caso conviene trasmettere
+direttamente il messaggio (salvo casi particolari come lo scambio di persona di un pad
+su supporto ottico/magnetico).
+Ogni messaggio cifrato deve contenere qualche forma di ridondanza.
+Altrimenti un attaccante potrebbe inviare un messaggio (cifrato) a caso
+ed esso sarebbe ricevuto, dopo la decifratura, come messaggio valido.
+
+=== PAGINA 4 ===
+È necessario avere un meccanismo per prevenire gli attacchi per ripetizione dei messaggi,
+altresí detti replay attacks.

@@ -1,0 +1,9 @@
+=== PAGINA 1 ===
+Le applicazioni non devono preoccuparsi
+del flusso dei dati, il quale viene offerto
+come servizio dallo stato inferiore (Trasporto).
+Trasmissione virtuale a seconda
+del protocollo specifico
+NOTA: Il Web e' tecnicamente una applicazione.
+Il protocollo IP e' il "collante"
+di tutta la rete (di reti) Internet.

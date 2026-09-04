@@ -1,0 +1,9 @@
+=== PAGINA 1 ===
+ESERCITAZIONE WIRESHARK
+wget http://speedtest.tele2.net/10MB.zip
+Right-click su un segmento facente parte dello stream
+di scaricamento: scegliere Follow -> TCP Stream.
+tcp
+tcp.analysis.bytes_in_flight
+tcp.analysis.duplicate_ack
+tcp.analysis.window_update

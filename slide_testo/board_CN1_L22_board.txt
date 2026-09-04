@@ -1,0 +1,81 @@
+=== PAGINA 1 ===
+LINK: Invio di frame (stringhe di bit) su una linea
+fisica, ciò che è influenzato dalle proprietà fisiche
+dei dispositivi utilizzati.
+
+=== PAGINA 2 ===
+A questo livello non abbiamo altro
+che bit (zeri e uni) che vengono tra-
+smessi su una linea fisica.
+Potremmo trasmettere un flusso ininterrotto di bit?
+Inoltre, bisogna distinguere i pacchetti distinti
+che sono nel payload fornito dal livello superiore
+(rete/network).
+Gli errori non si propagano come nella tecnica (mai usata)
+del byte count.
+FLAG BYTE: 01111110
+Ogni 0 che segue cinque 1
+viene eliminato dai dati in ricezione.
+
+
+[TABELLA pagina 2]
+
+ |  |  |  |  |  | 
+
+=== PAGINA 3 ===
+In assenza di informazione aggiuntiva (dati aggiuntivi) non c'è nulla
+con cui confrontare il payload allo scopo di rilevare (ed eventualmente
+correggere) errori.
+10101100 0
+10111100 0
+Gli errori normalmente avvengono in "burst" (fiammate), cioè
+sequenze di bit in cui il primo e ultimo bit sono "di errore"
+(non corretti, cioè 0 al posto di 1 o vice-versa) e quelli di mezzo
+sono un misto di bit di errore (frequenti) e bit corretti.
+
+
+[TABELLA pagina 3]
+
+ |  |  |  |  |  |  |  |  |  |  | 
+
+=== PAGINA 4 ===
+Le stringhe di bit vengono interpretate come polinomî
+a coefficienti binarî.
+Il protocollo CRC di rilevazione di errori si basa sulla
+divisibilità del messaggio (D + EDC) per un certo
+polinomio generatore fissato G(x).
+1011
+G si allinea sempre col bit
+piú significativo che è 1
+Aggiunta di 3 zeri: moltiplicazione di D(x) per xr
+
+=== PAGINA 5 ===
+00110110 Dist. di H.: numero di bit che è necessario invertire
+per convertire una parola nell'altra (cioè il numero di bit
+00011010
+in cui le due parole differiscono.
+Per la comunicazione i protocolli (a livello Link) utilizzano parole (di
+lunghezza fissa) che non sono tutte quelle possibili. Per es. tra le 25
+possibili parole di lunghezza 5 se ne utilizzano 24 (la metà). Ciò avviene
+per es. nella codifica 4B/5B. Ciò consente la rilevaz. di errori ma anche
+di evitare lunghe sequenze di uni o zeri.
+Utilizziamo parole di 10 bit, ma ne utilizziamo solo 4.
+0000000000 00
+0000011111 01
+1111100000
+10
+1111111111 11
+0000011111
+0100011101
+L: minima distanza tra due parole nella codifica (in questo caso 5)
+
+
+[TABELLA pagina 5]
+
+0000000000
+0000011111
+1111100000
+1111111111 | 00
+01
+10
+11

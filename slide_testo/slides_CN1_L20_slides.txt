@@ -1,0 +1,448 @@
+=== PAGINA 1 ===
+Computer Networks I
+Reti di Calcolatori I
+The Network Layer:
+The Control Plane
+Lecture 20
+
+=== PAGINA 2 ===
+Network Layer
+Routing: Introduction
+• We recall that, on packet receival, a router can perform 3 actions:
+• Forwarding the packet as is to a suitable neighbor.
+• Forwarding a modified/replaced packet (e.g., fragmentation, masquerading, etc.).
+• Dropping the packet (e.g., if expired).
+• There are different types of routers, some are very simple and are used by local
+administrators (for instance to connect LANs and WANs), others are used by ISPs
+to allow packets to be forwarded to the right device in the entire Internet.
+• As we saw, routers are equipped with forwarding tables that specify the local
+forward strategy (in the neighborhood of the router). The way these tables are
+created can be centralized or decentralized.
+• Routers have no knowledge about the rest of the network (at least on startup).
+
+=== PAGINA 3 ===
+Network Layer
+Routing: Introduction
+• To decide where packets should be forwarded routers make use of routing
+algorithms, which determine good paths (i.e., sequence of routes) from
+senders to receivers.
+• Typically, a “good” path is one that has the minimal cost (shortest or fastest
+path, etc.), in real-world there are also policy issues to be considered (e.g.,
+rules specifying if an organization can talk with another etc.).
+• The routing problem is crucial for computer networks, but the general
+problem of finding “good paths” on a network (or a graph) is particularly
+relevant not only for computer networks (e.g., videogames, autonomous
+driving, robotics, etc.).
+
+=== PAGINA 4 ===
+Network Layer
+Routing: Flooding
+• Most simple approach is flooding: each router forwards all incoming packets to
+all links except for the one by which the packet is received.
+• All paths are explored (optimal one included), so the packet will surely be delivered if a
+path exists.
+• Packets going nowhere will eventually reach their hop limit and be discarded.
+• It is tremendously robust due to the redundancy of generated packets (e.g., if some
+routers are offline alternative paths are always considered).
+• Flooding can be used in specific situations where redundancy is needed (e.g.,
+broadcast of messages, military scenarios, etc.) but it is impractical in high-
+performance and large networks (such as Internet).
+• For typical computer networks a more sophisticated routing algorithm is needed.
+
+=== PAGINA 5 ===
+Network Layer
+Routing: Problem Formulation
+• We can formalize our network as a graph G=(N,E), where:
+• N is a set of nodes (the routers of our network).
+• E is a set of edges (physical links) represented as a pair of nodes.
+• An edge also has a value representing its cost, which may reflect the
+physical length of the link, the link speed, or the monetary cost associated
+with a link.
+• We can formalize a generic cost as a function c such that, given a generic
+couple of nodes (x,y):
+• If (x,y)∊E, then c(x,y) is the cost of the edge (x,y)
+• If (x,y) E, then c(x,y)=∞
+∉
+• If (x,y)∊E, then also (y,x)∊E (undirected graph) and c(x,y)=c(y,x)
+
+=== PAGINA 6 ===
+Network Layer
+Routing: Problem Formulation
+• Following this formulation, a path in is a sequence of nodes such that all
+adjacent nodes are linked, formally:
+(x ,x ,…,x ) with (x ,x ), …, (x ,x )∊E
+1 2 p 1 2 p-1 p
+• The overall cost of the path is the sum of the links’ costs
+• Let’s call the set of all possible paths connecting the nodes u and z, we can
+define the best path as the path having minimum cost.
+
+=== PAGINA 7 ===
+Network Layer
+Routing: Problem Formulation
+• In this example we have a graph
+composed of 6 nodes
+• For instance, the best path between
+nodes u and w is: [exercise]
+
+=== PAGINA 8 ===
+Network Layer
+Routing: Problem Formulation
+• Algorithms able to find an optimal path between two nodes are called least-cost
+path algorithms (shortest-path in case of the same cost between all pairs of nodes).
+• In the case of computer networks, we are interested in finding such optimal path
+not for just two nodes but for all possible couples of nodes.
+• A routing algorithm converges when the shortest path for all couples of nodes in the
+network is found.
+• On networks there are 2 families of algorithms that are typically used:
+• Distance Vector.
+• Link State.
+
+=== PAGINA 9 ===
+Network Layer
+Routing: Distance-Vector Algorithm
+• The Distance-Vector (DV) algorithm is a decentralized approach that exploit
+local knowledge about the network combined with nodes communication to
+find the shortest paths.
+• It is based on the Bellman-Ford algorithm that is used to compute paths.
+• Here each node receives some information from one or more of its directly
+attached neighbors, performs a calculation, and then distributes the results
+of its calculation back to its neighbors.
+• This algorithm is asynchronous in that it does not require all of the nodes to
+be coordinated with each other.
+
+=== PAGINA 10 ===
+Network Layer
+Routing: Distance-Vector Algorithm
+Let’s denote with d (y) the cost of the best path from node x to node y. From the Bellman
+x
+equation we can derive the following one:
+d (y) = min {c(x,v) + d (y)}
+x v v
+This is quite intuitive: there must be and adjacent node v to x that lies on the best path
+from x to y, and the cost of the said best path is the cost of reaching v plus the best path
+between v and y.
+• If we are able to find such v we can just add it into the forwarding table and forward to it
+all packets directed to .
+• To do so, we should have an estimation of for all neighbors (the distance vector).
+
+=== PAGINA 11 ===
+Network Layer
+Routing: Distance-Vector Algorithm
+• Let’s try with a real example. Considering u and z, the best
+path is
+u→x→y→z
+
+=== PAGINA 12 ===
+Network Layer
+Routing: Distance-Vector Algorithm
+• Now, for all the nodes along this optimal path the
+Bellman equation must hold.
+• Let’s consider node u, which has 3 neighbours w, v, and x
+• For x we have c(u,x)=1 and d (z)=3.
+x
+• For v we have c(u,v)=2 and d (z)=5.
+v
+• For w we have c(u,w)=5 and d (z)=3
+w
+Node x minimises the expression c(u,x)+d (z),
+x
+therefore it is the next one on the optimal path.
+
+=== PAGINA 13 ===
+Network Layer
+Routing: Distance-Vector Algorithm
+• We can iterate this process on the next node of
+the path (which is x) and we will see that the
+Bellman equation stands (i.e., that node y, which
+is next in the path, will also minimize the
+expression, and so on).
+• If we have the distance vector for all nodes, we
+can easily use Bellman equation to compute the
+next hop in the path (forwarding table).
+
+=== PAGINA 14 ===
+Network Layer
+Routing: Distance-Vector Algorithm
+• The pseudocode: • We use the data-structure D (v) to
+w
+store the distance vectors from all
+DistanceVector(x)
+nodes w to target nodes v.
+for all nodes v
+if v is a neighbor of x then
+D (v) = c(x,v)
+x • During the initialization phase:
+else
+• Only distances to neighbors are set.
+D (v) = ∞
+x
+for all neighbors w and destinations y
+D (y) = ?
+w
+• During the online phase:
+send initial D (·) to all neighbors
+x
+• The news from the neighborhood are
+repeat received.
+if cost of a neighbor updated then
+• Distance vectors are updated (Bellman
+for all nodes y
+equation).
+D (y) = min {c(x,v) + D (y)}
+x v v • Local changes are communicated to
+if D (y) changed for any destination y then
+x adjacent nodes.
+send updated D (·) to all neighbors
+x
+until false //forever
+
+=== PAGINA 15 ===
+Network Layer
+Routing: Distance-Vector Algorithm
+• To clarify this process let’s focus again on the path
+between u and z:
+1. On start, u only knows its neighbors. The cost to z is infinity
+(D (z) = ∞).
+u
+2. Node y wakes up and discovers a better path to z, which is the
+direct link y-z with cost 2 (D (z) = c(y,z) = 2). It communicates
+y
+the good news to x.
+3. Node x discovers that the best path to z now passes through y
+with cost 3 (D (z) = c(x,y) + D (z) = 1 + 2), and forwards the good
+x y
+news to u.
+4. Node u receives the news. Now there is a path to z that costs
+less than infinity passing through x (D (z) = c(u,x) + D (z) = 1 +
+u x
+3).
+• The same process takes place for all nodes/paths.
+
+=== PAGINA 16 ===
+Network Layer
+Routing: Distance-Vector Algorithm
+• As for the computational complexity, every time the cost of a node is
+updated, all nodes have to re-evaluate their edges. This process leads to a
+quadratic worst-case complexity.
+• Pros:
+• The algorithm is asynchronous, this facilitates the computation as routers can on-
+line and in any stage adapt to updated costs.
+• Cons:
+• Slow convergence: updates spread slowly as all nodes have to detect the change
+and send an updated to the adjacent ones.
+• Count-to-infinity: while improved paths are immediately recognized and adopted
+by the network, failures are detected slowly and may produce loops.
+
+=== PAGINA 17 ===
+Network Layer
+Routing: Count-to-infinity
+• The count-to-infinity problem is due
+to the “local” nature of the DV
+DistanceVector(x)
+algorithm (which is also its power).
+for all nodes v
+if v is a neighbor of x then
+D (v) = c(x,v)
+x • The local vector (D (y)) is directly
+else
+x
+D (v) = ∞ computed starting from the vectors
+x
+for all neighbors w and destinations y
+of other nodes (D (y)).
+D (y) = ? v
+w
+send initial D (·) to all neighbors
+x
+• There is no indication about which
+repeat
+nodes are in the best paths chosen
+if cost of a neighbor updated then
+for all nodes y by adjacent nodes.
+D (y) = min {c(x,v) + D (y)}
+x v v • Can I be sure that I’m not in the “best
+if D (y) changed for any destination y then
+x path” of my neighbors?
+send updated D (·) to all neighbors
+x
+until false //forever
+
+
+[TABELLA pagina 17]
+
+D |  | (y)
+
+ | v | 
+
+=== PAGINA 18 ===
+Network Layer
+Routing: Count-to-infinity
+• Let’s consider this simplified example in which the link x-
+y gets a sudden increment of cost and only y notice it!
+• D (x) = 4,
+y
+• D (z) = 1,
+y
+This is the initial situation before the
+• D (y) = 4,
+x increment (c(x,y) is still 4).
+• D (z) = 4 + D (z) = 5,
+x y
+• D (x) = 1 + D (x) = 5,
+z y
+• D (y) = 1.
+z
+
+=== PAGINA 19 ===
+Network Layer
+Routing: Count-to-infinity
+• Let’s consider this simplified example in which the link x-
+y gets a sudden increment of cost and only y notice it!
+• D (x) = 4,
+y
+• D (z) = 1,
+y
+Node y detects the increment and updates
+• D (y) = 4,
+x
+distance-vector to x:
+• D (z) = 4 + D (z) = 5,
+x y D (x) = min{ 60, 1 + D (x) } = 1 + D (x) = 6,
+• D (x) = 1 + D (x) = 5, y z z
+z y
+• D (y) = 1.
+z
+• D (x) = 1 + D (x) = 6,
+y z
+• D (z) = 1,
+y
+• D (y) = 4,
+x
+• D (z) = 4 + D (z) = 5,
+x y
+• D (x) = 1 + D (x) = 5,
+z y
+• D (y) = 1.
+z
+
+=== PAGINA 20 ===
+Network Layer
+Routing: Count-to-infinity
+• Let’s consider this simplified example in which the link x-
+y gets a sudden increment of cost and only y notice it!
+• D (x) = 4,
+y
+• D (z) = 1,
+y
+• D (y) = 4,
+x
+• D (z) = 4 + D (z) = 5,
+x y
+But vector D (x) is used by z to compute the
+• D (x) = 1 + D (x) = 5,
+y
+z y
+path to x, so also D (x) must be updated!
+• D (y) = 1.
+z
+z
+• D (x) = 1 + D (x) = 6, • D (x) = 1 + D (x) = 6,
+y z y z
+• D (z) = 1, • D (z) = 1,
+y y
+• D (y) = 4, • D (y) = 4,
+x x
+• D (z) = 4 + D (z) = 5, • D (z) = 4 + D (z) = 5,
+x y x y
+• D (x) = 1 + D (x) = 5, • D (x) = 1 + D (x) = 7,
+z y z y
+• D (y) = 1. • D (y) = 1.
+z z
+
+=== PAGINA 21 ===
+Network Layer
+Routing: Count-to-infinity
+• Let’s consider this simplified example in which the link x-
+y gets a sudden increment of cost and only y notice it!
+• D (x) = 4,
+y
+• D (z) = 1,
+y
+• D (y) = 4,
+x
+• D (z) = 4 + D (z) = 5,
+x y
+But vector D (x) is itself used by y to compute
+• D (x) = 1 + D (x) = 5,
+z
+z y
+the path to x, so D (x) must be updated again!
+• D (y) = 1.
+y
+z
+• D (x) = 1 + D (x) = 6, • D (x) = 1 + D (x) = 6, • D (x) = 1 + D (x) = 8,
+y z y z y z
+• D (z) = 1, • D (z) = 1, • D (z) = 1,
+y y y
+• D (y) = 4, • D (y) = 4, • D (y) = 4,
+x x x
+• D (z) = 4 + D (z) = 5, • D (z) = 4 + D (z) = 5, • D (z) = 4 + D (z) = 5,
+x y x y x y
+• D (x) = 1 + D (x) = 5, • D (x) = 1 + D (x) = 7, • D (x) = 1 + D (x) = 7,
+z y z y z y
+• D (y) = 1. • D (y) = 1. • D (y) = 1.
+z z z
+
+=== PAGINA 22 ===
+Network Layer
+Routing: Count-to-infinity
+• Let’s consider this simplified example in which the link x-
+y gets a sudden increment of cost and only y notice it!
+• D (x) = 4,
+y
+• D (z) = 1,
+y
+• D (y) = 4,
+x
+• D (z) = 4 + D (z) = 5,
+x y
+This is a loop: the 2 vectors will be continuously
+• D (x) = 1 + D (x) = 5,
+z y
+updated until a stable configuration is reached.
+• D (y) = 1.
+z
+• D (x) = 1 + D (x) = 6, • D (x) = 1 + D (x) = 6, • D (x) = 1 + D (x) = 8,
+y z y z y z
+• D (z) = 1, • D (z) = 1, • D (z) = 1,
+y y y
+• D (y) = 4, • D (y) = 4, • D (y) = 4,
+x x x
+• D (z) = 4 + D (z) = 5, • D (z) = 4 + D (z) = 5, • D (z) = 4 + D (z) = 5,
+x y x y x y
+• D (x) = 1 + D (x) = 5, • D (x) = 1 + D (x) = 9, • D (x) = 1 + D (x) = 7,
+z y z y z y
+• D (y) = 1. • D (y) = 1. • D (y) = 1.
+z z z
+
+=== PAGINA 23 ===
+Network Layer
+Routing: Count-to-infinity
+• This problem could have been avoided if x had also
+noticed/communicated the change of the x-y cost.
+• If x is malfunctioning or delayed for some reason (e.g., the
+high costs of x’s links may indicate that x is
+malfunctioning), it will take time to converge.
+• D (x) = MIN{ c(y,x), c(y,z) + D (x) } = c(y,z) + D (x) = 1 + 50 = 51,
+y z z
+• D (z) = MIN{ c(y,z), c(y,x) + D (z) } = c(y,z) = 1,
+y x
+• D (y) = MIN{ c(x,y), c(x,z) + D (y) } = c(x,z) + D (y) = 50 + 1 = 51,
+x z z
+• D (z) = MIN{ c(x,z), c(x,y) + D (z) } = c(x,z) = 50,
+x y
+• D (x) = MIN{ c(z,x), c(z,y) + D (x) } = c(z,x) = 50,
+z y
+Costs convergence in case
+• D (y) = MIN{ c(z,y), c(z,x) + D (y) } = c(z,y) = 1.
+z x node x detects the change.

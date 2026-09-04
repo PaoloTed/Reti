@@ -1,0 +1,193 @@
+=== PAGINA 1 ===
+Computer Networks I
+Reti di Calcolatori I
+The Link Layer:
+MAC sublayer, Random Access Procols,
+Collision-Free Protocols, Switches, ARP
+Lecture 24
+
+=== PAGINA 2 ===
+Link Layer
+Random Access Protocols: CSMA
+• Because of the delay in the signal transmission!
+• Even if the propagation of signals in the
+Signal from B
+channel is typically near the speed of
+propagates in all
+light, it takes time to reach all other directions
+D has not yet
+Nodes
+nodes. Therefore, a second node detect received the
+signal and starts
+the transmission only after it has
+transmitting
+started.
+D receives the
+signal, and
+• Because of this delay between understands the
+channel was
+transmission start and detection, a
+busy
+node may consider as free a channel
+that is actually in use, producing a
+collision.
+
+=== PAGINA 3 ===
+Link Layer
+Random Access Protocols: CSMA
+• The pure CSMA is very simple:
+1. Check if the channel is busy.
+2. If channel is idle, send a frame.
+• In pure CSMA collisions are not detected but are still possible. We understand that a
+frame is lost just because the ACK is not received.
+• The CSMA/CD is more sophisticated (currently implemented on Ethernet):
+1. Check if the channel is busy.
+2. If channel is idle, send a frame.
+3. While transmitting, check for possible collisions.
+4. If collision is detected, stop transmitting and wait for a random period K ϵ {0, …, 2n-1} where n
+is the number of detected collisions on the current frame (binary exponential backoff).
+• The probability of successfully sending the frame increases with the number of
+collisions.
+
+=== PAGINA 4 ===
+Link Layer
+Taking-turns
+• Polling protocol: there is one master node that selects in a round-robin way
+one node per time allowed to transmit (up to the max throughput). This
+process is iterated every time transmission stops (e.g., Bluetooth).
+• There are no collisions.
+• There is a polling delay (time to select nodes).
+• The approach is centralized, there is a single-point-of-failure.
+• Token-passing protocol: there is no master node, nodes exchange a special
+frame called token, if a node receive the token it is allowed to transmit, then
+the token is passed to another node.
+• There are no collisions.
+• The approach is decentralized.
+• There are problems if some node forgets to release the token (monopolizing the link).
+
+=== PAGINA 5 ===
+Link Layer
+MAC Addresses
+• At the link-layer, devices are identified by MAC addresses:
+• Each network interface has a specific MAC address (it was
+designed to be fixed but it can be changed).
+• Each manufacturer has its own set of MAC addresses.
+• The MAC address (or physical address) is a link-layer
+address composed by 6 bytes (2^48 possible addresses)
+often represented in hexadecimal notation:
+1A:23:F9:CD:06:9B or 1A-23-F9-CD-06-9B
+• MAC addresses are local (while IPs outside LANs are global):
+• All interfaces are associated to a MAC address, but this is only
+used inside a LAN.
+
+
+[TABELLA pagina 5]
+
+ | 
+
+=== PAGINA 6 ===
+Link Layer
+MAC Addresses
+• In a LAN, 2 interfaces (A and B) communicate as follows:
+• A includes B’s MAC address into the frame and transmits it.
+• B receives the frame and compares its own MAC with the destination MAC of the frame.
+• If the 2 MACs are equal, the frame is accepted, otherwise the frame is rejected (the rest of the
+stack is not involved).
+• There is also the possibility to send broadcast messages (that are accepted regardless
+of the MAC), for LANs that use 6-byte addresses (such as Ethernet and 802.11), the
+broadcast address is a string of 48 consecutive 1s (that is, FF-FF-FF-FF-FF-FF in
+hexadecimal notation).
+• In a LAN it is quite possible (if not frequent) for an interface to receive frames directed
+to another interface, the role of the MAC address is to filter out unintended frames
+without disturbing the host.
+
+=== PAGINA 7 ===
+Link Layer
+Switches
+• Switches are the link-layer equivalent of the routers:
+• There is no routing algorithm implemented.
+• Only MAC addresses are used. IP addresses are not.
+• The role of the switch is to receive incoming link-
+layer frames and forward them onto outgoing links:
+• The switch is transparent to the hosts and routers in the
+Switch
+subnet.
+• A switch also has buffers on interfaces.
+• Switches have forwarding tables that associate MAC
+addresses to interfaces.
+• The table is updated automatically and dynamically (self-
+learning) as new devices are discovered.
+
+=== PAGINA 8 ===
+Link Layer
+Switched LAN
+• It is usual for LANs to use one or more
+switches connecting multiple local devices.
+Switches
+• Differently from routers, switches are fast and
+plug-and-play:
+• There is no routing algorithm involved.
+• Only 2 layers of the stack are considered.
+• On the other hand, switched LANs are limited
+in size and must be tree-structured:
+• MAC addresses are hard to group (forwarding
+tables in switches may grow rapidly).
+• There is no routing. Loops are difficult to avoid.
+
+=== PAGINA 9 ===
+Link Layer
+ARP
+• Since upper-layer protocol works with IP addresses we
+need to translate IP into MAC.
+• The Address Resolution Protocol (ARP) manages
+conversion between IP and MAC addresses.
+• Each interface is endowed with an ARP module
+having an ARP table that associates each IP in the
+LAN to a MAC address with a specific time to live
+(TTL) value after which the entry is delated (typically
+5-20 minutes).
+• Since MAC addresses are local, also ARP works only
+on local networks (LANs).
+
+=== PAGINA 10 ===
+Link Layer
+ARP: Example
+• Assume that host C (222.222.222.220) wants to
+send messages to host A (222.222.222.222). To
+do so, we need to know also the associated MAC:
+• Before to send the message, if A is not present into
+the table an “ARP request” packet is sent in
+broadcast to all devices of the network searching for
+the right IP.
+• All nodes receive this packet but only the searched IP
+(222.222.222.222) answers with a direct “ARP reply”
+message (unicast).
+• A malevolent host may intercept the message,
+sending back a “forged” reply (ARP poisoning).
+• ARP poisoning is one of the most common attacks on
+LANs.
+
+=== PAGINA 11 ===
+Link Layer
+ARP: Gateway
+• What happens if the IP is outside the network (non-local)?
+• The router connecting the 2 networks must have at least 2 interfaces (2 IP, MAC
+and ARP tables) each one inside the specific subnets.
+• Frames headed outside the subnet are sent to the first interface of the router,
+moved to the second interface, and headed toward the right host by using the
+second ARP table.
+
+=== PAGINA 12 ===
+Link Layer
+Ethernet Frame
+• Ethernet frame is composed by the following fields:
+• Data field (46 to 1500 bytes): contains the IP datagram. The maximum limit is given by the
+maximum transmission unit (MTU) of Ethernet, if datagram exceeds this size it is fragmented.
+• Destination address (6 bytes): contains the MAC address of the destination adapter.
+• Source address (6 bytes): contains the MAC address of the source adapter that transmits the
+frame onto the LAN.
+• Type field (2 bytes): specifies the network-layer protocol used for in this frame (there could
+be alternative to IP, for example, ARP packets have a specific type - 0x0806).
+• CRC (4 bytes): contains the CRC number.
+• Preamble (8 bytes): is a “wake up” block of bits used to synchronize the clocks of destination
+and source adapters.

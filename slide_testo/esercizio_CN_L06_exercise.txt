@@ -1,0 +1,75 @@
+=== PAGINA 1 ===
+Introduzione al DNS
+Query 1
+andrea@turgiato:~$ nslookup vatican.va
+Server: 127.0.0.53
+Address: 127.0.0.53#53
+Non-authoritative answer:
+Name: vatican.va
+Address: 185.152.70.106
+Questa query recupera il record di tipo A (che associa nome a indirizzo) del dominio
+vatican.va, mostrando l’indirizzo IP associato. La risposta è non-authoritative perché il
+server interpellato (127.0.0.53, cioè il resolver locale) non è uno dei server autorevoli per il
+dominio, ma solo un cache resolver o forwarder locale.
+Query 2
+andrea@turgiato:~$ nslookup -type=NS vatican.va
+Server: 127.0.0.53
+Address: 127.0.0.53#53
+Non-authoritative answer:
+vatican.va nameserver = a.nic.va.
+vatican.va nameserver = b.nic.va.
+vatican.va nameserver = c.nic.va.
+vatican.va nameserver = osiris.namex.it.
+vatican.va nameserver = seth.namex.it.
+Authoritative answers can be found from:
+Questa query recupera il record A del dominio vatican.va, mostrando l’indirizzo IP associato.
+La risposta è "Non-authoritative" perché il server interpellato (127.0.0.53, cioè il resolver
+locale) non è uno dei server autorevoli per il dominio, ma solo un cache resolver o forwarder
+locale.
+
+=== PAGINA 2 ===
+Query 3
+andrea@turgiato:~$ nslookup -type=SOA vatican.va
+Server: 127.0.0.53
+Address: 127.0.0.53#53
+Non-authoritative answer:
+vatican.va
+origin = a.nic.va
+mail addr = dnsop.net.va
+serial = 2025062401
+refresh = 14400
+retry = 3600
+expire = 1209600
+minimum = 3600
+Authoritative answers can be found from:
+Questa query richiede il record SOA, che indica quale sia il server principale autorevole per il
+dominio. Anche qui la risposta è non-authoritative, per lo stesso motivo appena descritto.
+L’origine (origin) conferma che a.nic.va è il server autorevole principale. Dopo la risposta c’è
+la linea "Authoritative answers can be found from:" ma senza elenco: questo accade
+spesso con resolver intermedi che non includono automaticamente i glue record dei server
+autorevoli nella risposta.
+Query 4
+andrea@turgiato:~$ nslookup -type=A a.nic.va
+Server: 127.0.0.53
+Address: 127.0.0.53#53
+Non-authoritative answer:
+Name: a.nic.va
+Address: 212.77.0.110
+Qui si chiede il record A per il nameserver principale appena individuato. La risposta mostra il
+suo indirizzo IP, ancora come non-authoritative perché fornita dal resolver locale e non dal
+server autorevole stesso.
+
+=== PAGINA 3 ===
+Query 5
+andrea@turgiato:~$ nslookup -type=A vatican.va 212.77.0.110
+Server: 212.77.0.110
+Address: 212.77.0.110#53
+Non-authoritative answer:
+Name: vatican.va
+Address: 185.152.70.106
+In questo caso si chiede direttamente al server autorevole (a.nic.va) il record A per
+vatican.va. In teoria la risposta dovrebbe essere authoritative, ma invece è ancora non-
+authoritative. Questo può dipendere dal modo in cui il server risponde al client nslookup, per
+la presenza di forwarding o particolari configurazioni; alcuni nameserver potrebbero non
+impostare il flag "Authoritative Answer" (AA) nelle risposte, anche se sono server autorevoli, per
+configurazioni di sicurezza o proxy.

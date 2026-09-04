@@ -1,0 +1,21 @@
+
+[TABELLA pagina 1]
+
+ | 
+
+ | 
+
+
+[TABELLA pagina 1]
+
+
+
+
+
+=== PAGINA 2 ===
+In questo esempio la comunicazione è stata iniziata dal host
+con interfaccia che ha indirizzo 10.0.0.1. Se un pacchetto, senza
+comunicazioni precedenti, deve essere inviato alla medesima
+interfaccia (host in verde), non ci sono informazioni sufficienti.
+A questo punto serve un nuovo protocollo; in particolare si usa
+NAT traversal.

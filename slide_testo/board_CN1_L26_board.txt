@@ -1,0 +1,14 @@
+=== PAGINA 1 ===
+SUBSTITUTION CIPHER
+Ogni simbolo si sostituisce con un altro.
+La chiave è la corrispondenza tra simboli.
+Per alfabeto romano (e altri) è facilmente attaccabile.
+Il DES eseguito blocco a blocco non è altro che una
+sostituzione di simboli in altri simboli (cifratura per
+sostituzione), perché ogni blocco da 64bit viene
+crittato separatamente. (ovviamente quello qui sopra
+non è il DES che viene usato in pratica; v. cipher block
+chaining qui sotto).
+
+=== PAGINA 3 ===
+MAC: Message Authentication Code

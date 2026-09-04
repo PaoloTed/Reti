@@ -1,0 +1,301 @@
+=== PAGINA 1 ===
+Computer Networks I
+Reti di Calcolatori I
+The Link Layer:
+MAC sublayer
+Lecture 23
+
+=== PAGINA 2 ===
+Link Layer
+Services
+• Link layer may offer up to 4 services: framing, link access, reliable delivery,
+error detection and correction.
+1. Framing: to encapsulate/decapsulate datagrams into/from frames.
+2. Link access: to regulate access to shared links (broadcast)
+• Done by the Medium Access Control (MAC) protocol.
+3. Reliable delivery: to guarantee that frames transmitted across the link are
+received (mostly optional).
+4. Error detection and correction: to detect frame’s errors and possibly
+correct them.
+• Parity check, checksum, CRC.
+
+=== PAGINA 3 ===
+Link Layer
+Link Types
+• There are basically 2 types of links that can be
+managed:
+Accept A
+• Point-to-point link: consists of a single sender at one end
+PPP
+and a single receiver at the other end. The point-to-point link
+protocol (PPP) is one example of protocol managing such
+links.
+Send A
+• E.g., direct ethernet link between 2 computers.
+• Broadcast link: multiple sending and receiving nodes all
+connected to the same shared channel. The term
+broadcast is used because when one node transmits a
+frame it is received by all nodes on the channel.
+• E.g., Ethernet bus, half-duplex Ethernet (rare, as most cables are
+Reject A
+todays full-duplex) or wireless LANs.
+Accept A
+Broadcast
+link
+• The access to broadcast links have to be coordinated
+(multiple access problem) as multiple communication Reject A
+Send A
+on a single link may interfere each other.
+
+=== PAGINA 4 ===
+Link Layer
+Collisions
+• The main problem of broadcast link is the collision: if
+multiple nodes are simultaneously transmitting
+Reject A
+frames on the same channel, all such frames overlap
+Accept A
+becoming unintelligible. Broadcast
+link
+Reject A
+• These collided frames are then received by all nodes Send A
+on the channel and dismissed as errors (no harm is
+done), but:
+• All transmitted frames are lost.
+• The time-interval is wasted, as the channel has been
+Reject $@!
+used to transmit useless data.
+Reject $@!
+Broadcast
+Collision!
+link
+• The access to the physical medium (as well as
+Send B
+framing) is regulated by the MAC (Medium Access
+Send A
+Control) protocol.
+
+=== PAGINA 5 ===
+Link Layer
+Multiple Access Protocol
+• In computer networks multiple access protocols
+are used to regulate transmissions via broadcast
+channels, so that:
+• Collisions are managed.
+• Each node has a chance to transmit, so nodes do not
+monopolize the link.
+• Established connections are not interrupted (e.g.,
+checking if link is busy).
+• Such protocols are needed for a variety of
+network settings, including both wired, wireless
+or satellite networks, where hundreds or
+thousands of nodes can directly communicate
+over a broadcast channel.
+
+=== PAGINA 6 ===
+Link Layer
+Multiple Access Protocol
+• The primary role of a multiple access protocol is to somehow avoid collisions
+(there are dozens of protocols over different link-layer technologies). Main
+approaches are:
+• Channel partitioning: the bandwidth is partitioned for different nodes.
+• Random access: the nodes “gamble” for the access.
+• Taking-turns: the nodes waits for their turn.
+• Desiderata: a multiple access protocol for a broadcast channel of rate R bps
+should also provide the following characteristics:
+• To maximize the usage of the channel: if M nodes have data to send, each one should
+have, in average, a throughput of R/M bps (if M=1 then throughput should be R).
+• To be decentralized: a master node may be a single point of failure.
+• To be simple and lightweight: tons of frames are sent, there must be no overhead.
+
+=== PAGINA 7 ===
+Link Layer
+Channel Partitioning Protocols: TDMA
+• Time division multiple access (TDMA): let’s
+consider a channel with N nodes having
+Node4
+transmission rate of R bps, TDMA divides
+Node2
+time into time frames (steps) and further
+divides each time frame into N time slots. Broadcast
+link
+Node3
+• Each time slot is assigned to one of the N Node1
+nodes. Whenever a node has a packet to
+Frequency
+send, it waits for the assigned time slot.
+Slot
+• Typically, slot sizes are chosen so that a
+N1 N2 N3 N4 N1 N2 N3 N4
+whole packet can be transmitted during a
+slot time.
+Time
+Frame
+
+
+[TABELLA pagina 7]
+
+N1 | N2 N | 3 | N4 | N1 | N2 | N3 | N4
+
+=== PAGINA 8 ===
+Link Layer
+Channel Partitioning Protocols: FDMA
+• Frequency division multiple-access
+(FDMA): divides the R bps channel into
+Node4
+different frequencies (each with a
+Node2
+bandwidth of R/N) and assigns each
+Broadcast
+frequency to one of the N nodes.
+link
+Node3
+Node1
+• FDMA and TDMA share pros and cons:
+• They avoids collisions and divide the
+Frequency
+bandwidth fairly among the N nodes.
+• A node is limited to a bandwidth of R/N, even N4 Slot
+when it is the only node with packets to send.
+N3
+N2
+N1
+Time
+
+
+[TABELLA pagina 8]
+
+N4
+
+N3
+
+N2
+
+N1
+
+=== PAGINA 9 ===
+Link Layer
+Channel Partitioning Protocols: CDMA
+• Code division multiple access (CDMA): assigns a
+different code to each node which is used to
+encode/decode the data bits it sends. Node4
+Node2
+Broadcast
+• If the codes are chosen carefully, CDMA
+link
+networks allows different nodes to transmit
+simultaneously without causing interference.
+Node3
+Node1
+• CDMA works mainly on wireless channels; it has Frequency
+been used in military systems for some time (due N4
+N3
+N2 Slot
+to its anti-jamming properties) and also in N1
+cellular telephony (e.g., 3G).
+• Complex to implement.
+• It does not scale well with the number of nodes.
+Time
+
+
+[TABELLA pagina 9]
+
+ |  |  | N4
+N3
+N2
+N1 |  | 
+
+ |  |  | N3
+N2
+N1 |  | 
+
+ |  |  | N2
+N1 |  | 
+
+N1 | N1 | N1 | N1 |  | 
+
+ |  |  |  |  | 
+
+ |  |  |  |  | 
+
+=== PAGINA 10 ===
+Link Layer
+Random Access Protocols
+• In random access protocols, a transmitting node always transmits at the full
+rate of the channel (at R bps).
+• If a collision occurs (i.e., at least 2 nodes are transmitting) all transmitting
+nodes waits a random delay before attempting again the retransmission.
+• Since this selection is performed independently, it is possible for the 2 nodes
+to choose a delay which is different enough to allow one of the two
+contenders to sneak the message in.
+• If, otherwise, a similar delay is chosen, a new collision occurs, and the process
+is iterated.
+
+=== PAGINA 11 ===
+Link Layer
+Random Access Protocols: Slotted ALOHA
+Node1 Node2
+• The slotted ALOHA protocol works as follows:
+• The time is divided into slots (as in TDMA) where each slot is large
+Send Send
+enough to contain one frame.
+• The nodes are synchronized, so each node transmit frames only at the Collision!
+beginnings of a slots.
+Flip a coin Flip a coin
+• If no collision is detected within the slot, the communication continues.
+NO Send NO Send
+• Otherwise, if a collision is detected within a slot, each colliding node
+have a probability p ϵ [0,1] of resending this frame in each one of the
+following slots, until the frame is successfully sent.
+Flip a coin Flip a coin
+Send NO Send
+• Features:
+• If there is only one node, it will use the full rate R of the channel (no
+Flip a coin
+collisions).
+Send
+• Is decentralized as nodes are totally independent from the others
+besides the synchronization.
+• Is simple to implement and to execute (random selection is quite fast).
+• Having multiple consecutive collisions is unlikely.
+Time
+
+
+[TABELLA pagina 11]
+
+Flip a co | in
+
+
+[TABELLA pagina 11]
+
+Flip a co | in
+
+
+[TABELLA pagina 11]
+
+Flip a co | in
+
+
+[TABELLA pagina 11]
+
+Flip a co | in
+
+
+[TABELLA pagina 11]
+
+Flip a co | in
+
+=== PAGINA 12 ===
+Link Layer
+Random Access Protocols: CSMA
+• One weakness of ALOHA is that we may start transmitting (producing a collision) even if
+the channel is already busy. We understand it just through the effect of collisions.
+• A solution is to monitor the channel and to attempt transmission only if the channel is
+idle.
+• Carrier sense multiple access (CSMA) and CSMA with collision detection (CSMA/CD)
+protocols are based on 2 principles:
+• Carrier sensing: nodes listen to the channel before transmitting. If a frame from another node is
+currently being transmitted, it waits until no transmission is detected.
+• Collision detection: nodes listens to the channel while it is transmitting. If a collision is detected, it
+stops transmitting and waits a random amount of time before restarting.
+• If all nodes perform carrier sensing, why do collisions occur in the first place?

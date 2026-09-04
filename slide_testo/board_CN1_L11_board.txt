@@ -1,0 +1,17 @@
+=== PAGINA 1 ===
+Timeout inferiore a RTT: A invia di nuovo
+il messaggio M1 con s=0 anche se detto
+messaggio e il relativo ACK sono inviati e
+ricevuti senza errori.
+
+
+[TABELLA pagina 1]
+
+
+
+
+
+
+[TABELLA pagina 1]
+
+ | 

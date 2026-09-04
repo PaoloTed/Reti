@@ -1,0 +1,322 @@
+=== PAGINA 1 ===
+Computer Networks I
+Reti di Calcolatori I
+The Application Layer:
+Network programming and DNS
+Lecture 9
+
+=== PAGINA 2 ===
+Application Layer
+Creating Network Applications
+• Sockets are a central element for the creation of
+network applications.
+De facto
+Standard
+Your
+• They typically manages (black-box) the transport
+Application
+(UDP/TCP) and the network (IP) layers Application
+functionalities.
+Transport
+Socket API
+• Note that there are several applications
+Network
+(middleware) that may wrap sockets simplifying
+their creation and providing more complex
+Access
+functionalities.
+(Link + Physical)
+OS + HW
+• However, basic API are still widely used. Where layers are implemented
+
+=== PAGINA 3 ===
+Application Layer
+Connection-oriented vs. Connectionless
+Connection
+Connectionless
+Client Server Client Server
+Oriented
+(UDP)
+(TCP)
+Create Socket Create Socket Create Socket Create Socket
+Creation
+Wait
+Connect
+Connections
+Connection
+Send Message Read Message Send Message Read Message
+Messaging
+Read Reply Send Reply Read Reply Send Reply
+Destruction Close
+Close Socket Close Socket Client-specific
+Socket
+
+=== PAGINA 4 ===
+Application Layer
+UDP Socket Commands
+• For UDP connection we need both client and server
+to open a socket.
+Client Server
+socket(…) socket(…)
+• The server has to bind the socket to a specific port.
+bind(…)
+New msg or
+• Then we can exchange messages using sendto and
+new client
+sendto(…)
+recvfrom(…)
+recvfrom functions.
+• Here IP and port of the client are retrieved through the
+sendto(…) recvfrom function.
+recvfrom(…)
+• We may loop over sendto/recvfrom to keep alive the
+communication.
+close(…) close(…)
+• When communication is over, both hosts close the
+socket.
+• Notice that if client only closes the socket, the server
+may accept other clients.
+
+=== PAGINA 5 ===
+Application Layer
+TCP Socket Commands
+Client Server • For TCP connection we need both client and server to open a
+socket.
+socket(…) socket(…)
+bind(…)
+• The server has to bind the socket to a specific port, listen and
+eventually accept new connection. The client has to connect to
+listen(…)
+the server.
+New client
+accept(…)
+• Then we can exchange messages using send and read functions.
+blocked
+connect(…)
+handshake • Here IP and port of the client are retrieved from the newly created
+socket.
+New msg
+send(…)
+• We may loop over send/read to keep alive the communication.
+read(…)
+• When communication is over, both hosts close the socket.
+send(…)
+read(…)
+• Notice that the server should perform an additional read before to close
+the client-specific socket (connection release) otherwise we must wait
+close(…)
+about 4 minutes to reuse the port.
+read(…)
+release
+close(…)
+• The server may also go back to the accept function and welcome
+another client.
+close(…)
+
+=== PAGINA 6 ===
+Application Layer
+DNS Translation (C/C++)
+• As just shown, we can create sockets between two hosts, but we need to
+know (IP) address and port of the server.
+• On the Internet, hosts are typically identified by hostnames rather than by IP
+addresses.
+• Berkeley sockets (C/C++) only works with IP addresses.
+• This is not surprising as sockets works on transport layer, while hostnames works on
+application layer.
+• If we are to connect with a host by hostname, we need to use DNS translation
+and get the associated IP address to be passed to the socket.
+
+=== PAGINA 7 ===
+Application Layer
+DNS Translation (C/C++)
+• C/C++ offers some functions and structures that perform such translation for
+us, which are used to contact DNS servers and to retrieve addresses.
+• In particular, we can use the function gethostbyname() to contact DNS
+servers.
+• The above function does not return just the IP address. It returns a hostent
+structure that contains some info about the host:
+• Canonical name.
+• Possible aliases.
+• One or more addresses.
+
+=== PAGINA 8 ===
+Application Layer
+DNS Translation (C/C++)
+• The hostent structure is defined as follows:
+#include <netdb.h>
+struct hostent {
+char * h_name; // original name of the host (canonical)
+char ** h_aliases; // list of aliases (terminated by a NULL pointer)
+int h_addrtype; // family of the address (typically AF_INET)
+int h_length; // length of the address (typically 4 bytes)
+char ** h_addr_list; // list of addresses (terminated by a NULL pointer)
+};
+// for compatibility reasons
+#define h_addr h_addr_list[0]
+• A DNS may provide a list of addresses (which may be randomly ordered if the query is sent to round-robin
+DNS servers).
+• We can get the address of the first element of the array (h_addr_list[0] or h_addr).
+• The returned addresses can be casted to in_addr structure used by sockets.
+
+=== PAGINA 9 ===
+Application Layer
+DNS Translation (C/C++)
+• The gethostbyname() function is defined as follows:
+#include <netdb.h>
+struct hostent *host_info = gethostbyname(const char *name);
+• Where:
+• name: is a string containing the hostname to be translated.
+• host_info: is a pointer to the hostent structure containing the information about host.
+• This is NULL if error occurred.
+• Notice that there is also a similar function gethostbyaddr() that returns a hostent
+structure for a specified IP address.
+
+=== PAGINA 10 ===
+Application Layer
+DNS Translation (C/C++)
+#include <iostream>
+#include <cstring>
+#include <string>
+#include <sys/socket.h> • Include libraries to allow DNS
+#include <arpa/inet.h>
+#include <sys/types.h> translation.
+#include <netinet/in.h>
+#include <unistd.h>
+#include <netdb.h>
+#include <stdio.h>
+int main(int argc, char **argv){
+struct hostent *server_info;
+char *server_name; • Initialization.
+if(argc < 2){
+std::cout<<"No hostname specified"<<std::endl;
+return 0; • Get hostname as argument.
+}
+else {
+server_name = argv[1];
+} • Invoke DNS and check if a response
+server_info = gethostbyname(server_name); has been received.
+if (server_name == NULL){
+std::cout << "could Not resolve hostname " << server_name << " :(" << std::endl;
+return 0;
+}
+
+=== PAGINA 11 ===
+Application Layer
+DNS Translation (C/C++)
+//plot output
+std::cout<<"Canonical name:"<<std::endl;
+std::cout<<"\t"<<server_info->h_name<<std::endl;
+std::cout<<"Aliases:"<<std::endl;
+int i = 0;
+• Plotting output from hostent
+while(server_info->h_aliases[i] != NULL){
+std::cout<<"\t"<<server_info->h_aliases[i]<<std::endl;
+structure:
+i++;
+}
+• Canonical name.
+std::cout<<"IPs:"<<std::endl;
+• List of aliases
+i = 0;
+while(server_info->h_addr_list[i] != NULL){
+• List of IPs.
+std::cout<<"\t"<< inet_ntoa( *( (struct in_addr *) server_info->h_addr_list[i] ) ) <<std::endl;
+i++;
+}
+return 0;
+}
+
+=== PAGINA 12 ===
+Application Layer
+HTTP Socket Example
+• We will now create a C++ code
+implementing from scratch a HTTP request
+(HEAD) for a web page.
+• The web page we will check is the “cenni
+storici” from the UNINA website:
+• http://www.unina.it/chi-siamo/cenni-storici
+
+=== PAGINA 13 ===
+Application Layer
+HTTP Socket Example (C/C++)
+#include <iostream>
+#include <cstring>
+#include <string>
+#include <sys/socket.h> • Include libraries to allow TCP connection to the
+#include <arpa/inet.h>
+#include <sys/types.h> web server.
+#include <netinet/in.h>
+#include <unistd.h>
+#include <netdb.h>
+#include <stdio.h>
+• Initialize variables and create the TCP socket. For a
+int main(){
+int socket_desc;
+HTTP request 3 elements are specified:
+struct sockaddr_in serv_addr;
+struct hostent *server;
+• Hostname of the web server.
+char buffer[4096];
+• Port number.
+socket_desc = socket(AF_INET, SOCK_STREAM, 0);
+if (socket_desc < 0){
+• Resource to be retrieved (object’s path).
+std::cout << "failed to create socket" << std::endl;
+return 0;
+}
+• Note: here we use the C++ cout for simplicity.
+
+=== PAGINA 14 ===
+Application Layer
+HTTP Socket Example (C/C++)
+• Connection to the web server. Here we use
+server = gethostbyname("www.unina.it");
+the following function:
+if (server == NULL){
+std::cout << "could Not resolve hostname :("
+<< std::endl;
+close(socket_desc);
+server =
+return 0;
+}
+gethostbyname(host.c_str());
+bzero((char *) &serv_addr, sizeof(serv_addr));
+serv_addr.sin_family = AF_INET;
+serv_addr.sin_port = htons(80);
+that invokes DNS and to gets the IP of the
+bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
+server from the hostname (inside the
+if (connect(socket_desc, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0){
+std::cout << "connection failed :(" << std::endl;
+hostent struct).
+close(socket_desc);
+return 0;
+}
+• The IP from the returned structure is
+copied into the serv_addr structure for the
+following connect function.
+
+=== PAGINA 15 ===
+Application Layer
+HTTP Socket Example (C/C++)
+• Messaging with the web
+server. The HTTP request
+const char *request = "HEAD /chi-siamo/cenni-storici HTTP/1.1\r\nHost: www.unina.it\r\nConnection: close\r\n\r\n";
+is defined into the
+if (send(socket_desc, request, strlen(request), 0) < 0){
+request string.
+std::cout << "failed to send request..." << std::endl;
+close(socket_desc);
+return 0;
+} • Here we are creating a
+std::cout<<"message sent:"<<std::endl;
+std::cout<<request<<std::endl;
+non-persistent
+int n = recv(socket_desc, buffer, sizeof(buffer), 0);
+connection since we just
+want to check one page.
+std::cout<<"received "<<n<<" bytes:"<<std::endl;
+std::cout<<buffer; • Close socket and plot the received
+close(socket_desc);
+page (HTML).
+return 0;

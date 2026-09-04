@@ -1,0 +1,643 @@
+=== PAGINA 1 ===
+Computer Networks I
+Reti di Calcolatori I
+Introduction to Computer Networks
+Lecture 1
+
+=== PAGINA 2 ===
+Overview
+Syllabus
+• Introduction to computer networks: goals and applications, main notions, network topologies
+and types, services (ISPs, grid, cloud, IoT), standards (layered models, IOS/OSI and reference
+models, protocols).
+• Application layer: client-server ad peer-to-peer architectures, FTP and SSH protocols (basis),
+structure of URL, HTTP protocol, mailing protocols (STMP, POP3, IMAP), DNS, BitTorrent
+protocol.
+• Transport layer: fundamentals, UDP protocol, reliable data transfer, TCP protocol.
+• Network layer: fundamentals, routers, IPv4 protocol, DHCP, NAT, IPv6, families of routing
+algorithms.
+• Access layer (data link + physical): network interfaces, parity check and CRC, collisions, ARP
+protocol, Ethernet protocol (basis).
+• Introduction to network security: attacks on networks, introduction to cryptography, message
+integrity, AP and TLS/SSL, operational security (firewall, IDS).
+• Network programming: UDP and TCP sockets, REST applications, data exchange formats.
+
+=== PAGINA 3 ===
+Uses of computer networks
+Computer network
+Large number of separate but interconnected computers do a job
+●
+Collection of interconnected, autonomous computing devices
+●
+Interconnected computers can exchange information
+●
+Example: the Internet
+Network uses
+Access to information
+●
+Person-to-person communication
+●
+Electronic commerce
+●
+Entertainment
+●
+The Internet of Things
+●
+
+=== PAGINA 4 ===
+Access to Information
+In the client-server model, a client explicitly requests information from a server that hosts
+that information.
+
+=== PAGINA 5 ===
+Access to information
+Client-server
+Communication takes the form of the client process
+sending a message over the network to the server process.
+The client process then waits for a reply message.
+
+=== PAGINA 6 ===
+Access to information
+Peer-to-peer
+In a peer-to-peer system, there are no fixed clients and
+servers.
+
+=== PAGINA 7 ===
+Introduction
+Computer Networks and Internet
+Computer networking: the process of connecting
+computer together so that they can share mobile network
+information. nationa l o r globa l I S P
+[Cambridge Dictionary]
+• I
+n
+n
+e
+t
+t
+e
+w
+rn
+o
+e
+rk
+t (
+in
+th
+t
+e
+h e
+m
+w
+os
+o
+t
+r
+i
+l
+m
+d)
+p ortant computer
+l
+r
+o
+e
+c
+g
+a
+io
+l
+n
+o
+a
+r
+l IS P
+• T
+n
+h
+e
+e
+tw
+In
+o
+t
+r
+e
+k
+r
+d
+n
+e
+e
+v
+t
+i
+i
+c
+n
+e
+c
+s
+lu
+, l
+d
+in
+e
+k
+s
+s
+h
+,
+u
+c
+n
+o
+d
+m
+re
+p
+d
+u
+s
+t e
+o
+r
+f
+s
+m
+, e
+i
+t
+ll
+c
+io
+. o
+n
+ff
+s
+e
+o
+r
+f
+i ng
+home netw o rk
+c
+p
+o
+ro
+n
+v
+t e
+i d
+n
+e
+t
+r
+hundreds of services for the users.
+netw o rk
+d atacenter
+n etwork
+• There are also smaller networks (local or
+enterprise
+network
+detached from internet).
+
+
+[TABELLA pagina 7]
+
+ |  |  | n
+rk | t
+
+c
+w | o | e |  | 
+
+=== PAGINA 8 ===
+Introduction
+History of Internet
+• The Internet is the largest computer network,
+connecting devices all around the globe.
+Internet is a network of networks. It is
+technically a huge Wide Area Network
+(WAN) that allows sub-networks and
+devices to be connected over different
+nations and continents.
+The idea of such “universal” big network
+was initially theorized by researchers
+(most notably J.C.R. Licklider) around
+1950 and started to become reality
+almost 10 years later.
+
+=== PAGINA 9 ===
+Introduction
+History of Internet
+• The Internet is the largest computer network,
+connecting devices all around the globe.
+• Brief history of Internet:
+• The Advanced Research Projects Agency (ARPA) of the
+U.S. Department of Defense awarded contracts for the
+development of the ARPANET project (1969).
+Initial ARPANET having 3+1
+nodes: SRI, UCLA, UCSB, and
+UTAH (1969)
+The initial ARPANET was mainly a closed
+network designed to include universities
+and research centers. Similar networks
+were independently created all around
+US and Europe.
+
+=== PAGINA 10 ===
+Introduction
+History of Internet
+• The Internet is the largest computer network,
+connecting devices all around the globe.
+• Brief history of Internet:
+• The Advanced Research Projects Agency (ARPA) of the
+U.S. Department of Defense awarded contracts for the
+development of the ARPANET project (1969).
+• R. Kahn (ARPA) and V. Cerf (Stanford) designed the
+Transmission Control Protocol (TCP) and Internet
+NSFNET in 1992 (Wikipedia).
+Protocol (IP), two protocols of the Internet protocol
+suite (1974).
+• The National Science Foundation (NSF) awarded
+The NSFNET and the TCP/IP protocol
+contracts for the NSFNET project, a TCP-IP based
+network (1986). went toward the idea of a network of
+networks, but both ARPANET and
+NSFNET carried commercial restrictions.
+
+=== PAGINA 11 ===
+Introduction
+History of Internet
+• The Internet is the largest computer network,
+connecting devices all around the globe.
+• Brief history of Internet:
+• The Advanced Research Projects Agency (ARPA) of the
+U.S. Department of Defense awarded contracts for the
+development of the ARPANET project (1969).
+• R. Kahn (ARPA) and V. Cerf (Stanford) designed the
+Transmission Control Protocol (TCP) and Internet Protocol
+(IP), two protocols of the Internet protocol suite (1974).
+• The National Science Foundation (NSF) awarded
+contracts for the NSFNET project, a TCP-IP based network
+(1986).
+• The ARPANET decommissioned (1990).
+• The NSFNET decommissioned, removing the last
+restrictions on the use of the Internet for commercial
+Graphical representation of
+traffic (1995).
+routing paths for a portion of
+Internet (Wikipedia).
+
+=== PAGINA 12 ===
+Introduction
+Networks Components: Devices, Links, Hosts
+• Network devices and links are the
+infrastru cture that allow hosts to connect: mobile network
+nationa l o r globa l I S P
+Access
+Router Switch Hub
+Point
+• Hosts ar e devices on which applications (or
+l
+r
+o
+e
+c
+g
+a
+io
+l
+n
+o
+a
+r
+l IS P
+programs) runs:
+home netw o rk
+c
+p
+o
+ro
+n
+v
+t e
+i d
+n
+e
+t
+r
+netw o rk
+d atacenter
+n etwork
+Laptop Server Smartphone PC
+enterprise
+network
+
+
+[TABELLA pagina 12]
+
+ |  | 
+
+=== PAGINA 13 ===
+Introduction
+Computer Networks and graphs
+• Computer networks share terminologies with graph theory:
+• The devices connected through the network are called nodes while the connections
+between nodes are called communication links (or channels).
+• A sequence of nodes/links is called path.
+• The end-points (or end-systems) of the network, which provide or use
+services, are special nodes called hosts.
+Router
+Laptop
+Ideally hosts are the leaves of the
+network (often it is not true) while
+intermediate nodes are routing
+Smartphone
+Server devices (routers, switches).
+
+=== PAGINA 14 ===
+Introduction
+Data Communication
+• Data communication main components:
+1. Message: contains the data to be transmitted.
+2. Sender: the entity which is sending the message.
+3. Receiver: the entity which is supposed to receive the message.
+4. Medium: the channel between sender and receiver where the message travels.
+5. Protocol: a set of communication rules, known to sender and receiver.
+5
+1
+2 3
+4
+
+=== PAGINA 15 ===
+Introduction
+Data Representation and Flow
+• The data we want to exchange can be represented in different forms.
+• Text, numbers, images, audio, video, etc.
+• Depending on the type and the
+purpose of the communication, the
+data flow can be:
+• Simplex: monodirectional.
+• Half-duplex: bidirectional (taking turns).
+• Full-duplex: bidirectional (simultaneous).
+
+=== PAGINA 16 ===
+Introduction
+Data Representation and Flow
+• Transmission rate typically refers to the maximum amount of information
+that a device can transmit, measured in bit/s (or byte/s).
+• The bandwidth is the maximum
+amount of information that a path
+(links + nodes) can transmit, measured
+Router
+Laptop
+Path
+in bit/s (or byte/s).
+• The throughput is the actual
+(instantaneous) amount of information
+Smartphone
+Server
+that is being transmitted over a path,
+measured in bit/s (or byte/s).
+
+=== PAGINA 17 ===
+Introduction
+Types of Connections
+• The hosts of a network can be connected in different ways.
+Wired link
+• Point-to-point: a dedicated link is
+provided between two devices (wireless
+Wireless link
+or wired).
+Wired link
+• Multipoint (broadcast): more than two
+specific devices share a single link
+Wireless link
+(wireless or wired).
+
+=== PAGINA 18 ===
+Introduction
+Network Topologies
+• There are different ways of connecting devices.
+• The network topology is the arrangement of the elements (links, nodes, etc.) of a communication
+network.
+en.wikipedia.org
+
+=== PAGINA 19 ===
+Introduction
+Network Topologies: Bus
+• In the Bus topology hosts are connected to a central backbone (bus) cable.
+• Collisions are possible.
+• Pros:
+• Simple and cheap.
+• Good for small networks.
+• Cons:
+• Single point of failure (broken bus) but sub
+networks may still be available.
+Bus networks have 1
+physical duplex link (or
+1 backbone and n links).
+
+=== PAGINA 20 ===
+Introduction
+Network Topologies: Ring
+• In the Ring topology hosts are point-to-point connected to exactly two other
+ones. The signal is forwarded along the ring, from device to device, until it
+reaches its destination.
+• Pros:
+• Simple and cheap.
+• Performs better than the bus.
+• Cons:
+• Adding new nodes is harder.
+Ring networks have n
+• Nodes malfunctioning may impair the network. duplex links.
+
+=== PAGINA 21 ===
+Introduction
+Network Topologies: Star
+• In the Star topology hosts are linked to a central controller (hub, switch or
+router), there is no direct link between hosts.
+• The central controller redirects messages.
+• Pros:
+• Less expensive, simple, robust, more scalable.
+• Cons:
+• The controller must be reachable by all hosts.
+Star networks have 1
+• Single point of failure.
+controller and n
+physical duplex links!
+
+=== PAGINA 22 ===
+Introduction
+Network Topologies: Tree
+• In the Tree topology multiple star topologies are integrated typically through
+a bus cable.
+• Pros:
+• Versatile, scalable, robust.
+• Well supported by HW and SW providers.
+• Cons:
+• Hard to configure.
+• Weakness of the bus.
+
+=== PAGINA 23 ===
+Introduction
+Network Topologies: Mesh
+• In the Mesh topology hosts are point-to-point linked in a non-hierarchical
+way.
+• Full mesh: all nodes connected (full-connected).
+• Partial mesh: nodes connected with some others.
+• Pros:
+• Low traffic, robust, secure, dedicated.
+• Cons:
+• Hardly scalable.
+• Expansive (need for devices with multiple ports). Full mesh networks
+have n(n-1)/2 physical
+duplex links!
+
+=== PAGINA 24 ===
+Introduction
+Network Topologies: Hybrid
+• Topologies can be mixed into a hybrid network.
+Star-backbone with 3 bus networks
+
+=== PAGINA 25 ===
+Introduction
+Categories of Networks
+• Networks are categorized by size, number of hosts, bandwidth.
+• Personal Area Network (PAN)
+• Local Area Network (LAN) or Wireless Local Area Network (WLAN).
+• Metropolitan Area Network (MAN).
+• Wide Area Network (WAN)
+LAN/WLAN
+MAN
+WAN
+Example of LAN connecting 12 computers to a switch
+
+=== PAGINA 26 ===
+Personal Area Network
+Categories of Networks
+PANs (Personal Area Networks) let devices communicate over the range of a person. Bluetooth
+is a short-range wireless network used to connect components without wires.
+
+=== PAGINA 27 ===
+Local Area Network
+Categories of Networks
+The configuration on the left represents a wireless 802.11 network. The configuration on the
+right represents a wired switched Ethernet network.
+
+=== PAGINA 28 ===
+Home Network
+Categories of Networks
+• Home network LAN
+– Broad, diverse range of Internet-connected devices
+– Characteristics: manageable, dependable, and secure
+• Internet of things
+– Allows almost any device to connect
+• Required home network properties
+– Easy to install
+– Secure and reliable
+– Interfaces work between all products
+– Reduced consumer device costs
+
+=== PAGINA 29 ===
+Metropolitan Area Network
+Categories of Networks
+A MAN (metropolitan area network) where both television signals and the Internet are being
+fed into the centralized cable head-end (or cable modem termination system) for subsequent
+distribution to people’s homes.
+
+=== PAGINA 30 ===
+Wide Area Network (1/3)
+Categories of Networks
+This wide area network illustrates how hosts in Perth, Brisbane, and Melbourne
+can communicate using leased lines.
+
+=== PAGINA 31 ===
+Wide Area Network (2/3)
+Categories of Networks
+This wide area network illustrates how hosts in Perth, Brisbane, and Melbourne
+can communicate via the Internet.
+
+=== PAGINA 32 ===
+Wide Area Network (3/3)
+Categories of Networks
+This wide area network illustrates how hosts in Perth, Brisbane, and Melbourne can
+communicate via an ISP.
+
+=== PAGINA 33 ===
+Introduction
+Complexity of WANs
+• The complexity of the topology
+may increase with the size of
+the network.
+Interchange Nodes
+• WANs connecting nations or
+continents can obviously be
+very complex and
+heterogeneous.
+Example of heterogeneous WAN
+
+=== PAGINA 34 ===
+Introduction
+Internet Service Providers
+• Internet access is the basic service.
+• An Internet Service Provider (ISP) is an
+organisation that provides services for
+accessing, using, or participating the
+Internet.
+• ISPs can be organized as commercial,
+community-owned, non-profit, or privately
+owned (e.g., by private companies or
+universities).
+(IXP)
+• Different ISPs exchange data through
+Network (neutral) Access Points (NAPs) or
+Internet Exchange Points (IXPs).
+
+=== PAGINA 35 ===
+Introduction
+Internet Service Providers
+• An ISP network is hierarchically
+defined:
+• A point of presence (PoP) is a group
+of one or more routers used by ISPs
+to reach the customers.
+• Access ISPs for local areas.
+• Regional ISPs for larger areas.
+• National ISPs for nations.
+• An Internet exchange point (IXP)
+works as a meeting point between
+(IXP)
+multiple ISPs (often not managed
+by the ISPs involved).
+
+=== PAGINA 36 ===
+Introduction
+Internet Connection
+• Private internet connections are established
+Private
+via Modem/ONT connected to the
+telephone network.
+ISP
+• Analogic (56kbps).
+Telephone
+• Integrated Services Digital Network ISDN Network
+(128kbps).
+INTERNET
+• Asymmetric Digital Subscriber Line ADSL (1Mbps
+to 20Mbps).
+• Twisted-Pair Copper Wire (10Mbps to 100Mbps).
+• Optical Fiber (50Mbps to 40Gbps), via optical
+network terminal - ONT, no (de)modulation.
+• Companies (especially medium/large ones)
+can have a direct/dedicated connection to
+the ISP.
+Company
+
+
+[TABELLA pagina 36]
+
+ |  | ISP
+
+ |  | 

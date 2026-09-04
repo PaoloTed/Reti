@@ -1,0 +1,42 @@
+=== PAGINA 1 ===
+Interazione base HTTP GET e risposta
+(esercitaz. da libro di testo)
+Iniziamo a esplorare il protocollo HTTP scaricando una pagina HTML molto semplice. Eseguire i segg.
+passi.
+1. Avviate il vostro browser Web.
+2. Avviate Wireshark, il packet sniffer, come descritto nella scorsa lezione, senza avviare la cattura
+dei pacchetti.
+Nel campo "display-filter-specification" inserite la parola http (in minuscolo e senza virgolette)
+per visualizzare solo i pacchetti HTTP catturati. Questo ci aiuta a concentrarci solo sul
+protocollo HTTP, evitando il "rumore" degli altri pacchetti.
+3. Attendete poco piú di un minuto (scoprirete presto il motivo) e poi lanciate la cattura dei
+pacchetti in Wireshark.
+4. Nel browser, inserite questo indirizzo:
+http://www.columbia.edu/~fdc/sample.html
+Il browser mostrerà la pagina HTML .
+5. Fermate la cattura in Wireshark.
+Dovreste vedere qualcosa di simile alla finestra di Wireshark (v. figura) in cui vengono visualizzati due
+messaggi HTTP: la richiesta GET inviata dal vostro browser al server e la risposta inviata dal server al
+browser. Nella finestra di dettaglio pacchetto sono mostrati i contenuti del messaggio selezionato, ad
+esempio il messaggio di risposta HTTP OK evidenziato. Poiché il messaggio HTTP viaggia dentro un
+segmento TCP, a sua volta dentro un datagramma IP e infine dentro un frame Ethernet, Wireshark
+mostra anche questi livelli di dettaglio. Per concentrarci solo su HTTP, assicuratevi che i dettagli
+Frame, Ethernet, IP e TCP siano minimizzati, mentre la sezione HTTP sia espansa.
+Analizzate i messaggi HTTP GET e risposta per rispondere alle seguenti domande:
+(a)Quale versione HTTP utilizza il browser (1.0, 1.1 o 2)? E il server?
+(b)Quali lingue il browser indica di poter accettare dal server?
+(c)Qual è l'indirizzo IP del vostro computer e qual è quello del server?
+(d)Qual è il codice di stato restituito dal server?
+(e)Quando è stata modificata l'ultima volta la pagina HTML sul server?
+(f)Quanti byte di contenuto sono stati inviati al browser?
+(g)Esaminando i dati grezzi nel contenuto del pacchetto, trovate intestazioni non visibili nella lista
+dei pacchetti?
+
+=== PAGINA 2 ===
+Se state eseguendo l'esercizio direttamente in Wireshark, potreste notare che il file sembra modificato
+da meno di un minuto prima del download. Questo accade perché il server a volte aggiorna il
+timestamp di "last-modified" ogni minuto, così da far scaricare sempre una copia aggiornata del
+documento.
+Esercizio ulteriore:
+• Ripetete l'esperimento con http://scottaaronson.com
+• Che differenze notate nella risposta? Commentate.

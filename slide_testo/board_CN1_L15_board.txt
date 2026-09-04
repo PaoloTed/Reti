@@ -1,0 +1,45 @@
+=== PAGINA 1 ===
+11001000 00010111 00011000 11001001
+Longest matching prefix rule
+Se un indirizzo viene associato con successo a piú di una subnet
+(spazio di indirizzi in una riga della forwarding table) esso viene
+instradato verso il porto di output associato alla subnet con il
+prefisso piú lungo.
+Questo consente di assegnare un sotto-spazio di indirizzi
+di uno spazio ad un output port diverso, senza generare
+ambiguità.
+
+
+[TABELLA pagina 1]
+
+ | 
+
+ | 
+
+ | 
+
+ | 
+
+ | 
+
+ | 
+
+=== PAGINA 2 ===
+11001000 00010111 00011000 00000000
+11001000 00010111 00011000 01000000
+11001000 00010111 00011000 01001101
+ICMP è un protocollo diagnostico di rete con cui sostanzialmente un client manda dei pacchetti a un
+server che risponde; dai timestamp si ricava il tempo di risposta. Si verfica anche se ci sono perdite
+di pacchetti.
+
+
+[TABELLA pagina 2]
+
+1001000 00010111 00011000 00000000
+
+1001000 00010111 00011000 01000000
+
+
+[TABELLA pagina 2]
+
+11001000 00010111 00011000 | 01

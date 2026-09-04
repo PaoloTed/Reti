@@ -1,0 +1,8 @@
+=== PAGINA 1 ===
+Ogni nodo, dopo il broadcast collettivo,
+conosce tutto il grafo. A quel punto tale nodo
+può calcolare i cammini minimi da esso
+medesimo verso tutti gli altri nodi. Ciò si calcola
+appunto con l'algoritmo di Dijkstra.
+127.0.0.1 loopback
+100.75.5.41 indirizzo IP

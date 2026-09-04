@@ -1,0 +1,56 @@
+=== PAGINA 1 ===
+1. Identifica i pacchetti ICMP echo request inviati dal tuo computer. Nota gli indirizzi IP sorgente e destinazione.
+2. Trova i pacchetti corrispondenti ICMP echo reply dal server.
+3. Esamina attentamente un pacchetto ICMP echo request:
+3.1 Espandi i dettagli della sezione Internet Protocol (IP) e osserva il campo TTL.
+3.2 Espandi la sezione del protocollo ICMP e identifica il campo "Type" (dovrebbe essere 8 per echo request).
+3.3 Nota i campi numero di sequenza e identificatore.
+3.4 Misura il tempo di andata e ritorno (RTT) tra echo request ed echo reply.
+ping iana.org
+nslookup iana.org c.root-servers.net
+
+=== PAGINA 2 ===
+Non ci sono risposte con record A o AAAA, ma
+la risposta contiene informazioni su name
+server per il dominio org.
+Sembra che il root server abbia fornito un record
+(non authoritative) con la risposta.
+Ovviamente Wireshark non vede il traffico, il quale è crittato, da e verso la VPN.
+Evidentemente il server VPN cui ci colleghiamo non solo passa le query DNS al
+name server fornito dal provider, ma si prende in carico la risoluzione del nome
+e poi fa "spoofing" dei datagram UDP/IP come se provenissero dal name server.
+Con altro provider VPN invece questo spoofing non avviene:
+
+=== PAGINA 3 ===
+100.75.5.21
+151.101.67.10
+In questo caso dopo 6 passi viene raggiunto il nodo italia.it (151.101.195.10)
+il quale però non risponde, probabilmente per via di filtri. Pertanto traceroute
+continua a mandare segmenti/datagram UDP che vengono ignorati, né vengono
+scartati per scadenza del TTL (che, ricordiamo, non è in base al tempo ma al
+numero di passi/hop.
+Ove il pacchetto UDP raggiunga il destinatario, detto destinatario risponde con un
+messaggio ICMP, ricevuto il quale il mittente/cliente si ferma. I pacchetti inviati dal
+cliente hanno come porto di destinazione un numero alto scelto casualmente, che
+normalmente non corrisponde ad alcun processo sul destinatario, che risponde
+appunto con un pacchetto ICMP che porta il messaggio di errore "Destination
+Unreachable (Port Unreachable)".
+
+=== PAGINA 4 ===
+Primo datagram UDP in un pacchetto IP con TTL==1
+Con il comando traceroute di Linux si può specificare la lunghezza del payload
+del datagram UDP inviato dalla nostra macchina. Se specifichiamo tale
+lunghezza come 3.000 byte, il pacchetto IP verrà frammentato, cosa che possiamo
+verificare con Wireshark.
+Il primo pacchetto IP con TTL==1
+ha offset 2.960.
+Il secondo pacchetto ha sempre TTL==1 e
+More fragment impostato, e ha lo stesso
+numero di id 28264, che è condiviso da
+tutti i pacchetti che, una volta ricomposti
+a destinazione, formeranno il payload (artificiale)
+preparato da traceroute.
+Anche se ovviamente traceroute è una applicazione,
+essa non fa uso del livello di trasporto in modo diretto.
+Essa prepara e invia direttamente pacchetti/datagram a
+livello di rete (ICMP, IP).

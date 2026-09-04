@@ -1,0 +1,789 @@
+=== PAGINA 1 ===
+Computer Networks I
+Reti di Calcolatori I
+The Network Layer
+Lecture 15
+
+=== PAGINA 2 ===
+Network Layer
+From Transport to Network
+• The job of the network layer is mainly to allow remote
+hosts to communicate:
+De iure
+• At the sending host: to take segments from the transport layer,
+ISO/OSI
+to encapsulate each segment into a datagram, and to send the
+datagrams into the network.
+• At the receiving host: to receive the datagrams from the
+network, extracts the transport-layer segments from
+datagrams, and delivers the segments up to the transport layer.
+• At this level, some of the most important protocols of
+computer networks works:
+• IP, DHCP, NAT, etc.
+• There are special devices (routers) that works at this level.
+
+=== PAGINA 3 ===
+Network Layer
+From Transport to Network
+• Inside the network there are nodes that
+forward datagrams to the adjacent nodes mobile network
+(routers) up to the destination host.
+nationa l o r globa l I S P
+application
+transport
+• T
+p
+ru
+h
+r
+n
+o
+e
+t
+a
+r
+o
+o
+p
+c
+u
+p
+o
+t
+l
+l
+i
+e
+c
+s
+r
+a
+t
+s
+a
+ti
+a
+c
+o
+k
+r
+n
+e
+.
+s
+P
+s
+n
+o
+h
+o
+t
+o
+e
+r
+w
+n
+t
+n
+r
+ti
+a
+a
+w
+n
+ll
+s
+i
+y
+t
+p
+h
+r
+o
+o
+a
+r
+u
+t
+t
+-
+t
+l
+r
+e
+a
+u
+r
+y
+n
+s
+e
+c
+d
+r
+a
+o
+t e
+n
+d
+o t
+n
+p
+e
+h
+l
+t
+y
+i
+w
+n
+s
+k
+i
+o
+ca
+rk
+l
+n
+p
+e
+h
+l
+t
+y
+i
+w
+n
+si
+k
+o
+c
+r
+a
+k
+l
+n
+p
+e
+h
+l
+t
+y
+i
+w
+n
+s i
+k
+o
+c
+r
+a
+k
+l
+protocols.
+n
+p
+e
+h
+l
+t
+y
+i
+w
+n
+si
+k
+o
+c
+r
+a
+k
+l
+n
+p
+e
+h
+l
+t
+y
+i
+w
+n
+s i
+k
+o
+c
+r
+a
+k
+l ne
+l
+t
+i
+w
+n k
+o r k
+d atacenter
+physical n etwork
+• The act of a datagram being redirected by
+application
+a router is also called hop.
+transpor t
+enterprise
+network
+link
+network
+physical
+
+
+[TABELLA pagina 3]
+
+ |  | n
+rk | t
+
+c
+o | e |  | 
+
+=== PAGINA 4 ===
+Network Layer
+Network Layer in Internet
+• The network layer is mainly responsible for host-to-host delivery.
+• What services could be offered along with delivery:
+• Guaranteed delivery: a packet sent by a source host will eventually arrive at the destination
+host.
+• Guaranteed delivery with bounded delay: packets will be delivered and within a specified
+host-to-host delay bound (for example, within 100 msec).
+• In-order packet delivery: packets will arrive at the destination in the order that they were
+sent.
+• Guaranteed minimal bandwidth: possibility to specify a minimal bit rate (for example, 1
+Mbps) such that, if the rate of the sending host is within it, then all packets are eventually
+delivered to the destination host.
+• Security: encryption/decryption of all datagrams at the source/destination.
+• Actually, none of these services is generally offered by networks.
+
+=== PAGINA 5 ===
+Network Layer
+Network Layer in Internet
+• Conversely, Internet’s network layer provides just one service, the so called
+best-effort service.
+• Best-effort service (or best-effort delivery): the network tries its best to deliver
+a packet from its source to its destination.
+• Packets are neither guaranteed to be received in the order in which they were sent, nor
+to be received at all.
+• There is no guarantee about delays or minimal bandwidth.
+• Despite its simplicity, the best-effort service model, in combination with good
+bandwidth have proven to be adequate.
+• For example, applications, such as Netflix and voice-and-video-over-IP, real-time
+conferencing, Matrix, etc. all works with it.
+
+=== PAGINA 6 ===
+Network Layer
+Routers in the Network
+• The primary role of the network layer is to perform host-to-host delivery, i.e., to move packets
+from a sending host to a receiving host.
+• This process is performed by routers (network nodes) that are special nodes having multiple
+incoming/outgoing links. Routers provide two network-layer functions:
+• Forwarding: when a packet arrives at a router’s input
+link, the router must move the packet to the
+P
+appropriate output link. It is also possible to: P
+a. Block a packet from exiting a router (e.g., if originated from
+Forwarding
+a known malicious host, or destined to a forbidden host).
+b. Drop a packet if it is expired.
+c. Duplicate a packet and sent it over multiple outgoing links.
+d. Modify a packet (e.g., to notify congestion, etc.).
+• Routing: to decide the route or path to be taken by
+P
+packets as they flow from a sender to a receiver. The
+algorithms that calculate these paths are referred to as
+Routing
+routing algorithms.
+
+=== PAGINA 7 ===
+Network Layer
+Routers
+• Routers may be very different depending
+on the usage/technology:
+• Home or business usage.
+Tp-link AX6600
+Cisco RV016-G5
+• Wireless or wired connections.
+home router
+business router
+• One important distinction is between edge
+and core routers:
+• Edge routers: a router that distributes data
+packets between one or more networks (e.g.,
+connecting a network with the ISP).
+• This is the most common typology.
+• Core routers: used to distribute packets within
+the same network rather than across multiple
+networks. Juniper MX2020,
+edge router
+• These are also used on the backbone of the Internet
+and its job is to carry out heavy data transfers. Cisco CRS-1
+backbone core router
+
+=== PAGINA 8 ===
+Network Layer
+Routers: Data and Control Planes
+• The job of routers is typically implemented as a two-step (or two-plane) process:
+• Forwarding (data or forwarding plane) refers to the router-local action of transferring a
+packet from an input link interface to the appropriate output link interface.
+• This is a fast operation (typically a few nanoseconds), and thus is typically implemented in hardware.
+• Routing (control plane) refers to the network-wide process that determines the end-to-
+end paths that packets take from source to destination.
+• This is a slower process (typically seconds), and it is often implemented via software.
+• At the data plane we have the forwarding table: a table that associates output
+links with possible destination addresses.
+• A router forwards a packet by examining the value of one or more fields in the packet’s
+header.
+• The value stored in the forwarding table indicates the outgoing link interface to which that
+packet is to be forwarded.
+
+=== PAGINA 9 ===
+Network Layer
+Routers: Data and Control Planes
+• Since multiple routers can be encountered before to reach
+Distributed
+a destination, the content of a forwarding table must be
+determined by collecting information from different
+routers.
+• This process is implemented using one or more routing tables
+(control plane) that eventually lead to the creation of the
+forwarding table (data plane).
+Centralized
+• Creation of routing and (eventually) forwarding tables can
+be performed in two ways:
+• Decentralised (or distributed): we can have each router
+endowed with a routing component that communicates with the
+routing component of other routers (this was the mainstream
+approach).
+• Centralised: we can have a physically separated (from the
+routers) remote controller computes that distributes the
+forwarding tables to be used by routers.
+
+=== PAGINA 10 ===
+Network Layer
+Routers: Data and Control Planes
+• In the centralised case, the remote controller might be implemented in a
+remote data center (with high reliability and redundancy) and might be
+managed by the ISP or some third party.
+• This approach is at the basis of software-defined networking (SDN), where
+the network is “software-defined” because the controller that computes
+forwarding tables and interacts with routers is a centralized software.
+• Some of these software are also open.
+
+=== PAGINA 11 ===
+Network Layer
+Routers: Main Components
+• A router’s main components are:
+• Input ports (different from transport-layer ports): are the
+physical input interfaces that operate with the lower link- Input Links
+layer of the connected link, their job is:
+• To consult the forwarding table (aka lookup) and to prepare the
+Input Input
+switching fabric for the output port to choose.
+table
+Port 1 Port N
+• To forward control packets (e.g., packets carrying routing
+Routing
+information) to the routing processor. Switch Fabric
+Processor
+• The number of input ports may range from dozens to hundreds (e.g.,
+Output Output
+the Juniper MX2020 edge router supports up to 960 of 10 Gbps
+Port 1 Port N
+Ethernet ports).
+Router
+• Switching fabric: connects input ports to its output ports.
+• Output ports: store packets received from the switching Output Links
+fabric and transmits these packets on the outgoing link.
+• Ports may be bidirectional (i.e., input/output ports are coupled).
+• Routing processor: executes the routing protocols, maintains
+state-information about links, and computes/updates the
+forwarding table.
+
+=== PAGINA 12 ===
+Network Layer
+Routers: Forwarding
+• The role of the forwarding table is to associate IP addresses to output ports, so
+that packets can be forwarded to the right output link in order to be transmitted
+to the next node (and possibly be forwarded again).
+• An IP address is a 4-bytes (32-bits) number that we usually see in decimal
+notation, but we can also see it in its binary form:
+192.168.1.1
+11000000 10101000 00000001 00000001
+• Inside a forwarding table, IPs are associated to output port numbers for actual
+redirection.
+
+=== PAGINA 13 ===
+Network Layer
+Routers: Forwarding
+• When a packet is received from the link into an input port a lookup operation
+is performed.
+• Each port has a copy of the forwarding table from the routing processor (received on
+a dedicated bus, e.g., a PCI bus) to avoid bottleneck due to continuous invoking of the
+centralized routing processor on a per-packet basis.
+• Multiple addresses may be associated to the same port.
+11001000 00010111 00010000 00000000
+Example of a 4-ports table TO
+11001000 00010111 00010111 11111111
+Prefix of IP addresses Link Interface
+11001000 00010111 00010*** ******** 0 11001000 00010111 00011000 00000000
+TO
+11001000 00010111 00011000 ******** 1
+11001000 00010111 00011000 11111111
+11001000 00010111 00011*** ******** 2
+11001000 00010111 00011001 00000000
+otherwise 3 TO
+11001000 00010111 00011111 11111111
+
+
+[TABELLA pagina 13]
+
+Prefix of IP addresses | Link Interface
+
+11001000 00010111 00010*** ******** | 0
+
+11001000 00010111 00011000 ******** | 1
+
+11001000 00010111 00011*** ******** | 2
+
+otherwise | 3
+
+=== PAGINA 14 ===
+Network Layer
+Routers: Forwarding
+11001000 00010111 00010000 00000000
+Example of a 4-ports table TO
+11001000 00010111 00010111 11111111
+Prefix of IP addresses Link Interface
+11001000 00010111 00010*** ******** 0 11001000 00010111 00011000 00000000
+TO
+11001000 00010111 00011000 ******** 1
+11001000 00010111 00011000 11111111
+11001000 00010111 00011*** ******** 2
+11001000 00010111 00011001 00000000
+otherwise 3 TO
+11001000 00010111 00011111 11111111
+• Notice that entries may not be mutually exclusive (for example, IP 11001000 00010111
+00011000 10101010 matches links 1 and 2) if so, the router forwards it to the longest
+matching entry (longest prefix matching rule):
+Match with Link 1 = 24 bits
+11001000 00010111 00011000 10101010 Link 1 wins!
+Match with Link 2 = 21 bits
+
+
+[TABELLA pagina 14]
+
+Prefix of IP addresses | Link Interface
+
+11001000 00010111 00010*** ******** | 0
+
+11001000 00010111 00011000 ******** | 1
+
+11001000 00010111 00011*** ******** | 2
+
+otherwise | 3
+
+=== PAGINA 15 ===
+Network Layer
+Routers: Forwarding
+• This lookup procedure is typically performed on the hardware to be executed as fast as
+possible (e.g., in nanoseconds for Gigabit transmissions).
+• Embedded memories and advanced table-search algorithms are also involved.
+• Once a packet’s output port has been determined (after lookup), the packet can be sent
+into the switching fabric. In some devices, packets may also be temporarily queued
+(buffered) if other input ports are using the fabric.
+• This two-steps operation of looking up a destination IP address (match) and forwarding
+(action) is called match-plus-action and is performed in many networked devices, such as:
+• Switches: similar action as routers.
+• Firewalls: where the action is to filter out specific incoming packets.
+• Network address translators (NATs): where the action is to rewrite port number of specific incoming
+packets before forwarding.
+
+=== PAGINA 16 ===
+Network Layer
+Memory
+Routers: Switching Fabric
+• In a switching fabric, switching can be performed in 3 ways:
+1. Switching via memory: ports are considered as I/O devices that
+write packets on memory cells then the routing process copies the
+Bus
+message on the output port as specified by the forwarding table.
+• This approach is a bit slow (need for memory access) and was more common
+in early routers (which were standard computers).
+2. Switching via a bus: input port transfers a packet directly to the
+output port over a shared bus, without intervention by the routing
+Network (crossbar)
+processor.
+• Only one port per time can be served, but this method is often sufficient for
+routers that operate in small local area.
+3. Switching via an interconnection network: input/output ports
+connected by a network having cross-points which can be
+open/close and then redirect the packets.
+• Here multiple packets can be forwarded in parallel. This method is used in
+several modern routers.
+
+=== PAGINA 17 ===
+Network Layer
+Routers: Ports
+Input Link
+• Since switching takes time, input and output
+ports have queues to temporarily store
+packets (as cars waiting for semaphores). Input
+Buffer
+Input
+• The extent of queueing is not fixed, it may Port
+depend on traffic load, the speed of the Switch Fabric
+switching fabric, or the line speed.
+Output
+Port
+Router
+Output
+• In general, packets may be received/sent Buffer
+faster/slower than switching, so they may be
+accumulating into the input/output buffer
+Output Link
+(that may overflow).
+
+
+[TABELLA pagina 17]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[TABELLA pagina 17]
+
+
+
+
+
+
+
+
+
+
+
+
+
+=== PAGINA 18 ===
+Network Layer
+Routers: Ports
+• Example: let’s assume to have (1) a router with N input and N output ports, (2) that
+each port is receiving packets at the same time, and (3) that all input and output lines
+have the same speed R packets per second.
+line
+• Let’s now consider a worst-case scenario in which all packets have to be forwarded to
+the same port.
+If the switching fabric have a rate (R ) we have:
+switch
+• If R N R , queuing on input ports is negligible as all packets are forwarded in time by the
+switch ≅ line
+forward fabric, but queuing on the output port is significant as the incoming packets are N time more
+than the rate of the output link.
+• if R < R < N R , there is queuing on both ports as input port must wait for the switch fabric
+line switch line
+while output port must wait for the link.
+• if R R , there is negligible queueing on output port but significant queuing on the input
+switch ≅ line
+ports.
+
+=== PAGINA 19 ===
+Network Layer
+Routers: Packet Scheduling
+• It is reasonable to have multiple packets (potentially from multiple input
+ports) to be forwarded to a single output port.
+• The access of queued packets from buffer to the output link needs to be
+scheduled.
+• There are basically 3 (famous) approaches:
+• First-come-first-served (FCFS, aka first-in-first-out, FIFO), which is simple time-based
+approach.
+• Priority queuing, which is based on the importance of the packets.
+• Round-robin queueing, where packets are divided into classes (based on priority)
+and each class is served in turn.
+
+=== PAGINA 20 ===
+Network Layer
+Routers: Packet Scheduling - FIFO
+• If the output link is busy (transmitting something) the
+packets arriving at the output port must be buffered.
+• If there is no sufficient buffering space to hold the arriving
+Output
+packet, we must rely on a packet-discarding policy.
+Port
+• A typical policy is to drop the recently arrived packets (drop-tail)
+but in more sophisticated approaches also already buffered
+packets can be removed to make space for the arriving ones.
+• A packet is removed from the queue only if it has been
+completely transmitted over the outgoing link (served).
+• In FIFO scheduling packets are selected for transmission in
+Output Link
+the same order in which they have arrived at the output
+port.
+2
+1
+Switch Fabric
+Output
+Buffer
+1
+3
+
+
+[TABELLA pagina 20]
+
+ | 3
+
+
+[TABELLA pagina 20]
+
+
+
+
+
+
+
+
+
+2
+
+1
+
+=== PAGINA 21 ===
+Network Layer
+Routers: Packet Scheduling - Priority
+• In priority queuing, packets arriving at the output link
+are classified (e.g., through TCP/UDP port numbers) into
+priority classes upon arrival at the queue.
+Output Port
+• A network operator may configure a queue so that
+specific packets (e.g., carrying network management
+information, real-time voice-over-IP, etc.) may receive
+priority over user traffic or non-real-time packets.
+• Each priority class may have its own queue:
+Output Link
+• Packets from the most prioritized non-empty class are
+transmitted first.
+• The choice among packets in the same priority class is typically
+done in a FIFO manner.
+2
+1
+Switch Fabric
+Output
+Buffer
+1
+6
+5
+4
+3 high low
+?
+
+
+[TABELLA pagina 21]
+
+ | ?
+
+
+[TABELLA pagina 21]
+
+
+
+
+
+
+
+
+
+2
+
+1
+
+
+[TABELLA pagina 21]
+
+
+
+
+
+6
+
+5
+
+4
+
+3
+
+=== PAGINA 22 ===
+Network Layer
+Routers: Packet Scheduling – Round-robin
+• In round robin queuing, packets are still sorted
+into classes, but classes are alternated rather than
+selected by priority.
+Output Port
+• A common implementation is called weighted fair
+queuing (WFQ) where arriving packets are
+classified and queued in the appropriate waiting
+area.
+Output Link
+• Each class is then associated to a specific weight
+that dictates the rate with which the class is
+selected over the others.
+3
+1
+Switch Fabric
+Output
+Buffer
+1
+6
+5
+4
+2
+c1 c2
+?
+
+
+[TABELLA pagina 22]
+
+ | ?
+
+
+[TABELLA pagina 22]
+
+
+
+
+
+
+
+
+
+3
+
+1
+
+
+[TABELLA pagina 22]
+
+
+
+
+
+6
+
+5
+
+4
+
+2

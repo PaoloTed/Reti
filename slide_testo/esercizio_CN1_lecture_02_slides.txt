@@ -1,0 +1,855 @@
+=== PAGINA 1 ===
+Computer Network I
+Reti di Calcolatori I
+The Internet: Protocols and Layers
+Lecture 2
+
+=== PAGINA 2 ===
+A “nuts and bolts” view of the Internet
+Billions of connected
+mobile network
+computing devices:
+nationa l o r globa l I S P
+ hosts = end systems
+ running network apps at
+Internet’s “edge”
+Packet switches: forward
+C
+p
+
+o
+ac
+m
+ro
+k
+m
+u
+e
+t
+t
+e
+u
+s
+r
+n
+s
+(
+,
+c
+i c
+s
+h
+w
+a
+u
+ti
+it
+n
+c
+o
+k
+h
+n
+s
+e s
+l
+o
+in
+f
+k
+d
+s
+ata)
+home netw o rk
+l
+r
+o
+e
+c
+g
+a
+io
+l
+n
+o
+I
+a
+r
+n
+l I S
+t
+P
+e r n
+c
+p
+e
+o
+ro
+n
+t
+v
+t e
+i d
+n
+e
+t
+r
+ fiber, copper, radio, satellite
+netw o rk
+d
+n
+a
+e
+t
+t
+a
+w
+c
+o
+e
+r
+n
+k
+ter
+ transmission rate: bandwidth
+Networks
+enterprise
+ collection of devices, routers, network
+links: managed by an organization
+
+
+[TABELLA pagina 2]
+
+ |  |  | n
+rk | t
+
+c
+w | o | e |  | 
+
+
+[TABELLA pagina 2]
+
+ |  |  |  |  |  |  |  |  |  | 
+
+=== PAGINA 3 ===
+Various connected devices
+Pacemaker & Monitor
+Tweet-a-watt:
+monitor energy use
+Amazon Echo
+IP picture frame Web-enabled toaster +
+weather forecaster
+Internet
+refrigerator
+Slingbox: remote
+control cable TV
+Security Camera
+AR devices
+sensorized,
+bed
+...and others
+Internet phones mattress
+Fitbit
+
+=== PAGINA 4 ===
+A “nuts and bolts” view of the Internet
+mobile network
+4G
+ Internet: “network of networks”
+nationa l o r globa l I S P
+• Interconnected ISPs
+ protocols are everywhere S t r eaming
+IP
+•
+•
+c
+e
+o
+.g
+n
+.
+t
+,
+r
+H
+o
+T
+l
+T
+se
+P
+n
+(
+d
+W
+in
+e
+g
+b
+,
+)
+r
+,
+e
+s
+c
+tr
+e
+e
+iv
+a
+i
+m
+ng
+in
+o
+g
+f
+v
+m
+id
+e
+e
+s
+o
+s
+,
+a ges
+Skype
+l
+r
+o
+e
+c
+g
+a
+io
+l
+n
+o
+a
+r
+l IS P
+v i d eo
+ Inte
+Sk
+r
+y
+n
+p
+e
+e
+t
+, T
+s
+C
+t
+P
+a
+,
+n
+IP
+d
+, W
+ar
+i
+d
+Fi
+s
+, 4G, Ethernet
+hom
+H
+e
+T
+n
+T
+e
+P
+tw o rk
+c
+p
+n
+o
+r
+e
+o
+n
+tw
+v
+t e
+i d
+o
+n
+e
+r
+t
+k
+r
+d atacenter
+n etwork
+• RFC: Request for Comments Ethernet
+• IETF: Internet Engineering Task
+TCP
+Force enterprise
+network
+WiFi
+
+
+[TABELLA pagina 4]
+
+ |  |  | n
+rk | t
+
+c
+w | o | e |  | 
+
+=== PAGINA 5 ===
+A services view of the Internet
+ Infrastructure that provides
+mobile network
+services to applications:
+nationa l o r globa l I S P
+• Web, streaming video, multimedia
+teleconferencing, email, games, e-
+S t r eaming
+commerce, social media, inter-
+Skype v i d eo
+ pro
+co
+v
+n
+id
+n
+e
+e
+s
+ct
+p
+ed
+ro
+a
+g
+p
+r
+p
+a
+li
+m
+an
+m
+ce
+i
+s
+n
+,
+g
+…
+interface
+l
+r
+o
+e
+c
+g
+a
+io
+l
+n
+o
+a
+r
+l IS P
+t
+•
+o
+“
+d
+h
+i
+o
+st
+o
+r
+k
+i
+s
+b
+”
+u
+a
+t
+l
+e
+lo
+d
+w
+a
+in
+p
+g
+p
+s
+l
+e
+ic
+n
+a
+d
+ti
+in
+o
+g
+n
+/r
+s
+e
+:
+ceiving
+hom
+H
+e
+T
+n
+T
+e
+P
+tw o rk
+c
+p
+n
+o
+r
+e
+o
+n
+tw
+v
+t e
+i d
+o
+n
+e
+r
+t
+k
+r
+d atacenter
+apps to “connect” to, use Internet n etwork
+transport service
+• provides service options, analogous
+enterprise
+to postal service
+network
+
+
+[TABELLA pagina 5]
+
+ |  |  | n
+rk | t
+
+c
+w | o | e |  | 
+
+=== PAGINA 6 ===
+Protocols
+Network protocols:
+Human protocols:
+ computers (devices) rather than humans
+ “what’s the time?”
+ all communication activity in Internet
+ “I have a question”
+governed by protocols
+ introductions
+… specific messages sent
+Protocols define the format, order of
+… specific actions taken
+messages sent and received among
+when message received,
+network entities, and actions taken
+or other events
+on msg transmission, receipt
+
+=== PAGINA 7 ===
+Human and network protocols
+A human protocol and a computer network protocol:
+Hi
+TCP connection
+request
+Hi
+TCP connection
+response
+Got the
+time? GET
+http://gaia.cs.umass.edu/kurose_ross
+2:00
+<file>
+time
+Introduction: 1-7
+
+
+[TABELLA pagina 7]
+
+ | Human and network protocols
+
+
+[TABELLA pagina 7]
+
+ti | me
+
+=== PAGINA 8 ===
+Introduction
+Who Standardize Standards?
+• Todays Internet standards and protocols are defined by a community of
+experts called Internet Engineering Task Force (IETF).
+• IETF is typically organized in open working groups, each one focused on
+specific aspects of internet.
+• Each working group produces numbered documents called Request For
+Comments (RFC) including description and definition of protocols, concepts,
+methods underlying a standard.
+• For example, the IPv4 protocol was defined in RFC 791 (1981).
+
+=== PAGINA 9 ===
+Taming network complexity
+Network architectural model
+Networks are complex,
+Question:
+with many “pieces”:
+
+hosts is there any hope of
+ routers organizing structure of
+ links of various media network?
+
+applications
+
+protocols
+
+hardware, software
+Introduction: 1-24
+
+=== PAGINA 10 ===
+Layering
+Network model
+Toward
+applications
+(high-level)
+• Architectural approach to implement
+communication: layered model (divide et
+Layer n+1
+impera in layers):
+Interface
+• Each layer constitutes a level of abstraction.
+Layer n
+• Each layer relies on services from the lower layer
+and provides services to the upper layer.
+Layer n-1
+Toward
+hardware
+(low-level)
+
+
+[TABELLA pagina 10]
+
+Layer n+1
+
+Layer n
+
+Layer n-1
+
+=== PAGINA 11 ===
+Layering - Discussion
+Network model
+Dealing with complex systems:
+
+explicit structure allows identification, relationship of complex
+system’s pieces
+• layered reference model for discussion
+
+modularization eases maintenance, updating of system
+• change in layer's service implementation: transparent to rest of
+system
+• e.g., change in gate procedure doesn’t affect rest of system
+
+layering considered harmful? (efficiency)
+
+layering in other complex systems
+Introduction: 1-26
+
+=== PAGINA 12 ===
+Service primitives
+Protocols and services
+Entities use protocols in order to implement their service definitions.
+
+=== PAGINA 13 ===
+Introduction
+Network Models: Layered Model
+• When two devices communicate, each layer on the sender communicates
+with the same layer on the receiver by means of a specific protocol.
+Sender Receiver
+Hello! Hello!
+Layer n+1 Layer n+1
+Layer n Layer n
+Layer n-1 Layer n-1
+
+
+[TABELLA pagina 13]
+
+Layer n+1
+
+Layer n
+
+Layer n-1
+
+
+[TABELLA pagina 13]
+
+Layer n+1
+
+Layer n
+
+Layer n-1
+
+=== PAGINA 14 ===
+Introduction
+Network Models: Layered Model (example)
+• When two devices communicate, each layer on the sender communicates
+with the same layer on the receiver by means of a specific protocol.
+Mail Received!
+Insert Postal Code and
+Destination Address
+Use Address to deliver
+to the right destination
+Use Postal Code to
+deliver to the right
+post office
+
+=== PAGINA 15 ===
+Connections and reliability (1/4)
+• Connection-oriented service
+– Modeled after the telephone system
+– Service user first establishes a connection, uses the connection, and then releases the
+connection
+– Can conduct a negotiation about the parameters to be used
+
+=== PAGINA 16 ===
+Connections and reliability (2/4)
+• Connectionless service
+– Modeled after the postal system
+– Packet is a message at the network layer
+– Store-and-forward switching: intermediate nodes receive a message in full before
+sending it on to the next node
+– Cut-through switching: transmission of a message at a node starts before it is completely
+received by the node
+– Datagram service: Unreliable (not acknowledged) connectionless service
+• Reliability characterizes connection-oriented and connectionless services
+
+=== PAGINA 17 ===
+Connections and reliability (3/4)
+• Connection-oriented systems
+– Reliable message stream (sequence of pages)
+– Reliable byte stream (movie download)
+– Unreliable connection (voice over IP)
+• Connectionless systems
+– Reliable message stream (electronic junk mail)
+– Reliable byte stream (text messaging)
+– Unreliable connection (database query)
+
+=== PAGINA 18 ===
+Connections and reliability (4/4)
+Six common connection-oriented and connectionless services.
+
+=== PAGINA 19 ===
+Introduction
+Network Models: The OSI Model
+• In the ‘80 the ISO (International Standards Organization) defined a layered
+model for computer networks: the OSI (Open System Interconnection) model.
+Seven layers of the ISO/OSI model
+redneS
+revieceR
+• The ISO/OSI model includes 7 layers:
+1. Physical transmission of raw bits.
+2. Data format definition (frames).
+3. Routing of messages through the net.
+4. Transmission protocols (TCP, UDP).
+5. Management of ports and sessions
+(continuity of data stream).
+6. Translation of messages (encoding,
+compression, decryption, etc.).
+7. Data use and human-computer interaction
+(file sharing, emails, streaming videos, etc.).
+
+
+[TABELLA pagina 19]
+
+revieceR | 
+
+
+[TABELLA pagina 19]
+
+redneS | 
+
+=== PAGINA 20 ===
+Introduction
+Network Models: The OSI Model
+• Not always all layers are
+implemented.
+• Typically, in intermediate
+nodes (switches, routers),
+only 2 or 3 layers are
+implemented (media
+layers).
+• Only the end-points
+implement the whole
+stack up to the
+application layers.
+
+=== PAGINA 21 ===
+Introduction
+Network Models: The OSI Model
+• Encapsulation (top-down):
+every layer of the sender
+adds a layer-specific field to
+the message (payload) in
+the form of a header (H) or
+trailer (T).
+• Decapsulation (bottom-up):
+Those fields are removed
+and interpreted by the
+same layer in the receiver.
+
+=== PAGINA 22 ===
+Introduction
+OSI Model: 1. Physical Layer
+• The physical layer is responsible for movements of individual bits from one
+hop (node) to the next.
+• Physical characteristics of interfaces and media (connectors, cables, electric signals)
+• Line configuration (point-to-point or multipoint)
+• Physical topology (mesh, star, ring or bus)
+• Transmission mode (simplex, half-duplex or duplex)
+• Representation of bits
+• Data rate
+• Synchronization of bits
+
+=== PAGINA 23 ===
+Introduction
+OSI Model: 2. Data Link Layer
+• The data link layer is responsible for moving frames from one hop (node) to
+the next (segment).
+• Works on frames (portion of data, typically few hundreds of bytes)
+• Flow and error control (frame control sequences)
+• Access control
+
+=== PAGINA 24 ===
+Introduction
+OSI Model: 3. Network Layer
+• The network layer is responsible for the delivery of individual packets from
+the source host to the destination host (path).
+• Works on packets (typically larger and more complex than frames)
+• Source-to-destination delivery: packets from the source to the destination.
+• Logical addressing
+• Routing (routing tables)
+
+=== PAGINA 25 ===
+Introduction
+OSI Model: 4. Transport Layer
+• The transport layer is responsible for the delivery of a message from one end
+to another (message is received by the right program).
+• End-to-end delivery
+• Connection control (Connection-oriented or connection-less)
+• Segmentation/reassembly (to/from packets of layer 3)
+• Port addressing
+• Flow and error control
+
+=== PAGINA 26 ===
+Introduction
+OSI Model: 5. Session Layer
+• The session layer is responsible for dialog control and synchronization of
+request/response.
+• It establishes, maintains and synchronize the interaction between communicating
+system (communication session).
+• Dialog control and management
+• Synchronization (checkpoints)
+
+=== PAGINA 27 ===
+Introduction
+OSI Model: 6. Presentation Layer
+• The presentation layer is responsible for the representation of data, i.e.,
+translation, compression, encryption, etc.
+• Translation (e.g., EBCDIC-coded or ASCII-coded to text)
+• Encryption and Decryption
+• Compression
+
+=== PAGINA 28 ===
+Introduction
+OSI Model: 7. Application Layer
+• The application layer is responsible for providing services to the user.
+• Network virtual terminal (Remote log-in)
+• File transfer and access
+• Mail services
+• Accessing the World Wide Web
+• …
+
+=== PAGINA 29 ===
+Critique of the OSI model (1/2)
+• Bad timing
+– Competing TCP/IP protocols were already in widespread use
+• Bad design
+– Both the model and the protocols are flawed
+• Bad implementations
+– Initial implementations were huge, unwieldy, and slow
+• Bad politics
+– Widely thought to be the creature of the European telecommunication ministries, the
+European Community, and later the U.S. Government
+
+=== PAGINA 30 ===
+Critique of the OSI model (2/2)
+To prevent bad timing, it is essential that the standards be written in the trough in between the
+tops of the waves known as the two ‘‘elephants."
+
+=== PAGINA 31 ===
+Critique of the TCP/IP model (1/2)
+• Model does not clearly distinguish the concepts of services, interfaces, and
+protocols
+• Model is not at all general
+– Poorly suited to describing any other protocol stack
+• The link layer is not really a layer at all in the normal sense of the term
+• Model does not distinguish between the physical and data link layers
+• Other protocol implementations were distributed free
+
+=== PAGINA 32 ===
+TCP/IP vs OSI
+• The ISO/OSI model is de iure the standard stack for computer networks, but it
+is quite complex and detailed.
+De iure De facto
+• The TCP/IP and UDP/IP (aka Internet ISO/OSI TCP/IP or UDP/IP
+Protocol Suite) are the set of
+communication protocols actually used
+Application
+on internet and local networks.
+• TCP: Transmission Control Protocol.
+• UDP: User Datagram Protocol. TCP/UDP
+• IP: Internet Protocol.
+IP
+Link + Physical
+• The TCP/IP and UDP/IP are de facto the
+(Network Access
+standard stack for internet or Data link)
+communication.
+
+=== PAGINA 33 ===
+Other network models
+• There are different protocols for device communication, which can be used
+depending on the situation, that are still relying on the layered model.
+Industrial standards
+(Automation, IoT)
+ISO/OSI TCP/IP or UDP/IP RS-232 CAN
+Application
+CANopen,
+Application CANopen FD,
+J1939, …
+…
+TCP/UDP
+IP
+UART CAN2.0 A/B
+Link + Physical
+(Network Access
+or Data link) Rx, Tx, GND CAN-H, CAN-L

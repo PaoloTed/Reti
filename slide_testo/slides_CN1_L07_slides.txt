@@ -1,0 +1,353 @@
+=== PAGINA 1 ===
+Computer Networks I
+Reti di Calcolatori I
+The Application Layer:
+More on DNS
+Lecture 7
+
+=== PAGINA 2 ===
+Application Layer
+DNS
+• There are two ways to identify a host: by hostname and by IP address. People prefer
+the more mnemonic hostname identifier, while network devices prefer fixed-length,
+hierarchically structured IP addresses.
+• Example: www.unina.it -> 143.225.15.50
+• The Domain Name System (DNS) is an application-layer protocol that manages
+translation from hostnames to IP addresses.
+• It is a client-server protocol in which a DNS-client asks to a DNS-server for a specific
+hostname-to-address translation.
+• DNS servers are often UNIX machines running the Berkeley Internet Name Domain
+(BIND) software, typically using UDP connection and port number 53.
+
+=== PAGINA 3 ===
+The Domain Name System (DNS)
+Mechanism to “convert” names to IP addresses
+
+Impossible to manage a centralised repository (table)
+
+large number of hosts
+
+geographical distance of hosts and delays
+
+DNS is a distributed, decentralised system
+
+3
+
+=== PAGINA 4 ===
+DNS (cont’d)
+hierarchical
+
+domain-based
+
+implemented by means of a distributed database
+
+Resolver
+Program that returns the IP address associated to a name
+
+queries a local DNS server
+
+all messages are UDP packets
+
+4
+
+=== PAGINA 5 ===
+The DNS name space
+Naming hierarchy organised by ICANN (Internet Corp. for Assigning Names and
+
+Numbers)
+250 top-level domains
+
+Each domain partitioned in sub-domains, and so on
+
+Top-level domains
+Two types
+generic (aero, com, edu, . . . )
+
+country (uk, uk, it, tv, . . . )
+
+all managed by registrars appointed by ICANN
+5
+
+=== PAGINA 6 ===
+The DNS name space
+The name space is hierarchical from the root down
+
+Different parts delegated to different organisations
+
+6
+
+=== PAGINA 7 ===
+The DNS name space (cont’d)
+Generic top-level domains
+are controlled by ICANN who
+appoints registrars to run
+them
+7
+
+=== PAGINA 8 ===
+Domain names
+Names are paths upwards from the domain to the root
+
+example: eng.mit.edu
+
+Absolute paths end with a dot; relative paths are to be interpreted
+
+Possibility of registering under more than one top-level domain
+
+example: ibm.com, ibm.us
+
+cyber-squatting: buying domains only in order to sell them later to interested
+
+businesses
+8
+
+=== PAGINA 9 ===
+Domain names (cont’d)
+Each domain controls the allocation of the domains under it
+
+The creation of a new domain requires permission from the parent domain
+
+Naming does not follow physical/geographical boundaries
+
+9
+
+=== PAGINA 10 ===
+Domain resource records
+Fields of a resource record
+domain name
+
+time to live
+
+class
+
+type
+
+value
+
+10
+
+=== PAGINA 11 ===
+Resource record fields: Domain name (NAME)
+Tells the domain to which the record applies
+
+This field is the main search key for DNS queries
+
+Normally several records exist for each domain, residing at different servers
+
+11
+
+=== PAGINA 12 ===
+Resource record fields: Time to live (TTL)
+Indicates the life time of the record
+
+long for stable hosts (e.g. 86, 400 for 1 day), short for volatile ones (e.g. 60 for 1
+
+min)
+maximum value 231 − 1, approximately 68 years
+
+12
+
+=== PAGINA 13 ===
+Resource record fields: Class (CLASS)
+This field is always IN (Internet) for Internet records
+
+Other codes are rarely used
+
+13
+
+=== PAGINA 14 ===
+Resource record fields: Type (cont’d)
+Possible values:
+SOA (Start of Authority): information about the server’s zone (explained later),
+
+administrator’s contact etc.
+A (Address): 32-bit IPv4 address of some interface for the host
+
+some hosts have more than one interface
+
+equivalent AAAA value for IPv6 addresses
+
+MX (Mail eXchange): gives the name of the host which accepts email in the domain
+
+[see next slide]
+
+14
+
+=== PAGINA 15 ===
+Resource record fields: Type (TYPE)
+NS (Name Space): gives the name server for the domain; used as part of name
+
+lookup
+CNAME (Canonical Name): allows for aliases; the DNS lookup proceeds with the
+
+new name
+PTR (Pointer): alias used for reverse lookup: the lookup does not proceed, instead
+
+the name is returned.
+...
+
+15
+
+=== PAGINA 16 ===
+Resource record fields: Type (TYPE)
+16
+
+=== PAGINA 17 ===
+Resource record fields: Value (RDATA)
+The value depends on the record type (see table in previous slide)
+
+Can contain a domain, a value, or an ASCII string
+
+17
+
+=== PAGINA 18 ===
+Domain resource records: example
+cs.vu.nl
+18
+
+=== PAGINA 19 ===
+Name servers
+A single, centralised DNS server makes no sense
+
+The DNS name space is divided in non-overlapping zones
+
+The partitioning is up to the zone administrator
+
+Each zone contains one or more name servers
+
+a primary one and secondary one
+
+19
+
+=== PAGINA 20 ===
+Name servers (cont’d)
+Name servers contain data for portions of the name space called zones (circled)
+
+20
+
+=== PAGINA 21 ===
+Name resolution
+1.Host queries a local name server
+2.If the domain falls under the jurisdicion (zone) of the local server, an authoritative
+record is returned
+3.otherwise, the local server handles the query recursively and issues remote
+queries
+if the DNS server has the address, it returns it
+
+otherwise, it returns the name server for a lower zone
+
+the process goes on iteratively, until the address is found
+
+21
+
+=== PAGINA 22 ===
+Name resolution (cont’d)
+these are the ones to start from when no information is available
+
+there are 13 of them
+
+a.root-servers.net to m.root-servers.net
+
+they are highly replicated servers
+
+they are busy, therefore they usually return information on lower zones (not on
+
+individual records)
+22
+
+=== PAGINA 23 ===
+Name servers: example
+23
+
+=== PAGINA 24 ===
+nslookup examples
+We can perform manually the iterative querying done by a local DNS server
+
+Reverse lookup is also possible (get name from address)
+
+24
+
+=== PAGINA 25 ===
+nslookup examples
+The (default) server is in this case the
+router: 127.0.0.53 (port 53)
+• The returned records are non-
+authoritative (cached)
+• They do not come from the DNS server
+that manages the zone
+• The local server handles the whole
+resolution via iterative queries
+• The host issues a recursive query (either
+the complete answer
+or an error is returned)
+25
+
+=== PAGINA 26 ===
+Types of DNS queries
+Local DNS servers manage recursive queries
+
+service to their hosts
+
+Many DNS servers (the busy ones, e.g. the ones closer to the top) do not handle
+
+recursive queries
+26
+
+=== PAGINA 27 ===
+Types of DNS records
+Records are either authoritative or cached
+
+Cached records expire (recall TTL)
+
+Caching helps performances
+
+All answers are cached
+
+The address can be returned immediately by the local server if cached
+
+If a request for the address of cs.mit.edu comes and the server has the address of
+
+the DNS server for mit.edu, such server can be queried.
+Root servers are only queried in the absence of any information on a certain domain.
+
+27
+
+=== PAGINA 28 ===
+Application Layer
+DNS: Resolver
+• There is another important type of DNS server called the
+local DNS server (or DNS resolver).
+• A local DNS server does not strictly belong to the
+hierarchy of servers and is typically managed by ISPs.
+• Google also provides similar servers all around the world
+(Google Public DNS) on address 8.8.8.8 or 8.8.4.4.
+• When a host connects to an ISP, the ISP provides the
+host with the IP addresses of one or more of its local
+DNS servers (that are typically “close to” the host).
+• When a host makes a DNS query, the query is sent to the
+local DNS server, which acts as a proxy, forwarding the
+query to the DNS server hierarchy.
+
+=== PAGINA 29 ===
+Application Layer
+DNS: Aliasing
+• DNS provides an aliasing service for servers in which complicated/long names
+(aka canonical) are associated to a more simple/short ones (aka alias).
+• Host aliasing: hosts with complicated hostnames can be associated to more
+mnemonic aliases.
+• Example: relay1.west-coast.enterprise.com -> www.enterprise.com
+• Note that DNS can still be invoked by an application to obtain the canonical
+(original) hostname for a supplied alias as well as the associated IP address.
+
+=== PAGINA 30 ===
+Application Layer
+DNS: Load Distribution
+• A DNS can be used to perform load distribution among replicated servers
+(aka, round-robin DNS).
+• Typically, busy sites (e.g., google, amazon, CNN, etc.) are replicated over
+multiple servers, with each server running on a different end system and
+each having a different IP address (multiple IP addresses associated with one
+canonical hostname).
+• The DNS database contains this set of IP addresses. When clients make a DNS
+query for a name mapped to a set of addresses, the server may rotate the
+order in which addresses are replied.

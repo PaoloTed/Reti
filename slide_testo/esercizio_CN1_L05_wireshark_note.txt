@@ -1,0 +1,44 @@
+=== PAGINA 1 ===
+Istruzioni per l'installazione di
+Wireshark
+1. Come installare Wireshark con apt (se si usa distrubuzione
+con apt)
+Per installare Wireshark su Debian/Ubuntu e derivate si esegue:
+sudo apt update
+sudo apt install wireshark
+Durante l’installazione verrà chiesto se permettere agli utenti non-root di catturare pacchetti; bisogna
+rispondere affermativamente.
+2. Come verificare che l'utente faccia parte del gruppo
+Wireshark
+• Verificare che esista il gruppo wireshark con:
+getent group wireshark
+• Controllare se l’utente è membro del gruppo:
+groups
+3. Come riconfigurare Wireshark con apt per esecuzione da non-
+root
+Se serve modificare la configurazione dopo l’installazione, si può eseguire:
+sudo dpkg-reconfigure wireshark-common
+e scegliere di consentire l’uso da parte di utenti non-root. Bisogna poi aggiungere l’utente al gruppo
+wireshark e riavviare la sessione.
+4. Come impostare e controllare permessi su dumpcap con
+setcap/getcap
+• Per assegnare permessi al binario dumpcap si usa:
+sudo setcap cap_net_raw,cap_net_admin+eip /usr/bin/dumpcap
+
+=== PAGINA 2 ===
+• Per controllare i permessi assegnati:
+getcap /usr/bin/dumpcap
+Se il comando restituisce
+cap_net_raw,cap_net_admin+eip
+oppure
+cap_net_raw,cap_net_admin=eip
+allora i permessi sono corretti (normalmente lo sono già appena finita l'installazione; controllare
+pertanto con getcap come sopra).
+5. Come rendere eseguibile /usr/bin/dumpcap
+Di solito dumpcap è già eseguibile, ma se serve si può eseguire:
+sudo chmod +x /usr/bin/dumpcap
+6. Come aggiungere l’utente corrente al gruppo wireshark
+Si usa il comando:
+sudo usermod -aG wireshark $USER
+Per applicare la modifica uscire e rientrare nella sessione (logout/login) oppure eseguire:
+newgrp wireshark

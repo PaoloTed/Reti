@@ -1,0 +1,6 @@
+=== PAGINA 1 ===
+Implementando una chiamata HTTP da zero tocchiamo con mano
+il fatto che un messaggio a livello applicazione viene inviato come
+payload (contenuto) di un messaggio a livello di trasporto, dove il
+primo messaggio ha contenuto assoutamente trasparente/irrilevante
+per il livello di trasporto.

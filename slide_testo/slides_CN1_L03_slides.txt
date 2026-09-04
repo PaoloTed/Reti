@@ -1,0 +1,519 @@
+=== PAGINA 1 ===
+Computer Networks I
+Reti di Calcolatori I
+The Application Layer
+Lecture 3
+
+=== PAGINA 2 ===
+Application Layer
+Network Applications
+• A network application is composed by
+application
+transport
+multiple programs that run on different mobile nentewtwoorrkk
+data link
+end-systems (hosts or endpoints) and
+phy s ical
+nationa l o r globa l I S P
+communicate with each other over the
+network.
+• Example: a Web application includes two
+l
+r
+o
+e
+c
+g
+a
+io
+l
+n
+o
+a
+r
+l IS P
+di
+•
+sti
+th
+n
+e
+c t
+b r
+p
+o
+r
+w
+o
+s
+g
+e
+r
+r
+a
+p
+m
+ro
+s
+g
+:
+ram running in the user’s
+home netw o
+a
+r
+t
+p
+r
+k
+a
+p
+n
+lic
+s
+a
+p
+t
+o
+i o
+r t
+n
+c
+p
+o
+ro
+n
+v
+t e
+i d
+n
+e
+t
+r
+network
+netw
+ap
+o
+p
+r
+l
+k
+icatio n
+d atacenter
+host (desktop, laptop, tablet, smartphone, data lin k
+transport
+n etwork
+physical
+network
+and so on).
+data link
+physical
+• the Web server program running in the
+enterprise
+Web server host. network
+
+
+[TABELLA pagina 2]
+
+ |  | 
+
+=== PAGINA 3 ===
+Application Layer
+Some Network Applications
+• The applications are the programs that runs on the devices and allow users
+to access to services.
+• social networking
+• Web
+• text messaging
+• e-mail
+• multi-user network games
+• streaming stored video (YouTube, Netflix)
+• P2P file sharing
+• voice over IP (e.g., Skype)
+• real-time video conferencing
+• Internet search
+• remote login
+• …
+
+=== PAGINA 4 ===
+Application Layer
+Creating Network Applications
+• Creating network applications means to
+write programs that:
+• Run on different end systems, perhaps using
+different languages or OS.
+Socket
+• Communicate over network (e.g., via sockets)
+by means of a specific protocol.
+Network
+• No need to write software for network-core
+Socket
+devices
+• Network devices do not run user applications.
+• There are specific libraries (e.g., sockets)
+implementing network functionalities.
+
+=== PAGINA 5 ===
+Application Layer
+Creating Network Applications
+
+=== PAGINA 6 ===
+Application Layer
+Creating Network Applications
+The communication between processes occurs via sockets.
+
+Applications use the transport layer’s services (reliable data stream)
+
+
+=== PAGINA 7 ===
+Application Layer
+Network Applications
+• A (network) application architecture is designed by the application developer and
+determines how the application is structured over the various end systems:
+• Client-server: the nodes are heterogeneous, there is an always-on host (server), which
+provides services to be requests from many other hosts (clients).
+• Peer-to-peer (P2P): the nodes are (ideally) homogeneous, the application exploits direct
+communication between pairs of intermittently connected hosts (peers).
+Client-server
+Peer-to-peer
+
+=== PAGINA 8 ===
+Application Layer
+Client-server Applications
+• In a client-server architecture, clients do not directly communicate with each other.
+• The server has a fixed, well-known address (hostname or IP address) so a client can always
+contact the server by sending a packet (request) to it.
+• In a client-server architecture multiple servers are often involved to keep up with all the requests
+from clients. The client is typically unaware of that and perceives them as a single server.
+• Multiple servers can be:
+• Grouped into data centers containing a huge number of servers in a specific location.
+• Servers must be powered, maintained, and well connected.
+• Scattered as distributed servers all around the world.
+• Servers must be interconnected and coordinated.
+• Organized in distributed data centers.
+
+=== PAGINA 9 ===
+Application Layer
+Client-server Applications
+• A web application is a typical client-server
+example:
+• There is an always-on Web server receiving
+requests from the browsers on the client hosts.
+• When a Web server receives a request for an
+object from a client host, it responds by sending
+the requested object to the client host.
+• The web server is reachable by the hosts.
+•
+
+=== PAGINA 10 ===
+Application Layer
+Peer-to-peer Applications
+• It is often used for traffic-intensive applications.
+• There is no single server with fixed address
+ Each client has its own address
+• Pure P2P applications are rare: most applications have hybrid architectures,
+combining both client-server and P2P elements.
+• For example, for many instant messaging applications, servers are used to track the
+addresses of users, but user-to-user messages are sent directly between user hosts (without
+passing through intermediate servers).
+• P2P architectures are scalable and distributed.
+• For example, in a P2P file-sharing application, although each peer generates workload by
+requesting files, each peer also adds service capacity to the system by distributing files to
+other peers.
+• P2P architectures are also cheap (no need for infrastructures or significant
+bandwidth) but there are security, performance, and reliability issues.
+
+=== PAGINA 11 ===
+Application Layer
+Peer-to-peer Applications
+• Typical P2P applications are internet
+telephony and video conference or
+file-sharing (e.g., BitTorrent,
+Napster):
+• Servers are used to track the IP
+addresses of users, but user-to-user
+messages/requests are sent directly
+between user hosts (without passing
+through intermediate servers).
+• In file-sharing applications the server
+can also trace all available files in
+order to speed up the search.
+S
+
+=== PAGINA 12 ===
+Application Layer
+Communication between Processes
+• In a network application there are processes running on
+Process1
+different machines (potentially running on different Process2
+Process3
+operating systems) that communicate through the network.
+• In web applications the process of a client’s browser exchanges
+messages with the process of the web server.
+• In P2P file-sharing a file is transferred from a process in one peer to
+a process in another peer.
+• Between a pair of communicating processes there is typically
+a client process and a server process:
+• In Web applications a browser’s process is a client, while the
+server’s process is a server.
+• In P2P file-sharing the peer that is downloading can be seen as a
+Process1
+client, while the peer that is uploading as a server.
+Process2
+Process3
+• In a P2P application processes may “change role”.
+
+=== PAGINA 13 ===
+Application Layer
+Communication between Processes
+• Most network applications consist of pairs of
+communicating processes sending/receiving
+messages to/from each other through the
+underlying network.
+Application Layer
+Socket
+Transport Layer
+• Following the layered model, a socket is the
+software interface between application and
+transport layers and allows processes to
+send/receive messages over the network.
+Toward
+hardware
+(low-level)
+
+
+[TABELLA pagina 13]
+
+Application Layer
+
+Transport Layer
+
+=== PAGINA 14 ===
+Application Layer
+Communication between Processes
+• A typical analogy is to consider sockets
+as mailboxes:
+• When a process wants to send a message
+to another process on another host, it puts Process on
+Host1
+the message into a mailbox.
+• This sending process assumes that there is
+a transportation infrastructure on the
+Transport
+other side of its door that will transport
+infrastructure
+the message to the mailbox of the (network)
+destination process.
+Process on
+• Once the message arrives at the
+Host2
+destination host, the message passes
+through the receiving process’s mailbox
+(socket).
+
+=== PAGINA 15 ===
+Application Layer
+Communication between Processes
+• Sockets are used as Application Programming Interface (API) between the application
+and the network.
+• The application developer has control of everything on the application-layer side of the
+socket but has little control of the transport-layer side of the socket.
+• The only control that the application developer has on the transport-layer side is:
+1. The choice of transport protocol (TCP/UDP).
+2. Perhaps the ability to set a few transport-layer parameters (e.g., maximum buffer, maximum
+segment size, etc.).
+• Once the application developer chooses a transport protocol (if a choice is available),
+the application is built assuming as given the transport-layer services provided by that
+protocol.
+
+=== PAGINA 16 ===
+Application Layer
+Communication between Processes
+• Following the postal mail analogy, processes need an
+Process1
+address to send messages. Process2
+Process3
+Identifier
+• Since multiple network applications can be running
+Address
+on a single host, to identify the receiving process, two
+pieces of information needed:
+1. An address of the host (to find the right host on the
+network).
+2. An identifier of the receiving process (to find the right
+process in the host).
+• The address works at the network level (routing) while
+identifier works at transport level.
+
+=== PAGINA 17 ===
+Application Layer
+Communication between Processes
+• In the Internet, a host is identified by an IP address
+Process1
+(32-bit quantity) while the process is identified by a Process2
+Web!
+port number.
+80
+192.168.1.10
+• Popular applications have been conventionally
+assigned to specific port numbers.
+• For example, a Web server is identified by port number 80,
+a mail server process (using the SMTP protocol) is
+identified by port number 25.
+• A list of well-known port numbers (and protocols) can be found here:
+https://www.iana.org/assignments/service-names-port-numbers/service-names-port-number
+s.xhtml
+.
+
+=== PAGINA 18 ===
+Application Layer
+QoS from Transport-layer
+• The transport-layer (below the application layer) offers protocols to implement on
+demand some proprieties, aka Quality of Service (QoS):
+• Reliability of data transfer: data sent by one end of the application is delivered correctly and
+completely to the other end.
+• Throughput: the rate at which the sending process can deliver bits to the receiving process
+(bit/sec).
+• Timing: every bit that the sender pumps into the socket arrives at the receiver’s socket within a
+time range.
+• Security: encryption and decryption of the messages.
+• Theoretically, security is a transport-layer issue but secure protocols (e.g., TLS - Transport-Layer Security) are
+often built upon TCP, so it is application-layer in practice.
+• TCP (Transmission Control Protocol): includes a handshake between processes service
+and a reliable data transfer service (aka connection-oriented).
+• UDP (User Datagram Protocol): is lightweight with minimal services, there is no
+handshake, no guarantee that messages are received (aka connectionless).
+
+=== PAGINA 19 ===
+Application Layer
+Application Protocols
+• An application-layer protocol defines how network application’s processes,
+running on different end systems, pass messages to each other.
+• How are messages structured? What are the meanings of the various fields in the
+messages? When do the processes send the messages?
+• Specifically, application-layer protocols define:
+1. The types of messages exchanged (for example request messages and response
+messages).
+2. The syntax of the various message types, such as the fields in the message and how
+the fields are delineated.
+3. The semantics of the fields, i.e., the meaning of the information in the fields.
+4. The rules for determining when and how a process sends messages and responds to
+messages.
+
+=== PAGINA 20 ===
+Application Layer
+Some Application Protocols
+• There are several application-layer protocols that are commonly used on
+networks (and internet), here some example.
+Application Description
+DHCP Dynamic Host Configuration Protocol, assigns IP addresses
+DNS Domain Name System, translate website names to IP addresses
+HTTP/HTTPS HyperText Transfer Protocol (Secure), transfer web pages
+SMTP/SMTPS Simple Mail Transfer Protocol (Secure), sends email messages
+SNMP Simple Network Management Protocol, manages network devices
+Telnet/SSH Teletype Network (Secure SHell), allows command-line interfacing with remote hosts
+FTP/FTPS File Transfer Protocol (Secure), used to transfer files
+
+
+[TABELLA pagina 20]
+
+Application | Description
+
+DHCP | Dynamic Host Configuration Protocol, assigns IP addresses
+
+DNS | Domain Name System, translate website names to IP addresses
+
+HTTP/HTTPS | HyperText Transfer Protocol (Secure), transfer web pages
+
+SMTP/SMTPS | Simple Mail Transfer Protocol (Secure), sends email messages
+
+SNMP | Simple Network Management Protocol, manages network devices
+
+Telnet/SSH | Teletype Network (Secure SHell), allows command-line interfacing with remote hosts
+
+FTP/FTPS | File Transfer Protocol (Secure), used to transfer files
+
+=== PAGINA 21 ===
+Application Layer
+Some Application Protocols
+• Some application may exchange sensitive information (e.g., user’s
+credentials, personal data, etc.).
+• On public networks, messages should be secured.
+Application Description
+DHCP Dynamic Host Configuration Protocol, assigns IP addresses
+DNS Domain Name System, translate website names to IP addresses
+HTTP/HTTPS HyperText Transfer Protocol (Secure), transfer web pages
+SMTP/SMTPS Simple Mail Transfer Protocol (Secure), sends email messages
+SNMP Simple Network Management Protocol, manages network devices
+Telnet/SSH Teletype Network (Secure SHell), allows command-line interfacing with remote hosts
+FTP/FTPS File Transfer Protocol (Secure), used to transfer files
+
+
+[TABELLA pagina 21]
+
+Application | Description
+
+DHCP | Dynamic Host Configuration Protocol, assigns IP addresses
+
+DNS | Domain Name System, translate website names to IP addresses
+
+HTTP/HTTPS | HyperText Transfer Protocol (Secure), transfer web pages
+
+SMTP/SMTPS | Simple Mail Transfer Protocol (Secure), sends email messages
+
+SNMP | Simple Network Management Protocol, manages network devices
+
+Telnet/SSH | Teletype Network (Secure SHell), allows command-line interfacing with remote hosts
+
+FTP/FTPS | File Transfer Protocol (Secure), used to transfer files
+
+=== PAGINA 22 ===
+Application Layer
+FTP and FTPS
+• FTP (File Transfer Protocol) is one of the oldest protocols defined in Internet
+(first version in 1971) and is used to transfer files between hosts over
+network.
+• In the basic version of FTP data transfer is in clear-text (username, password,
+and files) so it is best used in local or private applications.
+• The secure version FTPS (FTP Secure) protects username and password and
+encrypt contents.
+• Both FTP and FTPS have two components:
+• The protocol that specifies commands (show, get, delete files, etc.).
+• A software application implementing the protocol (client-side and a server-side
+software).
+
+=== PAGINA 23 ===
+Application Layer
+FTP Example
+• In Linux we can use ftp and vsftpd (very secure FTP daemon) as client and server applications
+respectively.
+• On the server machine:
+• Install vsftpd:
+• $ sudo apt-get install vsftpd
+• Check ftp server running
+Note: The server side of this application
+• $ service vsftpd status (check if daemon is running)
+is implemented as a daemon: a program
+that runs in background and waits for
+clients to connects. This is a common
+• On the client machine: approach.
+• Install ftp:
+• $ sudo apt-get install ftp (it is already available in Ubuntu)
+• Connect to server:
+• $ ftp ADDRESS (usr and pass will be asked)
+• Close connection:
+• $ exit
+
+=== PAGINA 24 ===
+Application Layer
+FTP Common Commands
+Common FTP commands:
+help - List all available FTP commands.
+cd - Change directory on remote machine.
+lcd - Change directory on local machine.
+ls - View the names of the files and directories in the current remote directory.
+mkdir - Create a new directory within the remote directory.
+pwd - Print the current working directory on the remote machine.
+delete - Delete a file in the current remote directory.
+rmdir- Remove a directory in the current remote directory.
+get - Copies a file from the remote server to the local machine.
+put - Copies a file from the local machine to the remote machine.

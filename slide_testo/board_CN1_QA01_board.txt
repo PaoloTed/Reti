@@ -1,0 +1,41 @@
+=== PAGINA 1 ===
+v. Lezione n. 4
+Le risposte devono essere complete e possono essere concise.
+(a) la associazione tra il nome e l'indirizzo IP compare in diversi record in diversi server DNS
+(nelle cache, a parte il server che ha autorità). Il punto è come gestire le repliche dopo il cambiamento.
+Il campo TTL (time to live) è cruciale; non si effettua alcun aggiornamento ma si lascia che i record
+scadano e poi vengano rimpiazzati da quelli con l'informazione aggiornata. Nel frattempo ci saranno degli
+errori che vengono tollerati.
+feijoada.dsc.uttfpr.edu.br
+feijoada.dsc.uttfpr.edu.br
+
+=== PAGINA 2 ===
+10010011 10001110 10101000 00000000
+10010011 10001110 10101100 00000000
+10010011 10001110 11001011 10100101
+10010011 10001110 10101101 01010101
+
+=== PAGINA 3 ===
+Segue esempio dalla lezione 15 (lavagna)
+11001000 00010111 00011000 11001001
+Longest matching prefix rule
+Se un indirizzo viene associato con successo a piú di una subnet
+(spazio di indirizzi in una riga della forwarding table) esso viene
+instradato verso il porto di output associato alla subnet con il
+prefisso piú lungo.
+Questo consente di assegnare un sotto-spazio di indirizzi
+di uno spazio ad un output port diverso, senza generare
+ambiguità.
+
+
+[TABELLA pagina 3]
+
+ | 
+
+ | 
+
+ | 
+
+ | 
+
+ | 

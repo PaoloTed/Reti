@@ -1,0 +1,27 @@
+=== PAGINA 1 ===
+(v. testo di Tanenbaum)
+
+=== PAGINA 2 ===
+Appena una stazione rileva una collisione essa
+termina la trasmissione, aspetta un tempo casuale,
+e riprova.
+Ethernet ha un campo "pad" per allungare artificialmente i frame
+troppo corti. Infatti il tempo di trasmissione di un frame deve essere
+garantito essere piú lungo di 2
+La disposizione ad anello può anche essere solo logica,
+cioè non corrispondente ad una analoga disposizione ad
+anello del livello fisico. Per es. a livello fisico ci può essere
+un bus cui tutte le stazioni sono connesse, ma a livello
+logico c'è sempre il passaggio del token (gettone).
+La stazione che ha il token, passato lungo l'anello,
+può (ma non deve) trasmettere.
+I frame di dati viaggiano anch'essi sull'anello da una
+stazione alla successiva.
+I protocolli di rilascio del token possono avere diverse
+minori varianti. È importante che ci sia un modo di
+recuperare un token perduto/bloccato (per es. una
+stazione cessa di funzionare mentre custodisce il
+token).
+
+=== PAGINA 4 ===
+MACA: Multiple Access, Collision Avoidance

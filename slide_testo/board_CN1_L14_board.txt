@@ -1,0 +1,9 @@
+=== PAGINA 1 ===
+I router utilizzano il modello
+store-and-forward. Essi hanno
+dunque un buffer dove tengono
+(brevemente) i pacchetti prima
+di inoltrarli verso il prossimo nodo.
+I router possono avere il buffer
+pieno (congestione) e pertanto
+perdere pacchetti in arrivo.

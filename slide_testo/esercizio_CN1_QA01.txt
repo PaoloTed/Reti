@@ -1,0 +1,47 @@
+=== PAGINA 1 ===
+Reti di Calcolatori I:
+Domande di ripasso
+1 HTTP (Application Layer)
+(a) Spiegare quali sono le parti di un URL e qual è l’uso di ciascuna.
+(b) Spiegare brevemente il three-wayhandshake usato per stabilire una connessione HTTP.
+(c) Illustrare cosa è il pipelining in HTTP.
+(d) Su quali protocolli a livello di trasporto è basato il protocollo HTTP?
+2 DNS (Application Layer)
+(a) Supponiamo che si cambi l’indirizzo IP di una macchina, che ha come nome per esem-
+pio server-1.ortofrutta.it ed ospiti (ad esempio) un server FTP. Spiegare come è gestito
+l’aggiornamento affinché la modifica sia riflessa nel DNS. Nota: ilfattochelamacchinaospitiunserver
+FTPèirrilevanteperladomanda.
+(b) Supponiamo che si debba risolvere il nome feijoada.dsc.utfpr.edu.br da un calcolatore portatile,
+chesitrovainunodeilaboratoridiUniNAechenonhaalcunainformazionenellapropriacache. Detta
+macchina invia quindi una richiesta a uno dei server dei nomi di UniNA, per es. dscna2.unina.it,
+del quale si assume che nella cache (come risultato di precedenti interrogazioni, ovviamente) ci sia
+un record NS con l’indirizzo IP del server DNS per dsc.utfpr.edu.br. Spiegare come il suddetto
+name server di UniNA gestisce la richiesta e come ci si aspetta che risponda il server dei nomi per
+dsc.utfpr.edu.br.
+3 Indirizzi IP (Network Layer)
+(a) Si consideri la seguente tavola di routing di un server che implementa CIDR (Classless InterDomain
+Routing).
+Subnet Next hop
+147.142.168.0/21 L1
+147.142.172.0/23 L2
+default R0
+Due pacchetti IP, con indirizzi di destinazione 147.142.203.165 e 147.142.173.85 rispettivamente, arrivano
+al router. Descrivere come tali pacchetti sono gestiti e inoltrati.
+Perlarisposta,considerarecheildecimale147èrappresentatoinbinario(paroladi8bit)come10010011,
+142 come 10001110, 168 come 10101000, 172 come 10101100, 173 come 10101101, 203 come 11001011, 165
+come10100101,e85come01010101.
+(b) Sispieghiperchéigrandirouter,peresempioquellichegestisconograndiquantitàditrafficonellereti
+degli ISP, usano CIDR e hanno a che fare con informazioni relative a subnets (per es. 189.103.176.0/20)
+piuttosto che indirizzi IP singoli.
+1
+
+
+[TABELLA pagina 1]
+
+Subnet | Next hop
+
+147.142.168.0/21
+147.142.172.0/23
+default | L1
+L2
+R0

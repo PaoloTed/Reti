@@ -1,0 +1,15 @@
+=== PAGINA 1 ===
+Nelle reti c'e' comunicazione tra due
+macchine a ogni strato, coi relativi
+protocolli. Tutte queste trasmissioni
+sono virtuali, salvo quella a livello fisico,
+che comporta dei fenomeni fisici.
+A livello Applicazione si trovano per es. il Web, applicazioni di messaggistica,
+telefonia basata su dati, DNS etc.
+www.unina.it
+Dall`esercizio della Lez. 7
+
+=== PAGINA 2 ===
+Può darsi che un server per kyushu-u
+abbia record di tipo A con autorità per
+nodi nella sotto-zona arancione.
