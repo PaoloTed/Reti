@@ -3,6 +3,7 @@
 > **Corso di Laurea in Informatica — A.A. 2025-2026**
 > Questa guida copre **tutti gli argomenti** delle lezioni 1–26 del corso **Computer Networks I**.
 > Il documento è completamente sostitutivo allo studio delle slide ed è scritto interamente in **italiano**.
+> Include **tutte le 63 lavagne manoscritte originali** (board), i **laboratori pratici completi con Wireshark** e le **sessioni di domande d'esame (QA01)**.
 
 ---
 
@@ -24,6 +25,8 @@
 13. [Sicurezza delle Reti](#13-sicurezza-delle-reti) — [Sottosezioni](#indice-delle-sottosezioni-capitolo-13)
 14. [Programmazione REST e Formati di Scambio Dati](#14-programmazione-rest-e-formati-di-scambio-dati) — [Sottosezioni](#indice-delle-sottosezioni-capitolo-14)
 15. [Esercizi Risolti e Sessioni di Domande e Risposte](#15-esercizi-risolti-e-sessioni-di-domande-e-risposte) — [Sottosezioni](#indice-delle-sottosezioni-capitolo-15)
+16. [Guide Pratiche di Laboratorio con Wireshark](#16-guide-pratiche-di-laboratorio-con-wireshark) — [Sottosezioni](#indice-delle-sottosezioni-capitolo-16)
+17. [Sessione di Ripasso e Domande d'Esame Svolte (QA01)](#17-sessione-di-ripasso-e-domande-desame-svolte-qa01) — [Sottosezioni](#indice-delle-sottosezioni-capitolo-17)
 
 ---
 
@@ -204,6 +207,22 @@ Rete:         [ Header IP | Header TCP | DATI ]     → datagramma
 Link:         [ Header Eth | ... | DATI | Trailer ] → frame
 ```
 
+### 1.9 Schemi e Appunti dalle Lavagne (Lezione 2)
+
+I seguenti schemi riproducono fedelmente le lavagne manoscritte della lezione sull'architettura a livelli e il modello di rete:
+
+![Board Lezione 02 - Pagina 1](assets/board_images/board_lecture02_p1.png)
+*Figura 1.1 — Comunicazione tra due macchine a ogni strato e protocolli corrispondenti.*
+
+![Board Lezione 02 - Pagina 2](assets/board_images/board_lecture02_p2.png)
+*Figura 1.2 — Host terminali vs nodi intermedi di commutazione e instradamento.*
+
+![Board Lezione 02 - Pagina 3](assets/board_images/board_lecture02_p3.png)
+*Figura 1.3 — Stack protocollare e incapsulamento sequenziale dei dati.*
+
+![Board Lezione 02 - Pagina 4](assets/board_images/board_lecture02_p4.png)
+*Figura 1.4 — Percorso end-to-end dei dati attraverso la rete fisica.*
+
 ---
 
 ## 2. Il Livello Applicazione — Architetture e Protocolli Base
@@ -315,6 +334,14 @@ ftp INDIRIZZO_SERVER
 | `get` / `put` | Scarica / carica file |
 | `mkdir` / `rmdir` | Crea / rimuove directory remota |
 | `delete` | Cancella file remoto |
+
+### 2.7 Schemi e Appunti dalle Lavagne (Lezione 3)
+
+![Board Lezione 03 - Pagina 1](assets/board_images/board_L03_p1.png)
+*Figura 2.1 — Principio di disaccoppiamento: le applicazioni delegano la gestione del flusso al livello di trasporto.*
+
+![Board Lezione 03 - Pagina 2](assets/board_images/board_L03_p2.png)
+*Figura 2.2 — Servizi del trasporto visti dal livello applicazione (astrazione logica).*
 
 ---
 
@@ -476,6 +503,11 @@ If-Modified-Since: Tue, 18 Aug 2015 15:11:03 GMT
 - Non modificato → `304 Not Modified` (nessun corpo, usa copia locale)
 - Modificato → `200 OK` + nuovo oggetto
 
+### 3.8 Schemi e Appunti dalle Lavagne (Lezione 4)
+
+![Board Lezione 04 - Pagina 1](assets/board_images/board_L04_p1.png)
+*Figura 3.1 — Diagramma temporale dello scambio messaggi HTTP, handshaking TCP e stima dell'RTT.*
+
 ---
 
 ## 4. Posta Elettronica, P2P e DNS
@@ -593,6 +625,20 @@ Gestito dagli ISP. Il **Google Public DNS** è `8.8.8.8` e `8.8.4.4`.
 **Caching DNS:** i record vengono memorizzati con scadenza = TTL.
 
 **Round-Robin DNS:** per siti trafficati (Google, Amazon), il DNS ruota l'ordine di risposta tra più IP per distribuire il carico.
+
+### 4.6 Schemi e Appunti dalle Lavagne (Lezione 7)
+
+![Board Lezione 07 - Pagina 1](assets/board_images/board_L07_p1.png)
+*Figura 4.1 — Tabella dei record DNS e formati di risorsa.*
+
+![Board Lezione 07 - Pagina 2](assets/board_images/board_L07_p2.png)
+*Figura 4.2 — Flusso delle interrogazioni DNS nella gerarchia dei server.*
+
+![Board Lezione 07 - Pagina 3](assets/board_images/board_L07_p3.png)
+*Figura 4.3 — Esempio pratico di risoluzione dei nomi tra server autoritativi.*
+
+![Board Lezione 07 - Pagina 4](assets/board_images/board_L07_p4.png)
+*Figura 4.4 — Caching locale e gestione del campo Time To Live (TTL).*
 
 ---
 
@@ -778,6 +824,17 @@ int main() {
 
 > **Socket TCP identificata da 4 elementi:** IP sorgente, porta sorgente, IP destinazione, porta destinazione.
 
+### 5.7 Schemi e Appunti dalle Lavagne (Lezioni 8 e 9)
+
+![Board Lezione 08 - Pagina 1](assets/board_images/board_L08_p1.png)
+*Figura 5.1 — Comunicazione tra processi remoti tramite socket come porta di interfaccia tra applicazione e SO.*
+
+![Board Lezione 08 - Pagina 2](assets/board_images/board_L08_p2.png)
+*Figura 5.2 — Incapsulamento del payload applicativo all'interno del segmento di trasporto.*
+
+![Board Lezione 09 - Pagina 1](assets/board_images/board_L09_p1.png)
+*Figura 5.3 — Costruzione di una richiesta HTTP raw da zero inviata direttamente su socket TCP.*
+
 ---
 
 ## 6. Il Livello di Trasporto — UDP e Trasferimento Affidabile
@@ -911,6 +968,17 @@ Window: [base, nextseqnum-1] = trasmessi ma non ACK
 **Selective Repeat (SR):** ritrasmette **solo** i pacchetti persi/corrotti; i fuori-ordine vengono bufferizzati.
 
 > **Vincolo SR:** numero di sequenza ≥ 2 × window size.
+
+### 6.8 Schemi e Appunti dalle Lavagne (Lezioni 10, 11 e 12)
+
+![Board Lezione 10 - Pagina 1](assets/board_images/board_L10_p1.png)
+*Figura 6.1 — Livello di trasporto: comunicazione punto-punto logica tra host terminali.*
+
+![Board Lezione 11 - Pagina 1](assets/board_images/board_L11_p1.png)
+*Figura 6.2 — Analisi temporale RDT nel caso critico di Timeout inferiore all'RTT: gestione dei duplicati.*
+
+![Board Lezione 12 - Pagina 1](assets/board_images/board_L12_p1.png)
+*Figura 6.3 — Perché l'affidabilità completa spetta allo strato di trasporto e non alla rete IP sottostante.*
 
 ---
 
@@ -1046,6 +1114,20 @@ Client                              Server
 ```
 
 ACK e FIN del server possono essere nello stesso segmento o separati. I timer gestiscono le perdite durante il teardown.
+
+### 7.10 Schemi e Appunti dalle Lavagne (Lezioni 13 e 16)
+
+![Board Lezione 13 - Pagina 1](assets/board_images/board_L13_p1.png)
+*Figura 7.1 — Flusso di byte TCP, numerazione progressiva dei segmenti e campo Sequence Number.*
+
+![Board Lezione 13 - Pagina 2](assets/board_images/board_L13_p2.png)
+*Figura 7.2 — Meccanismo degli ACK cumulativi e avanzamento della finestra.*
+
+![Board Lezione 13 - Pagina 3](assets/board_images/board_L13_p3.png)
+*Figura 7.3 — Diagramma temporale di sincronizzazione e scambio dati TCP.*
+
+![Board Lezione 16 - Pagina 1](assets/board_images/board_L16_p1.png)
+*Figura 7.4 — Esercitazione Wireshark su stream TCP: download file 10MB e analisi del throughput.*
 
 ---
 
@@ -1196,6 +1278,23 @@ Input Links ──► [Input Port 1...N] ──► [Switch Fabric] ──► [Ou
 
 **Esempio:** IP `...00011000 10101010` → corrisponde a interfaccia 1 (24 bit match) e 2 (21 bit match) → **interfaccia 1 vince**.
 
+### 9.7 Schemi e Appunti dalle Lavagne (Lezioni 14 e 15)
+
+![Board Lezione 14 - Pagina 1](assets/board_images/board_L14_p1.png)
+*Figura 9.1 — Architettura interna del router: commutazione store-and-forward e buffer di memoria.*
+
+![Board Lezione 14 - Pagina 2](assets/board_images/board_L14_p2.png)
+*Figura 9.2 — Fenomeni di accodamento in ingresso/uscita e perdita di pacchetti per overflow.*
+
+![Board Lezione 14 - Pagina 3](assets/board_images/board_L14_p3.png)
+*Figura 9.3 — Gestione della fabric di commutazione ad alta velocità.*
+
+![Board Lezione 15 - Pagina 1](assets/board_images/board_L15_p1.png)
+*Figura 9.4 — Regola del Longest Matching Prefix calcolata bit a bit in binario.*
+
+![Board Lezione 15 - Pagina 2](assets/board_images/board_L15_p2.png)
+*Figura 9.5 — Esempio pratico di disaggregazione delle rotte su tabella di inoltro.*
+
 ---
 
 ## 10. Indirizzamento IP, DHCP, NAT e IPv6
@@ -1311,6 +1410,20 @@ ip route   # Vedi gateway predefinito
 
 **Transizione IPv4→IPv6:** si usano **tunnel** (datagrammi IPv6 incapsulati in IPv4).
 
+### 10.6 Schemi e Appunti dalle Lavagne (Lezione 17)
+
+![Board Lezione 17 - Pagina 1](assets/board_images/board_L17_p1.png)
+*Figura 10.1 — Calcolo in binario delle maschere di sottorete e separazione NetID / HostID.*
+
+![Board Lezione 17 - Pagina 2](assets/board_images/board_L17_p2.png)
+*Figura 10.2 — Individuazione dell'indirizzo di rete (tutti 0) e dell'indirizzo di broadcast (tutti 1).*
+
+![Board Lezione 17 - Pagina 3](assets/board_images/board_L17_p3.png)
+*Figura 10.3 — Esercizio svolto di subnetting: partizionamento dell'indirizzo 193.32.216.0 / 24.*
+
+![Board Lezione 17 - Pagina 4](assets/board_images/board_L17_p4.png)
+*Figura 10.4 — Tabella di riepilogo con range di host assegnabili per ciascuna sottorete.*
+
 ---
 
 ## 11. Il Piano di Controllo — Algoritmi di Routing
@@ -1396,6 +1509,44 @@ LinkState(x):
 | **Robustezza** | Bassa (errori si propagano) | Alta (calcoli indipendenti) |
 
 > **In Internet si usano entrambi:** OSPF usa LS, BGP usa DV.
+
+### 11.7 Schemi e Appunti dalle Lavagne (Lezioni 18, 19, 20 e 21)
+
+![Board Lezione 18 - Pagina 1](assets/board_images/board_L18_p1.png)
+*Figura 11.1 — Rappresentazione formale della rete come grafo $G = (N, E)$ con pesi sui link.*
+
+![Board Lezione 18 - Pagina 2](assets/board_images/board_L18_p2.png)
+*Figura 11.2 — Proprietà di ottimalità dei percorsi e instradamento a costo minimo.*
+
+![Board Lezione 19 - Pagina 1](assets/board_images/board_L19_p1.png)
+*Figura 11.3 — Analisi dei pacchetti ICMP Echo Request ed Echo Reply.*
+
+![Board Lezione 19 - Pagina 2](assets/board_images/board_L19_p2.png)
+*Figura 11.4 — Meccanismo di Traceroute basato sul decremento del TTL e messaggi Time Exceeded.*
+
+![Board Lezione 19 - Pagina 3](assets/board_images/board_L19_p3.png)
+*Figura 11.5 — Esame dei campi del datagramma IP e del payload UDP nelle sonde di rete.*
+
+![Board Lezione 19 - Pagina 4](assets/board_images/board_L19_p4.png)
+*Figura 11.6 — Sequenza di risposte dai router intermedi lungo il cammino.*
+
+![Board Lezione 20 - Pagina 1](assets/board_images/board_L20_p1.png)
+*Figura 11.7 — Algoritmo Distance Vector: formulazione di Bellman-Ford e inizializzazione.*
+
+![Board Lezione 20 - Pagina 2](assets/board_images/board_L20_p2.png)
+*Figura 11.8 — Procedura di notifica periodica delle distanze ai soli vicini diretti.*
+
+![Board Lezione 20 - Pagina 3](assets/board_images/board_L20_p3.png)
+*Figura 11.9 — Aggiornamento delle tabelle di inoltro e convergenza del grafo.*
+
+![Board Lezione 20 - Pagina 4](assets/board_images/board_L20_p4.png)
+*Figura 11.10 — Analisi del fenomeno del Count-to-Infinity in presenza di guasti ai link.*
+
+![Board Lezione 21 - Pagina 1](assets/board_images/board_L21_p1.png)
+*Figura 11.11 — Algoritmo Link-State: broadcast dei pacchetti LSP e conoscenza globale della topologia.*
+
+![Board Lezione 21 - Pagina 2](assets/board_images/board_L21_p2.png)
+*Figura 11.12 — Calcolo dell'albero di copertura dei cammini minimi da nodo radice.*
 
 ---
 
@@ -1513,6 +1664,41 @@ Tecnologia LAN più diffusa. Sviluppata negli anni '70, standardizzata da **IEEE
   - In tabella → invia sulla porta corrispondente (filtering/forwarding)
   - Non in tabella → flood su tutte le porte tranne origine
 
+### 12.8 Schemi e Appunti dalle Lavagne (Lezioni 22, 23 e 24)
+
+![Board Lezione 22 - Pagina 1](assets/board_images/board_L22_p1.png)
+*Figura 12.1 — Livello Link: trasmissione di stringhe di bit (frame) influenzata dalle proprietà fisiche del mezzo.*
+
+![Board Lezione 22 - Pagina 2](assets/board_images/board_L22_p2.png)
+*Figura 12.2 — Adattatore di rete (scheda NIC) e demarcazione tra host e canale fisico.*
+
+![Board Lezione 22 - Pagina 3](assets/board_images/board_L22_p3.png)
+*Figura 12.3 — Tecniche di framing e trasparenza dei dati.*
+
+![Board Lezione 22 - Pagina 4](assets/board_images/board_L22_p4.png)
+*Figura 12.4 — Rilevamento e correzione degli errori: bit di parità bidimensionale e CRC.*
+
+![Board Lezione 22 - Pagina 5](assets/board_images/board_L22_p5.png)
+*Figura 12.5 — Incapsulamento del datagramma IP all'interno del frame di livello 2.*
+
+![Board Lezione 23 - Pagina 1](assets/board_images/board_L23_p1.png)
+*Figura 12.6 — Reti ad accesso condiviso: diffusione in broadcast e ricezione da parte di tutte le stazioni.*
+
+![Board Lezione 23 - Pagina 2](assets/board_images/board_L23_p2.png)
+*Figura 12.7 — Concetto di collisione ed efficienza del canale condiviso.*
+
+![Board Lezione 24 - Pagina 1](assets/board_images/board_L24_p1.png)
+*Figura 12.8 — Protocollo CSMA/CD: ascolto del canale prima e durante la trasmissione.*
+
+![Board Lezione 24 - Pagina 2](assets/board_images/board_L24_p2.png)
+*Figura 12.9 — Condizione sul tempo minimo di trasmissione per rilevare collisioni su tutto il dominio.*
+
+![Board Lezione 24 - Pagina 3](assets/board_images/board_L24_p3.png)
+*Figura 12.10 — Algoritmo di backoff esponenziale binario: gestione dei ritrasferimenti post-collisione.*
+
+![Board Lezione 24 - Pagina 4](assets/board_images/board_L24_p4.png)
+*Figura 12.11 — Prestazioni di Ethernet e confronto con i protocolli ad accesso casuale puro.*
+
 ---
 
 ## 13. Sicurezza delle Reti
@@ -1624,6 +1810,29 @@ Client ◄══════════ Comunicazione cifrata ═════�
 
 **IDS (Intrusion Detection System):** monitora il traffico per pattern sospetti.
 **IPS (Intrusion Prevention System):** come IDS ma può bloccare automaticamente.
+
+### 13.8 Schemi e Appunti dalle Lavagne (Lezioni 25 e 26)
+
+![Board Lezione 25 - Pagina 1](assets/board_images/board_L25_p1.png)
+*Figura 13.1 — Protocollo di scambio di chiavi Diffie-Hellman: modulo primo $p$ e generatore $g$.*
+
+![Board Lezione 25 - Pagina 2](assets/board_images/board_L25_p2.png)
+*Figura 13.2 — Calcolo della chiave simmetrica comune senza trasmettere il segreto sul canale.*
+
+![Board Lezione 25 - Pagina 3](assets/board_images/board_L25_p3.png)
+*Figura 13.3 — Attacco Man-in-the-Middle (Intruder T) su Diffie-Hellman in assenza di autenticazione.*
+
+![Board Lezione 25 - Pagina 4](assets/board_images/board_L25_p4.png)
+*Figura 13.4 — Risoluzione della vulnerabilità MitM mediante certificati digitali e firma a chiave pubblica.*
+
+![Board Lezione 26 - Pagina 1](assets/board_images/board_L26_p1.png)
+*Figura 13.5 — Cifrari a sostituzione monoalfabetica: mappatura di ciascun simbolo con la chiave segreta.*
+
+![Board Lezione 26 - Pagina 2](assets/board_images/board_L26_p2.png)
+*Figura 13.6 — Cifrari a trasposizione e permutazione dell'ordine dei caratteri nel testo cifrato.*
+
+![Board Lezione 26 - Pagina 3](assets/board_images/board_L26_p3.png)
+*Figura 13.7 — Principi di crittanalisi: vulnerabilità delle sostituzioni all'analisi delle frequenze.*
 
 ---
 
@@ -1853,68 +2062,409 @@ x ─3─ y ─2─ z
 
 ---
 
+---
+
+## 16. Guide Pratiche di Laboratorio con Wireshark
+<div align="right"><em><a href="#indice">Torna all'indice</a></em></div>
+
+Questo capitolo raccoglie e documenta dettagliatamente tutte le esercitazioni pratiche svolte con il packet sniffer **Wireshark** nel corso delle lezioni, con istruzioni sui comandi di sistema, filtri da applicare e analisi delle risposte.
+
+### 16.1 Installazione e Configurazione di Wireshark su Linux (Ubuntu/Debian)
+
+Per eseguire catture di rete come utente non privilegiato (evitando di eseguire l'intera GUI con `sudo`), è fondamentale configurare correttamente i gruppi di sistema e le Linux Capabilities sul binario `dumpcap`.
+
+**1. Installazione via APT:**
+```bash
+sudo apt update
+sudo apt install wireshark
+```
+Durante l'installazione, alla schermata interattiva di debconf che richiede:
+> *"Should non-superusers be able to capture packets?"*
+selezionare tassativamente **Sì (Yes)**.
+
+**2. Verifica e configurazione dei gruppi utente:**
+```bash
+# Verifica se esiste il gruppo di sistema 'wireshark'
+getent group wireshark
+
+# Aggiungi l'utente corrente al gruppo wireshark
+sudo usermod -aG wireshark $USER
+
+# Riconfigura il pacchetto nel caso in cui fosse stato selezionato 'No' in precedenza
+sudo dpkg-reconfigure wireshark-common
+```
+
+**3. Impostazione delle Capabilities su dumpcap:**
+Il binario di cattura necessita dei permessi di accesso grezzo alla rete (`cap_net_raw`) e amministrazione delle interfacce (`cap_net_admin`):
+```bash
+# Assegna le capabilities
+sudo setcap cap_net_raw,cap_net_admin+eip /usr/bin/dumpcap
+
+# Verifica i permessi impostati
+getcap /usr/bin/dumpcap
+# Output corretto: /usr/bin/dumpcap = cap_net_admin,cap_net_raw+eip
+
+# Assicura i permessi di esecuzione
+sudo chmod +x /usr/bin/dumpcap
+
+# Applica le modifiche senza riavviare
+newgrp wireshark
+```
+
+---
+
+### 16.2 Laboratorio HTTP GET Base (L04)
+
+**Obiettivo:** Esaminare la struttura dettagliata di un'interazione HTTP client-server, osservando la richiesta `GET` e la risposta `200 OK`.
+
+**Procedura passo-passo:**
+1. Aprire Wireshark e selezionare l'interfaccia di rete principale (es. `eth0` o `wlan0`).
+2. Nella barra del filtro di visualizzazione (*Display Filter*), inserire:
+   ```
+   http
+   ```
+3. Avviare la cattura dei pacchetti (icona della pinna blu).
+4. Aprire il browser web e digitare l'URL di test:
+   ```
+   http://www.columbia.edu/~fdc/sample.html
+   ```
+5. Una volta visualizzata la pagina, fermare immediatamente la cattura (quadrato rosso).
+
+**Analisi dei messaggi catturati:**
+- **Messaggio di Richiesta (`GET /~fdc/sample.html HTTP/1.1`):**
+  - **Versione HTTP:** Il browser moderno usa tipicamente `HTTP/1.1`.
+  - **Campi Header:**
+    - `Host: www.columbia.edu`
+    - `User-Agent`: Stringa identificativa del browser e del SO.
+    - `Accept`: Tipi MIME accettati (es. `text/html,application/xhtml+xml`).
+    - `Accept-Language`: Lingue preferite dal client (es. `it-IT,it;q=0.9,en-US;q=0.8`).
+    - `Accept-Encoding`: Algoritmi di compressione supportati (`gzip, deflate, br`).
+- **Messaggio di Risposta (`HTTP/1.1 200 OK`):**
+  - **Codice di stato:** `200 OK` (richiesta completata con successo).
+  - `Content-Type: text/html; charset=ISO-8859-1`
+  - `Content-Length`: Dimensione in byte del payload HTML.
+  - `Last-Modified`: Data dell'ultimo aggiornamento del documento sul server (aggiornato periodicamente dal server di test per evitare caching permanente).
+
+---
+
+### 16.3 Laboratorio HTTP con Download Multi-segmento (L05)
+
+**Obiettivo:** Comprendere il riassemblaggio di un messaggio a livello applicazione suddiviso in più segmenti TCP a causa dei limiti di MTU/MSS.
+
+**Concetto chiave:**
+Un singolo messaggio HTTP con un corpo (entity body) di dimensioni rilevanti non può entrare in un unico pacchetto IP (limitato dalla MTU standard di 1500 byte, pari a un MSS tipico di 1460 byte). Wireshark evidenzia i segmenti intermedi con la dicitura:
+```
+[TCP segment of a reassembled PDU]
+```
+
+**Analisi del flusso:**
+1. Il client invia il pacchetto HTTP contenente il messaggio `GET`.
+2. Il server invia una serie di pacchetti TCP contenenti frammenti del file HTML. Ciascun pacchetto trasporta un blocco di dati con numero di sequenza incrementale:
+   - Pacchetto 1: `Seq = 1`, `Len = 1460`
+   - Pacchetto 2: `Seq = 1461`, `Len = 1460`
+   - Pacchetto N: `Seq = ...`, `Len = ...`
+3. Il client invia i relativi riscontri (`ACK`) per confermare la ricezione dei byte.
+4. L'ultimo segmento TCP chiude il trasferimento del corpo del messaggio: Wireshark riassembla tutti i segmenti e visualizza l'intestazione HTTP della risposta (`HTTP/1.1 200 OK`) associata a questo pacchetto finale.
+
+---
+
+### 16.4 Laboratorio Analisi DNS con nslookup (L10)
+
+**Obiettivo:** Ispezionare i pacchetti DNS (UDP porta 53), identificando la struttura delle query e delle risposte, la gerarchia dei record e il comportamento dei server ricorsivi.
+
+**Filtro Wireshark fondamentale:**
+```
+dns
+```
+
+**Parte 1 — Query Standard di Tipo A (Indirizzo IPv4):**
+Eseguire nel terminale:
+```bash
+nslookup www.unina.it
+```
+- **Porto destinazione della Query:** `UDP 53`.
+- **Porto sorgente della Risposta:** `UDP 53` (inviata dal resolver locale configurato sull'host).
+- **Sezione *Queries*:** contiene il nome cercato (`www.unina.it`), la classe `IN` (Internet) e il Type `A` (IPv4).
+- **Sezione *Answers*:** restituisce i record `A` contenenti gli indirizzi IP associati al nome di dominio.
+
+**Parte 2 — Query di Tipo NS (Name Server autoritativi):**
+Eseguire nel terminale:
+```bash
+nslookup -type=NS unina.it
+```
+- La risposta contiene l'elenco dei server autoritativi per il dominio (es. `ns1.unina.it`, `ns2.unina.it`).
+- **Additional Records:** Spesso il server include record di tipo `A` (chiamati *Glue Records*) che specificano gli indirizzi IP dei name server elencati, consentendo al client di contattarli senza dover emettere ulteriori interrogazioni DNS separate.
+
+---
+
+### 16.5 Laboratorio Traceroute, ICMP e Frammentazione IP (L19)
+
+**Obiettivo:** Ricostruire il percorso attraverso i router di rete tramite l'utility `traceroute` e analizzare la gestione del campo Time To Live (TTL) e della frammentazione dei datagrammi IP.
+
+**Principio di funzionamento di Traceroute:**
+Traceroute invia sonde UDP verso porte elevate non utilizzate (es. > 33434):
+1. **Sonda con $TTL = 1$**: il primo router decrementa il TTL a 0, scarta il pacchetto e invia al mittente un messaggio:
+   ```
+   ICMP Type 11, Code 0: Time-to-live exceeded in transit
+   ```
+   L'indirizzo IP sorgente di questo pacchetto ICMP rivela l'identità del primo router (hop 1).
+2. **Sonda con $TTL = 2$**: scade al secondo router, che risponde analogamente.
+3. Il processo prosegue incrementando il TTL finché la sonda raggiunge l'host destinazione, il quale (non trovando alcun servizio in ascolto sulla porta UDP elevata) risponde con:
+   ```
+   ICMP Type 3, Code 3: Destination Unreachable (Port Unreachable)
+   ```
+   A questo punto Traceroute sa di aver raggiunto la meta e conclude la scansione.
+
+**Comandi di test:**
+```bash
+# Traceroute standard
+traceroute italia.it
+
+# Traceroute con pacchetti di dimensione maggiorata (3000 byte per forzare la frammentazione)
+traceroute italia.it 3000
+```
+
+**Analisi della Frammentazione IP in Wireshark:**
+- Con datagrammi da 3000 byte su una rete con MTU di 1500 byte, il datagramma IP viene suddiviso in 3 frammenti:
+  1. **Frammento 1:** `Offset = 0`, flag `More Fragments (MF) = 1`, lunghezza 1500 byte (20B header IP + 1480B payload).
+  2. **Frammento 2:** `Offset = 185` (poiché $185 \times 8 = 1480$ byte), flag `MF = 1`, lunghezza 1500 byte.
+  3. **Frammento 3:** `Offset = 370` ($370 \times 8 = 2960$ byte), flag `MF = 0` (ultimo frammento), lunghezza residua (~68 byte).
+- Tutti i frammenti condividono lo stesso identico valore nel campo **Identification** dell'header IPv4.
+
+---
+
+### 16.6 Tabella Riepilogativa dei Filtri Wireshark per l'Esame
+
+| Protocollo | Filtro di Visualizzazione (*Display Filter*) | Note ed Utilizzo |
+|------------|---------------------------------------------|------------------|
+| **HTTP** | `http` | Mostra solo le richieste e risposte HTTP |
+| **HTTP Errori** | `http.response.code >= 400` | Isola solo errori client (`4xx`) e server (`5xx`) |
+| **DNS** | `dns` | Mostra query e risposte DNS |
+| **DNS Tipo A** | `dns.qry.type == 1` | Isola solo le query per indirizzi IPv4 |
+| **TCP** | `tcp.port == 80` oppure `tcp.port == 443` | Traffico TCP su web (HTTP o HTTPS) |
+| **Handshake TCP** | `tcp.flags.syn == 1` | Filtra solo pacchetti `SYN` e `SYN-ACK` di apertura |
+| **Reset TCP** | `tcp.flags.reset == 1` | Identifica connessioni abortite o rifiutate |
+| **ICMP** | `icmp` | Mostra messaggi ping e risposte traceroute |
+| **Time Exceeded** | `icmp.type == 11` | Pacchetti TTL scaduto generati da Traceroute |
+| **Host Specifico** | `ip.addr == 192.168.1.1` | Tutto il traffico da/verso uno specifico host IP |
+
+
+---
+
+## 17. Sessione di Ripasso e Domande d'Esame Svolte (QA01)
+<div align="right"><em><a href="#indice">Torna all'indice</a></em></div>
+
+In questo capitolo sono raccolte le domande di ripasso formali ed aperte del documento d'esame **QA01**, con le relative soluzioni e approfondimenti numerici svolti dal docente.
+
+### 17.1 Domande su HTTP (Application Layer)
+
+#### Domanda 1(a) — Struttura dell'URL
+*Spiegare quali sono le parti di un URL e qual è l'uso di ciascuna.*
+
+**Risposta Svolta:**
+Un **Uniform Resource Locator (URL)** identifica univocamente una risorsa sulla rete globale ed è strutturato come:
+```
+<protocollo>://<host>:<porta>/<percorso>?<parametri>#<frammento>
+```
+1. **Protocollo / Schema** (es. `http`, `https`, `ftp`): definisce le regole di comunicazione e il linguaggio da utilizzare per recuperare la risorsa.
+2. **Host / Nome di Dominio** (es. `www.unina.it` o indirizzo IP `192.168.1.1`): individua la macchina server che ospita la risorsa.
+3. **Porta** (opzionale, default 80 per HTTP, 443 per HTTPS): identifica il processo server a livello di trasporto a cui recapitare la richiesta.
+4. **Percorso / Path** (es. `/dipartimento/corsi/reti.html`): specifica la collocazione gerarchica della risorsa nel file system logico del server.
+5. **Query String** (es. `?id=42&lang=it`): serie di coppie chiave-valore per inviare parametri dinamici ad applicazioni o script lato server.
+6. **Frammento / Anchor** (es. `#sezione-2`): riferimento interno al documento, interpretato solo dal browser del client senza essere inviato al server.
+
+#### Domanda 1(b) — Three-Way Handshake prima di HTTP
+*Spiegare brevemente il three-way handshake usato per stabilire una connessione HTTP.*
+
+**Risposta Svolta:**
+Poiché HTTP si basa sul protocollo affidabile orientato alla connessione **TCP**, prima di inviare qualsiasi richiesta HTTP deve essere completato il Three-Way Handshake:
+1. **Client $\to$ Server (`SYN`):** Il client sceglie un numero di sequenza iniziale casuale $ISN_c$ e invia un segmento con flag `SYN = 1`, `Seq = ISN_c`.
+2. **Server $\to$ Client (`SYN-ACK`):** Il server alloca i buffer, sceglie il proprio $ISN_s$ e risponde con `SYN = 1`, `ACK = 1`, `Seq = ISN_s`, `Ack = ISN_c + 1`.
+3. **Client $\to$ Server (`ACK`):** Il client conferma con `ACK = 1`, `Seq = ISN_c + 1`, `Ack = ISN_s + 1`. In questo terzo pacchetto il client può già inserire i dati della prima richiesta `HTTP GET` (risparmiando un RTT).
+
+#### Domanda 1(c) — Pipelining in HTTP
+*Illustrare cosa è il pipelining in HTTP.*
+
+**Risposta Svolta:**
+In **HTTP/1.1 con connessioni persistenti**, il **pipelining** consente al client di inviare richieste successive per risorse multiple (es. immagini collegate in una pagina HTML) senza dover attendere la ricezione della risposta alla richiesta precedente.
+Il server è vincolato a processare e restituire le risposte **nello stesso identico ordine** in cui ha ricevuto le relative richieste (FIFO). Questo meccanismo riduce drasticamente i tempi di attesa dell'RTT, ma è affetto dal problema dell'**Head-of-Line Blocking (HOL)** a livello applicativo: se la prima richiesta richiede un tempo di calcolo elevato sul server, tutte le risposte successive rimangono bloccate in coda.
+
+#### Domanda 1(d) — Protocollo di trasporto di HTTP
+*Su quali protocolli a livello di trasporto è basato il protocollo HTTP?*
+
+**Risposta Svolta:**
+- **HTTP/1.0, HTTP/1.1 e HTTP/2** sono basati tassativamente su **TCP**, sfruttando la sua garanzia di consegna affidabile, ordinata e senza duplicati, oltre al controllo di congestione e flusso.
+- **HTTP/3** è basato su **QUIC**, un protocollo di trasporto di nuova generazione che poggia su **UDP**, spostando la gestione dell'affidabilità, della crittografia (TLS 1.3 integrata) e del multiplexing nativo a livello utente per eliminare completamente l'HOL blocking.
+
+---
+
+### 17.2 Domande su DNS (Application Layer)
+
+#### Domanda 2(a) — Modifica dell'indirizzo IP e ruolo del TTL
+*Supponiamo che si cambi l'indirizzo IP di una macchina denominata `server-1.ortofrutta.it`. Spiegare come è gestito l'aggiornamento affinché la modifica sia riflessa nel DNS.*
+
+**Risposta Svolta:**
+Nel sistema DNS **non esiste un meccanismo di invalidazione attiva (push / flush globale)** da parte del server autoritativo verso le cache di tutti gli altri DNS resolver distribuiti nel mondo:
+1. L'amministratore aggiorna il record di tipo `A` sul **Name Server autoritativo** della zona `ortofrutta.it`.
+2. I client e i server ricorsivi locali continuano a utilizzare le vecchie informazioni memorizzate nella propria **cache locale** fino alla scadenza naturale del contatore **Time To Live (TTL)** associato al record.
+3. Durante questo intervallo di tempo (periodo di transizione), si verificano temporanei errori o fallimenti di connessione per gli host che consultano record cache non ancora scaduti. Questo comportamento è una scelta architetturale del DNS, che privilegia la scalabilità e le prestazioni globali rispetto alla consistenza immediata (modello *eventual consistency*).
+4. Alla scadenza del TTL, la cache elimina la voce obsoleta; alla richiesta successiva emetterà una nuova query ricorsiva al server autoritativo, prelevando il nuovo indirizzo IP.
+> **Best Practice:** Se è pianificata una migrazione di IP, gli amministratori riducono preventivamente il TTL (es. da 86400 secondi / 24 ore a 300 secondi / 5 minuti) qualche giorno prima, in modo che il disallineamento al momento del passaggio effettivo duri pochissimi minuti.
+
+#### Domanda 2(b) — Risoluzione dei nomi e utilizzo dei record NS in cache
+*Supponiamo di risolvere il nome `feijoada.dsc.utfpr.edu.br` da un portatile nei laboratori di UniNA (cache locale vuota). La richiesta va a `dscna2.unina.it`, che possiede già in cache un record NS con l'IP del server DNS per `dsc.utfpr.edu.br`. Spiegare come viene gestita la richiesta.*
+
+**Risposta Svolta:**
+1. Poiché il server DNS di UniNA (`dscna2.unina.it`) ha già in cache il record `NS` per il sotto-dominio `dsc.utfpr.edu.br`, **non deve risalire l'intera gerarchia globale** (Root server `.`, TLD `.br`, server per `edu.br` e `utfpr.edu.br`).
+2. Il server di UniNA contatta direttamente l'indirizzo IP specificato nel record NS di `dsc.utfpr.edu.br`, inviando l'interrogazione per `feijoada.dsc.utfpr.edu.br`.
+3. Il server autoritativo per `dsc.utfpr.edu.br` riceve la query, individua nel proprio database di zona il record `A` corrispondente all'host `feijoada` e risponde direttamente al server di UniNA con l'indirizzo IP cercato.
+4. `dscna2.unina.it` memorizza il risultato nella propria cache e lo inoltra infine al calcolatore portatile richiedente.
+
+---
+
+### 17.3 Domande su Indirizzi IP e Routing CIDR (Network Layer)
+
+#### Domanda 3(a) — Calcolo del Longest Prefix Match
+*Si consideri la seguente tavola di routing di un router che implementa CIDR:*
+
+| Subnet | Next Hop |
+|---|---|
+| `147.142.168.0/21` | `L1` |
+| `147.142.172.0/23` | `L2` |
+| `default` | `R0` |
+
+*Due pacchetti IP arrivano al router con indirizzi di destinazione:*
+- *Pacchetto 1: `147.142.203.165`*
+- *Pacchetto 2: `147.142.173.85`*
+
+*Descrivere dettagliatamente come tali pacchetti sono gestiti e inoltrati.*
+
+**Risoluzione Matematica e Binaria:**
+
+**1. Conversione dei prefissi della tabella in binario:**
+I primi due ottetti (`147.142`) sono comuni a tutte le rotte:
+- `147` = `10010011`
+- `142` = `10001110`
+
+Esaminiamo il terzo ottetto per ciascuna rotta:
+- **Rotta 1 (`/21` = 16 + 5 bit del terzo ottetto):**
+  - Terzo ottetto: `168` = `10101 000`
+  - I primi 5 bit sono: **`10101`**
+- **Rotta 2 (`/23` = 16 + 7 bit del terzo ottetto):**
+  - Terzo ottetto: `172` = `1010110 0`
+  - I primi 7 bit sono: **`1010110`**
+
+---
+
+**2. Analisi Pacchetto 1 (`147.142.203.165`):**
+- Terzo ottetto: `203` = `11001011`
+- Confronto con Rotta 1 (`/21`): i primi 5 bit di `203` sono `11001`. Il prefisso della rotta è `10101`. **Non c'è match!**
+- Confronto con Rotta 2 (`/23`): i primi 7 bit di `203` sono `1100101`. Il prefisso della rotta è `1010110`. **Non c'è match!**
+- **Inoltro:** Il pacchetto 1 non corrisponde ad alcuna subnet specifica e viene inoltrato sull'interfaccia di **`default` $\to$ `R0`**.
+
+---
+
+**3. Analisi Pacchetto 2 (`147.142.173.85`):**
+- Terzo ottetto: `173` = `10101101`
+- Confronto con Rotta 1 (`/21`):
+  - Primi 5 bit di `173`: `10101`
+  - Prefisso Rotta 1: `10101` $\implies$ **MATCH! (lunghezza prefisso = 21)**
+- Confronto con Rotta 2 (`/23`):
+  - Primi 7 bit di `173`: `1010110`
+  - Prefisso Rotta 2: `1010110` $\implies$ **MATCH! (lunghezza prefisso = 23)**
+- **Applicazione della regola del Longest Prefix Match:**
+  Entrambe le rotte corrispondono, ma la Rotta 2 ha un prefisso più lungo e specifico ($23 > 21$).
+- **Inoltro:** Il pacchetto 2 viene instradato verso il next-hop **`L2`**.
+
+---
+
+#### Domanda 3(b) — Perché i router degli ISP usano CIDR e subnet aggregate
+*Spiegare perché i grandi router degli ISP operano con prefissi aggregati (es. `189.103.176.0/20`) anziché su singoli indirizzi IP.*
+
+**Risposta Svolta:**
+1. **Scalabilità delle tabelle di routing:** Lo spazio di indirizzamento IPv4 comprende $2^{32} \approx 4.3$ miliardi di indirizzi. Se ogni host o server richiedesse una voce separata nella tabella di routing, la dimensione delle tabelle saturerebbe la memoria ad altissima velocità dei router (memorie TCAM - Ternary Content-Addressable Memory).
+2. **Aggregazione delle rotte (Route Summarization / Supernetting):** Il CIDR consente a un ISP di annunciare al resto del mondo un unico blocco aggregato (es. `/20`, che comprende $2^{12} = 4096$ indirizzi IP individuali). I router della dorsale internet devono solo memorizzare questo singolo prefisso.
+3. **Riduzione dell'overhead di elaborazione:** Prefissi aggregati riducono drasticamente sia la complessità della ricerca (lookup) per ogni pacchetto in transito sia il traffico di segnalazione dei protocolli di routing (BGP), che altrimenti dovrebbero propagare aggiornamenti continui per la caduta o l'accensione di singoli host.
+
+---
+
+### 17.4 Schemi e Appunti dalle Lavagne (Sessione QA01)
+
+Di seguito sono riportate le lavagne manoscritte della sessione di ripasso con gli appunti grafici del docente:
+
+![Board QA01 - Pagina 1](assets/board_images/board_QA01_p1.png)
+*Figura 17.1 — Discussione sulle repliche DNS, campo TTL e tolleranza degli errori temporanei di caching.*
+
+![Board QA01 - Pagina 2](assets/board_images/board_QA01_p2.png)
+*Figura 17.2 — Calcoli di conversione binaria per il Longest Prefix Matching sui pacchetti d'esame.*
+
+![Board QA01 - Pagina 3](assets/board_images/board_QA01_p3.png)
+*Figura 17.3 — Regola del Longest Matching Prefix e suddivisione di spazi di indirizzamento senza ambiguità.*
+
+
+---
+
 ## Indice delle Sottosezioni
 <div align="right"><em><a href="#indice">Torna all'indice</a></em></div>
 
 ### Indice delle Sottosezioni Capitolo 1
-
 - [1.1 Cos'è una Rete di Calcolatori](#11-cosè-una-rete-di-calcolatori)
-- [1.2 Internet — La Rete delle Reti](#12-internet--la-rete-delle-reti)
+- [1.2 Internet — La Rete delle Reti](#12-internet-la-rete-delle-reti)
 - [1.3 Componenti di una Rete](#13-componenti-di-una-rete)
 - [1.4 Comunicazione dei Dati](#14-comunicazione-dei-dati)
 - [1.5 Tipi di Connessione e Topologie di Rete](#15-tipi-di-connessione-e-topologie-di-rete)
 - [1.6 Categorie di Reti](#16-categorie-di-reti)
 - [1.7 Internet Service Providers (ISP)](#17-internet-service-providers-isp)
 - [1.8 Il Modello a Strati (Stack Protocollare)](#18-il-modello-a-strati-stack-protocollare)
+- [1.9 Schemi e Appunti dalle Lavagne (Lezione 2)](#19-schemi-e-appunti-dalle-lavagne-lezione-2)
 
 ### Indice delle Sottosezioni Capitolo 2
-
 - [2.1 Applicazioni di Rete](#21-applicazioni-di-rete)
 - [2.2 Architetture delle Applicazioni di Rete](#22-architetture-delle-applicazioni-di-rete)
 - [2.3 Comunicazione tra Processi](#23-comunicazione-tra-processi)
-- [2.4 QoS — Servizi dello Strato di Trasporto](#24-qos--servizi-dello-strato-di-trasporto)
+- [2.4 QoS — Servizi dello Strato di Trasporto](#24-qos-servizi-dello-strato-di-trasporto)
 - [2.5 Protocolli del Livello Applicazione](#25-protocolli-del-livello-applicazione)
-- [2.6 FTP — File Transfer Protocol](#26-ftp--file-transfer-protocol)
+- [2.6 FTP — File Transfer Protocol](#26-ftp-file-transfer-protocol)
+- [2.7 Schemi e Appunti dalle Lavagne (Lezione 3)](#27-schemi-e-appunti-dalle-lavagne-lezione-3)
 
 ### Indice delle Sottosezioni Capitolo 3
-
 - [3.1 World Wide Web e HTTP](#31-world-wide-web-e-http)
-- [3.2 URL — Uniform Resource Locator](#32-url--uniform-resource-locator)
+- [3.2 URL — Uniform Resource Locator](#32-url-uniform-resource-locator)
 - [3.3 HTTP e il Protocollo di Trasporto](#33-http-e-il-protocollo-di-trasporto)
 - [3.4 Connessioni HTTP: Persistenti vs. Non Persistenti](#34-connessioni-http-persistenti-vs-non-persistenti)
 - [3.5 Formato dei Messaggi HTTP](#35-formato-dei-messaggi-http)
 - [3.6 Cookie](#36-cookie)
 - [3.7 Web Caching (Proxy)](#37-web-caching-proxy)
+- [3.8 Schemi e Appunti dalle Lavagne (Lezione 4)](#38-schemi-e-appunti-dalle-lavagne-lezione-4)
 
 ### Indice delle Sottosezioni Capitolo 4
-
 - [4.1 Architettura della Posta Elettronica](#41-architettura-della-posta-elettronica)
-- [4.2 SMTP — Simple Mail Transfer Protocol](#42-smtp--simple-mail-transfer-protocol)
-- [4.3 Accesso alle Email — POP3, IMAP, HTTP](#43-accesso-alle-email--pop3-imap-http)
+- [4.2 SMTP — Simple Mail Transfer Protocol](#42-smtp-simple-mail-transfer-protocol)
+- [4.3 Accesso alle Email — POP3, IMAP, HTTP](#43-accesso-alle-email-pop3-imap-http)
 - [4.4 Applicazioni P2P e BitTorrent](#44-applicazioni-p2p-e-bittorrent)
-- [4.5 DNS — Domain Name System](#45-dns--domain-name-system)
+- [4.5 DNS — Domain Name System](#45-dns-domain-name-system)
+- [4.6 Schemi e Appunti dalle Lavagne (Lezione 7)](#46-schemi-e-appunti-dalle-lavagne-lezione-7)
 
 ### Indice delle Sottosezioni Capitolo 5
-
 - [5.1 Socket nell'Architettura a Strati](#51-socket-nellarchitettura-a-strati)
 - [5.2 Strutture Dati per le Socket](#52-strutture-dati-per-le-socket)
 - [5.3 Creazione della Socket](#53-creazione-della-socket)
 - [5.4 Binding della Socket](#54-binding-della-socket)
 - [5.5 Programmazione Socket UDP](#55-programmazione-socket-udp)
 - [5.6 Programmazione Socket TCP](#56-programmazione-socket-tcp)
+- [5.7 Schemi e Appunti dalle Lavagne (Lezioni 8 e 9)](#57-schemi-e-appunti-dalle-lavagne-lezioni-8-e-9)
 
 ### Indice delle Sottosezioni Capitolo 6
-
 - [6.1 Dal Livello Applicazione al Livello di Trasporto](#61-dal-livello-applicazione-al-livello-di-trasporto)
 - [6.2 Responsabilità del Livello di Trasporto](#62-responsabilità-del-livello-di-trasporto)
 - [6.3 Multiplexing e Demultiplexing](#63-multiplexing-e-demultiplexing)
-- [6.4 UDP — User Datagram Protocol](#64-udp--user-datagram-protocol)
+- [6.4 UDP — User Datagram Protocol](#64-udp-user-datagram-protocol)
 - [6.5 Formato del Datagramma UDP](#65-formato-del-datagramma-udp)
 - [6.6 Checksum UDP](#66-checksum-udp)
 - [6.7 Trasferimento Affidabile dei Dati](#67-trasferimento-affidabile-dei-dati)
+- [6.8 Schemi e Appunti dalle Lavagne (Lezioni 10, 11 e 12)](#68-schemi-e-appunti-dalle-lavagne-lezioni-10-11-e-12)
 
 ### Indice delle Sottosezioni Capitolo 7
-
 - [7.1 Caratteristiche di TCP](#71-caratteristiche-di-tcp)
 - [7.2 Buffer TCP](#72-buffer-tcp)
 - [7.3 Maximum Segment Size (MSS)](#73-maximum-segment-size-mss)
@@ -1922,72 +2472,84 @@ x ─3─ y ─2─ z
 - [7.5 Numeri di Sequenza e Acknowledgment](#75-numeri-di-sequenza-e-acknowledgment)
 - [7.6 Stima del RTT e Timeout](#76-stima-del-rtt-e-timeout)
 - [7.7 Ritrasmissione Rapida (Fast Retransmit)](#77-ritrasmissione-rapida-fast-retransmit)
-- [7.8 Three-Way Handshake](#78-three-way-handshake-stabilimento-connessione)
+- [7.8 Three-Way Handshake (Stabilimento Connessione)](#78-three-way-handshake-stabilimento-connessione)
 - [7.9 Teardown della Connessione](#79-teardown-della-connessione)
+- [7.10 Schemi e Appunti dalle Lavagne (Lezioni 13 e 16)](#710-schemi-e-appunti-dalle-lavagne-lezioni-13-e-16)
 
 ### Indice delle Sottosezioni Capitolo 8
-
-- [8.1 Flow Control](#81-flow-control-controllo-di-flusso)
-- [8.2 Congestion Control](#82-congestion-control-controllo-della-congestione)
-- [8.3 Algoritmo di Jacobson](#83-algoritmo-di-jacobson--rate-regulation)
+- [8.1 Flow Control (Controllo di Flusso)](#81-flow-control-controllo-di-flusso)
+- [8.2 Congestion Control (Controllo della Congestione)](#82-congestion-control-controllo-della-congestione)
+- [8.3 Algoritmo di Jacobson — Rate Regulation](#83-algoritmo-di-jacobson-rate-regulation)
 
 ### Indice delle Sottosezioni Capitolo 9
-
 - [9.1 Funzioni del Livello di Rete](#91-funzioni-del-livello-di-rete)
 - [9.2 Servizi del Livello di Rete](#92-servizi-del-livello-di-rete)
 - [9.3 Router: Forwarding e Routing](#93-router-forwarding-e-routing)
 - [9.4 Tipi di Router](#94-tipi-di-router)
 - [9.5 Componenti di un Router](#95-componenti-di-un-router)
 - [9.6 Longest Prefix Matching](#96-longest-prefix-matching)
+- [9.7 Schemi e Appunti dalle Lavagne (Lezioni 14 e 15)](#97-schemi-e-appunti-dalle-lavagne-lezioni-14-e-15)
 
 ### Indice delle Sottosezioni Capitolo 10
-
 - [10.1 Indirizzo IP (IPv4)](#101-indirizzo-ip-ipv4)
 - [10.2 Subnetting](#102-subnetting)
-- [10.3 DHCP](#103-dhcp--dynamic-host-configuration-protocol)
-- [10.4 NAT](#104-nat--network-address-translation)
+- [10.3 DHCP — Dynamic Host Configuration Protocol](#103-dhcp-dynamic-host-configuration-protocol)
+- [10.4 NAT — Network Address Translation](#104-nat-network-address-translation)
 - [10.5 IPv6](#105-ipv6)
+- [10.6 Schemi e Appunti dalle Lavagne (Lezione 17)](#106-schemi-e-appunti-dalle-lavagne-lezione-17)
 
 ### Indice delle Sottosezioni Capitolo 11
-
 - [11.1 Introduzione al Routing](#111-introduzione-al-routing)
 - [11.2 Flooding](#112-flooding)
-- [11.3 Formulazione del Problema](#113-formulazione-del-problema-di-routing)
+- [11.3 Formulazione del Problema di Routing](#113-formulazione-del-problema-di-routing)
 - [11.4 Algoritmo Distance Vector (DV)](#114-algoritmo-distance-vector-dv)
-- [11.5 Algoritmo Link-State (LS) — Dijkstra](#115-algoritmo-link-state-ls--dijkstra)
-- [11.6 Confronto DV vs LS](#116-confronto-dv-vs-ls)
+- [11.5 Algoritmo Link-State (LS) — Dijkstra](#115-algoritmo-link-state-ls-dijkstra)
+- [11.6 Confronto DV vs. LS](#116-confronto-dv-vs-ls)
+- [11.7 Schemi e Appunti dalle Lavagne (Lezioni 18, 19, 20 e 21)](#117-schemi-e-appunti-dalle-lavagne-lezioni-18-19-20-e-21)
 
 ### Indice delle Sottosezioni Capitolo 12
-
 - [12.1 Funzioni del Link Layer](#121-funzioni-del-link-layer)
 - [12.2 Framming e Rilevamento Errori](#122-framming-e-rilevamento-errori)
 - [12.3 Protocolli MAC](#123-protocolli-mac)
 - [12.4 Indirizzi MAC](#124-indirizzi-mac)
-- [12.5 ARP — Address Resolution Protocol](#125-arp--address-resolution-protocol)
+- [12.5 ARP — Address Resolution Protocol](#125-arp-address-resolution-protocol)
 - [12.6 Ethernet](#126-ethernet)
 - [12.7 Switch di Rete](#127-switch-di-rete)
+- [12.8 Schemi e Appunti dalle Lavagne (Lezioni 22, 23 e 24)](#128-schemi-e-appunti-dalle-lavagne-lezioni-22-23-e-24)
 
 ### Indice delle Sottosezioni Capitolo 13
-
 - [13.1 Obiettivi della Sicurezza](#131-obiettivi-della-sicurezza)
 - [13.2 Tipi di Attacchi](#132-tipi-di-attacchi)
 - [13.3 Crittografia Simmetrica](#133-crittografia-simmetrica)
-- [13.4 Crittografia Asimmetrica](#134-crittografia-asimmetrica-chiave-pubblica)
-- [13.5 Integrità — Hash e MAC](#135-integrità--hash-e-mac)
+- [13.4 Crittografia Asimmetrica (Chiave Pubblica)](#134-crittografia-asimmetrica-chiave-pubblica)
+- [13.5 Integrità — Hash e MAC](#135-integrità-hash-e-mac)
 - [13.6 TLS/SSL](#136-tlsssl)
 - [13.7 Firewall e IDS](#137-firewall-e-ids)
+- [13.8 Schemi e Appunti dalle Lavagne (Lezioni 25 e 26)](#138-schemi-e-appunti-dalle-lavagne-lezioni-25-e-26)
 
 ### Indice delle Sottosezioni Capitolo 14
-
-- [14.1 REST](#141-rest--representational-state-transfer)
+- [14.1 REST — Representational State Transfer](#141-rest-representational-state-transfer)
 - [14.2 Risorse e URI](#142-risorse-e-uri)
 - [14.3 Formati di Scambio Dati](#143-formati-di-scambio-dati)
-- [14.4 Interazione con REST API](#144-interazione-con-rest-api-curl)
+- [14.4 Interazione con REST API (curl)](#144-interazione-con-rest-api-curl)
 
 ### Indice delle Sottosezioni Capitolo 15
-
-- [15.1 Esercizi HTTP — RTT](#151-esercizi-su-http-l04)
-- [15.2 Esercizi UDP — Checksum](#152-esercizi-su-udp--checksum)
-- [15.3 Esercizi Go-Back-N](#153-esercizi-su-go-back-n)
-- [15.4 Esercizi Subnetting](#154-esercizi-su-ip-e-subnetting)
+- [15.1 Esercizi su HTTP (L04)](#151-esercizi-su-http-l04)
+- [15.2 Esercizi su UDP — Checksum](#152-esercizi-su-udp-checksum)
+- [15.3 Esercizi su Go-Back-N](#153-esercizi-su-go-back-n)
+- [15.4 Esercizi su IP e Subnetting](#154-esercizi-su-ip-e-subnetting)
 - [15.5 Algoritmo di Dijkstra](#155-algoritmo-di-dijkstra)
+
+### Indice delle Sottosezioni Capitolo 16
+- [16.1 Installazione e Configurazione di Wireshark su Linux (Ubuntu/Debian)](#161-installazione-e-configurazione-di-wireshark-su-linux-ubuntudebian)
+- [16.2 Laboratorio HTTP GET Base (L04)](#162-laboratorio-http-get-base-l04)
+- [16.3 Laboratorio HTTP con Download Multi-segmento (L05)](#163-laboratorio-http-con-download-multi-segmento-l05)
+- [16.4 Laboratorio Analisi DNS con nslookup (L10)](#164-laboratorio-analisi-dns-con-nslookup-l10)
+- [16.5 Laboratorio Traceroute, ICMP e Frammentazione IP (L19)](#165-laboratorio-traceroute-icmp-e-frammentazione-ip-l19)
+- [16.6 Tabella Riepilogativa dei Filtri Wireshark per l'Esame](#166-tabella-riepilogativa-dei-filtri-wireshark-per-lesame)
+
+### Indice delle Sottosezioni Capitolo 17
+- [17.1 Domande su HTTP (Application Layer)](#171-domande-su-http-application-layer)
+- [17.2 Domande su DNS (Application Layer)](#172-domande-su-dns-application-layer)
+- [17.3 Domande su Indirizzi IP e Routing CIDR (Network Layer)](#173-domande-su-indirizzi-ip-e-routing-cidr-network-layer)
+- [17.4 Schemi e Appunti dalle Lavagne (Sessione QA01)](#174-schemi-e-appunti-dalle-lavagne-sessione-qa01)
