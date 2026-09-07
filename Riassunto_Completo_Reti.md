@@ -206,6 +206,12 @@ Mentre il Livello di Rete si assicura che il pacchetto arrivi dalla macchina A a
 Costruire un canale affidabile su Internet (che fa drop, duplicazione e riordinamento) richiede quattro elementi logici: *Sequence Numbers, Timer, ACK/NAK, e Buffer*.
 
 #### Protocolli Pipelined: Go-Back-N (GBN) vs Selective Repeat (SR)
+
+> [!NOTE]
+> **Finestra vs Numeri di Sequenza**
+> - La **Finestra ($N$)**: Rappresenta il numero massimo di pacchetti "in volo" (inviati ma non ancora confermati da ACK) che il mittente può mantenere simultaneamente sulla rete. Serve a regolare la quantità di traffico immessa nel canale.
+> - I **Numeri di Sequenza (Spazio $2^k$)**: Sono le etichette numeriche scritte nell'header di ogni pacchetto per identificarli temporaneamente e riordinarli all'arrivo. Poiché i numeri girano ciclicamente (da $0$ a $2^k-1$), lo spazio totale dei numeri di sequenza deve sempre essere **maggiore** della finestra. Questo previene il problema dell'*Aliasing*, ovvero la possibilità che un vecchio pacchetto ritardato venga confuso con un nuovo pacchetto avente lo stesso numero (in GBN lo spazio deve essere $\geq N+1$, in SR $\geq 2N$).
+
 Il protocollo basilare *Stop-and-Wait* attende l'ACK di ogni singolo pacchetto prima di procedere. È lentissimo. Si risolve inviando una finestra di $N$ pacchetti simultanei (Pipelining).
 1. **Go-Back-N (GBN)**: 
    - Il ricevente ha buffer zero: accetta i pacchetti **solo in ordine sequenziale perfetto**. Se ne arriva uno fuori ordine, lo droppa.
