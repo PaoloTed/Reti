@@ -1433,67 +1433,54 @@ int main() {
 
 ### 6.1 Dal Livello Applicazione al Livello di Trasporto
 
-Un **protocollo di trasporto** fornisce **comunicazione logica** tra processi applicativi su host diversi.
+Un **protocollo di trasporto** fornisce una **comunicazione logica** (process-to-process) tra processi applicativi in esecuzione su host diversi. Dal punto di vista dell'applicazione, i due host sembrano direttamente connessi, anche se si trovano ai lati opposti del pianeta.
 
-Il livello di trasporto converte i messaggi applicativi in **segmenti** (TCP) o **datagrammi** (UDP), li passa al livello di rete.
+Mentre il livello di rete sottostante (es. IP) garantisce l'instradamento logico dei pacchetti da un host all'altro (host-to-host delivery), il livello di trasporto converte i messaggi applicativi in **segmenti** (in TCP) o **datagrammi** (in UDP) aggiungendo un apposito header prima di passarli al livello di rete.
+
+> [!NOTE]
+> A livello di trasporto la comunicazione avviene tra **processi**. A livello di rete avviene tra **host**. Il software del livello di trasporto viene eseguito solo sugli host terminali (edge della rete), non nei router interni che agiscono solo fino a livello di rete.
 
 ### 6.2 Responsabilità del Livello di Trasporto
 
-| # | Responsabilità | UDP | TCP |
-|---|---------------|-----|-----|
-| 1 | **Process-to-process delivery** (porte, mux/demux) | ✅ | ✅ |
-| 2 | **Integrity checking** (checksum) | ✅ | ✅ |
-| 3 | **Reliable data transfer** | ❌ | ✅ |
-| 4 | **Congestion/flow control** | ❌ | ✅ |
+I protocolli del livello di trasporto, come UDP e TCP, si fanno carico di quattro responsabilità principali (di cui solo le prime due sono garantite da UDP):
+
+| # | Responsabilità | UDP | TCP | Descrizione |
+|---|---------------|-----|-----|-------------|
+| 1 | **Process-to-process delivery** | ✅ | ✅ | Consegna del messaggio al processo corretto tramite porte (Mux/Demux). |
+| 2 | **Integrity checking** | ✅ | ✅ | Controllo di integrità del dato tramite Checksum (identifica le alterazioni fisiche). |
+| 3 | **Reliable data transfer (RDT)** | ❌ | ✅ | Trasferimento Dati Affidabile: arrivo in ordine e senza perdite o duplicati. |
+| 4 | **Congestion & Flow control** | ❌ | ✅ | Previene la congestione sia nella rete sia nel buffer del ricevente. |
 
 ### 6.3 Multiplexing e Demultiplexing
 
-**Il problema:** più processi accedono alla rete contemporaneamente.
+Più processi (es. browser, Spotify, mail client) possono accedere simultaneamente alla rete. Invece di inviare dati direttamente ai processi, ci si affida alle **socket**, che fungono da interfaccia.
 
-**Soluzione:** socket identificate da **numeri di porta** (16 bit, 0-65535).
-- **Well-known ports** (0-1023): riservate per protocolli noti
-- **Multiplexing** (mittente): crea segmenti da più processi assegnando identificatore
-- **Demultiplexing** (destinatario): reindirizza segmento alla socket giusta
+I messaggi vengono diretti tramite **numeri di porta** (da 0 a 65535, 16 bit). Le porte da 0 a 1023 sono dette *Well-known ports* (es. HTTP: 80, DNS: 53, SSH: 22, SMTP: 25).
 
-**Socket UDP:** identificata da **2 elementi** (dest IP, dest port)
-**Socket TCP:** identificata da **4 elementi** (src IP, src port, dest IP, dest port)
+* **Multiplexing (Mittente)**: Prende i dati dalle diverse socket, assegna le porte sorgente e destinazione, incapsulando il tutto in segmenti per il livello inferiore.
+* **Demultiplexing (Destinatario)**: Esamina l'header in arrivo e smista il segmento verso la socket corretta.
 
-**Tool nmap:**
-```bash
-sudo nmap [target]           # Port-scan
-sudo nmap -sV [target]       # Identifica servizi
-sudo nmap --top-port N [target]  # Top N porte
-```
+> [!TIP]
+> **Differenza fondamentale nelle Socket:**
+> - Una **socket UDP** è identificata unicamente da 2 elementi: `IP destinazione` + `Porta destinazione`. Vari datagrammi da client diversi verso lo stesso IP/Porta finiranno in una singola coda.
+> - Una **socket TCP** è identificata rigidamente da 4 elementi: `IP sorgente`, `Porta sorgente`, `IP destinazione`, `Porta destinazione`. Un server TCP alloca un nuovo thread e una nuova socket per ogni connessione in ingresso!
 
 ### 6.4 UDP — User Datagram Protocol
 
-**Caratteristiche:**
-- **Connectionless**: nessun handshaking
-- Nessuna garanzia sulla consegna
-- Nessun controllo di congestione/flusso
-- Solo port + checksum rispetto a IP
+**UDP** è un protocollo minimalista, "best-effort". Prende il payload, aggiunge le funzionalità di mux/demux e un controllo d'errore basilare, per poi inviarlo in rete senza alcuna pretesa.
 
-**Perché usare UDP?**
+**Perché scegliere UDP invece del ben più potente TCP?**
+1. **Controllo a livello applicativo**: UDP non intralcia l'applicazione. Non impone ritardi per ritrasmissioni forzate o pause per congestione. È eccellente per il *real-time* in cui scartare un pacchetto vecchio è meglio che ritardare l'intero stream.
+2. **Nessun ritardo per l'apertura**: UDP è *connectionless*. Nessun handshake iniziale, ergo nessun delay per stabilire la connessione (motivo cruciale per il protocollo DNS).
+3. **Nessuno stato di connessione**: Non avendo buffer di invio/ricezione, timer complessi e finestre di congestione, i server UDP possono sopportare un carico di client concorrenti enormemente superiore (maggiore scalabilità).
+4. **Overhead ridotto**: L'header di UDP è di soli 8 byte, contro l'header di TCP (20 byte standard).
 
-| Motivo | Spiegazione |
-|--------|-------------|
-| Controllo applicazione | Più diretto, utile per real-time |
-| Connessione rapida | Nessun handshake → nessun ritardo |
-| Nessuno stato | Server supporta più client contemporaneamente |
-| Overhead minimo | 8 byte header vs. 20 byte di TCP |
+> [!WARNING]
+> Usare massicciamente UDP senza implementare controlli applicativi sul rate d'invio (ad esempio in uno streaming smodato) porta a *UDP-induced packet loss*, in cui un singolo host aggressivo può intasare i router saturandone i buffer, soffocando le connessioni TCP vicine.
 
-**Usi comuni:**
+### 6.5 Formato e Checksum in UDP
 
-| Servizio | Trasporto |
-|----------|-----------|
-| DNS | UDP |
-| SNMP | UDP |
-| Streaming multimediale | UDP o TCP |
-| Telefonia Internet | UDP o TCP |
-| E-mail, Web, FTP | TCP |
-
-### 6.5 Formato del Datagramma UDP
-
+Il datagramma UDP ha una struttura estremamente snella:
 ```
  ├──────────────────────────────────────┤
  │  Source Port (16) | Dest Port (16)   │  Header (8 byte)
@@ -1503,327 +1490,285 @@ sudo nmap --top-port N [target]  # Top N porte
  └──────────────────────────────────────┘
 ```
 
-### 6.6 Checksum UDP
+Il **Checksum UDP** fornisce un check d'integrità rudimentale contro alterazioni di bit durante il tragitto. 
+**Lato mittente**: I dati vengono trattati come sequenza di numeri interi a 16 bit. Si sommano tutti (gestendo il riporto, detto overflow, sommandolo a sua volta al risultato) e infine se ne fa il **complemento a 1** (inversione dei bit). Questo è il Checksum.
+**Lato destinatario**: Si sommano di nuovo tutti i blocchi a 16 bit del pacchetto arrivato, includendo nel conto lo stesso campo Checksum. Se non vi è stata alcuna anomalia fisica, la somma dei bit restituirà obbligatoriamente `1111111111111111`. Se un solo bit vale `0`, il pacchetto viene scartato per errore.
 
-**Calcolo (mittente):** complemento a 1 della somma di tutte le parole a 16-bit del datagramma.
+### 6.6 Il Problema del Trasferimento Dati Affidabile (RDT)
 
-**Verifica (destinatario):** somma tutti i bit (checksum incluso) → deve dare `1111111111111111`.
+Come si può realizzare un Trasferimento Affidabile (*Reliable Data Transfer*, RDT) lavorando sopra un livello di rete notoriamente inaffidabile (come l'IP, che si limita al best-effort)?
 
-**Esempio:**
-```
-0110011001100000
-+ 0101010101010101
-= 1011101110110101  (prima somma)
-+ 1000111100001100
-= 10100101011000001 → overflow → +1 → 0100101011000010
+**L'analogia della stazione ferroviaria:**
+Immaginiamo di essere in una stazione in attesa del Treno 6 sul binario 5. L'altoparlante della stazione (comunicazione inaffidabile) annuncia un cambio e gracchia: *"Il Treno 6 arriverà sul binario 9"*.
+Se la trasmissione fallisce, potremmo udire:
+- *"Il Treno %&! arriverà sul binario 9"* (Corruzione)
+- *"Il Treno 7 arriverà sul binario 9"* (Alterazione non evidente)
+- Niente del tutto (Smarrimento).
+La ricezione errata porta conseguenze disastrose, e capire che c'è stato un errore è solo il primo passo; rimediare è il vero RDT.
 
-Checksum = complemento a 1 = 1011010100111101
-Verifica: 0100101011000010 + 1011010100111101 = 1111111111111111 ✅
-```
+Un **canale affidabile** perfetto deve garantire tre condizioni d'oro:
+1. Nessun bit corrotto (gestito parzialmente dal checksum).
+2. Nessun bit perso o duplicato.
+3. Tutti i bit arrivano esattamente nell'ordine in cui sono partiti.
 
-### 6.7 Trasferimento Affidabile dei Dati
+I router intermedi bufferizzano i pacchetti; se vi è congestione, i pacchetti in eccedenza debordano dai buffer venendo semplicemente cancellati (packet loss). L'RDT deve mascherare del tutto questo dramma all'applicazione sovrastante.
 
-**Obiettivo:** il livello di trasporto deve fornire affidabilità anche su canali inaffidabili (che possono corrompere, perdere, duplicare, riordinare pacchetti).
+### 6.7 Stop-and-Wait e la Lotta alla Perdita
 
-**3 garanzie per un canale affidabile:**
-1. Nessun bit corrotto
-2. Nessun bit perso o duplicato
-3. Tutti i bit nell'esatto ordine di invio
+Il primo primitivo protocollo per l'RDT è lo **Stop-and-Wait**: per ogni singolo pacchetto mandato, il mittente si pianta e attende passivamente un feedback.
+* **ACK** (*Positive Acknowledgment*): Tutto bene.
+* **NCK** (*Negative Acknowledgment*): C'è un errore o corruzione, rimanda il pacchetto.
 
-#### 6.7.1 Stop-and-Wait — Corruzioni
+Nascono però delle criticità enormi e concatenate:
+1. **Problema degli ACK Corrotti (Duplicati)**: Se l'ACK viene distrutto e torna come bit incomprensibili, il mittente non ha idea se il destinatario abbia ottenuto il dato. L'unica opzione è **ritrasmettere**. Ma il destinatario, ricevendo il pacchetto di nuovo, non sa se è un pacchetto *nuovo* o il precedente *ritrasmesso*!
+   *Soluzione*: si allega un **Numero di Sequenza** (Sequence Number) ai pacchetti. Nel caso basilare dello Stop-and-Wait, basta che il numero alterni tra `0` e `1`.
+2. **Lo smarrimento (Il Deadlock)**: Se il pacchetto si perde nel nulla (loss router), il destinatario non risponde nulla, e il mittente rimane bloccato in attesa per l'eternità.
 
-**ACK** (*Positive Acknowledgment*): messaggio ricevuto integro. **NCK** (*Negative ACK*): errore, ripetere.
+#### Introduzione del Timeout
+La salvezza contro i deadlock da pacchetto perso è il **Timeout**. Se l'ACK non giunge entro lo scoccare del timer, il mittente ritrasmette a prescindere.
+Stimare il timeout perfetto è essenziale per la vitalità della rete. Dipende ovviamente dall'RTT (*Round-Trip Time*).
+- Se è *troppo lungo*, la comunicazione arranca.
+- Se è *troppo corto*, si sprecano risorse per ritrasmettere inutilmente pacchetti lenti ma corretti, intasando ulteriormente la rete.
 
-**Problema ACK/NCK corrotti:** se l'ACK arriva corrotto, il mittente non sa se ritrasmettere (rischio di duplicati).
-**Soluzione:** aggiungere **numero di sequenza** al pacchetto (in stop-and-wait basta **1 bit**: 0 o 1).
+#### Le Prestazioni Disastrose dello Stop-and-Wait
 
-#### 6.7.2 Stop-and-Wait — Perdita di Pacchetti
+Possiamo paragonare il RDT a un tubo dell'acqua: con Stop-and-Wait iniettiamo un bicchiere, aspettiamo che arrivi a destinazione e ci ritorni un messaggio a conferma, per poi versare il secondo. 
 
-**Timeout:** se non arriva ACK entro il timeout, ritrasmette.
-- Timeout troppo lungo → rallenta la comunicazione
-- Timeout troppo corto → pacchetti si sovrappongono, ritrasmissioni inutili
-- Deve essere > RTT (ma è difficile stimarlo esattamente)
+Calcoliamo quanto tempo spreca il protocollo in uno scenario USA Coast-to-Coast:
+* Capacità Link $R$ = `1 Gbps` (`10^9 bit/s`)
+* RTT di latenza transatlantica = `30 ms` (`0.03 s`)
+* Grandezza Pacchetto $L$ = `1000 Bytes` (`8000 bits`)
 
-**Prestazioni stop-and-wait:** **terribili** su link veloci con latenza elevata.
+Il **Tempo di pura Trasmissione** per spingere 8000 bit sul cavo a 1 Gbps è:
+$t_{trasm} = \frac{L}{R} = 0.000008 \text{ sec (8 microsecondi)}$
 
-> **Esempio numerico:** link da 1 Gbps, RTT=30ms, pacchetto=1000B (8000 bit)
-> - Tempo di trasmissione = 8000 bit / 10^9 bit/s = **0.008 ms**
-> - Utilization = 0.008 / (30 + 0.008) ≈ **0.00027 = 0.027%**
-> - Il mittente aspetta il **99.97%** del tempo! Throughput effettivo = 27 kbps su un link da 1 Gbps.
+Se usiamo Stop-and-Wait, il tempo totale (andata del pacchetto e ritorno dell'ACK) è $t_{tot} = RTT + t_{trasm} = 30.008 \text{ ms}$.
+La **Utilization** del canale (frazione del tempo utile) è:
+$U = \frac{t_{trasm}}{t_{tot}} = \frac{0.008}{30.008} \approx 0.00027 \text{ (0.027\%)}$
 
-#### 6.7.3 Pipelining
+Nonostante possediamo una dorsale a `1 Gbps`, il protocollo ci fa sprecare il **99.97%** del tempo in mera attesa. Il throughput effettivo collassa a un misero `27 kbps`.
 
-Il mittente invia **più pacchetti** senza aspettare gli ACK — la "pipeline" è riempita di pacchetti in volo.
+### 6.8 Il Pipelining: Pompaggio continuo e Finestre
 
-**Conseguenze:** necessità di numeri di sequenza più grandi e buffering dei pacchetti (sia lato mittente sia destinatario).
+Per sfruttare la larghezza di banda serve il **Pipelining**: si sparano in sequenza molti pacchetti contemporaneamente (riempiendo la "tubazione") prima di esigere qualsiasi ACK.
+Questa potenza richiede due cose: buffer per accumulare la miriade di pacchetti in volo, e Numeri di Sequenza enormemente più ampi. 
+Per gestire l'inevitabile perdita in un treno di pacchetti, esistono due celebri architetture:
 
-**Go-Back-N (GBN):** finestra di N pacchetti non-acknowledged.
-- Il destinatario **non bufferizza** i pacchetti fuori ordine: li scarta
-- Ogni pacchetto out-of-order causa un re-invio dell'ultimo ACK corretto (**ACK cumulativo**)
+#### 1. Go-Back-N (GBN - Finestra Scorrevole)
+Il mittente spara fino a una finestra massima ($N$) di pacchetti non ancora confermati.
+* **Lato Destinatario**: Agisce in modo assai pigro ed egoista. Riceve il pacchetto 1, ACK; riceve il 2, ACK; *non* riceve il 3 ma riceve il 4. **Cosa fa? Scarta direttamente e distrugge il pacchetto 4**. Non lo bufferizza affatto. Il destinatario manderà in continuazione l'ACK cumulativo del 2. In Go-Back-N, il destinatario rigetta sistematicamente i pacchetti out-of-order.
+* **Lato Mittente**: Avendo spedito 3, 4, 5 e 6, scatterà prima o poi il Timeout sul pacchetto 3. La reazione del mittente è feroce: "Torna indietro a N!" (**Go Back N**). Invalida tutta la coda e ritrasmette l'intero treno 3, 4, 5 e 6 pur sapendo che alcuni erano già arrivati, sprecando molta banda e congestionando la rete.
 
-```
-Window: [base, nextseqnum-1] = trasmessi ma non ACK
-        [nextseqnum, base+N-1] = possono essere inviati senza aspettare
-        [base+N, ...] = non possono essere inviati ancora
-```
+#### 2. Selective Repeat (SR - Ripetizione Selettiva)
+Evoluzione efficiente di GBN, progettato per evitare ritrasmissioni cieche e rovinose.
+* **Lato Destinatario**: È dotato di memoria. Se si smarrisce il pacchetto 3, l'arrivo del 4, 5 e 6 non viene cestinato ma intelligentemente **bufferizzato** (salvato da parte). Viene inviato un ACK *individuale* (non cumulativo) per i pacchetti correttamente giunti fuori ordine.
+* **Lato Mittente**: Deve mantenere i singoli timer per ogni pacchetto in volo. Ritrasmetterà in modo chirurgico *soltanto* il pacchetto 3 smarrito, chiudendo il buco.
 
-**Svantaggio GBN:** in caso di perdita, ritrasmette il pacchetto perso **e tutti i successivi** nella finestra.
-
-**Selective Repeat (SR):** ritrasmette **solo** i pacchetti persi/corrotti.
-- Il destinatario **bufferizza** i pacchetti fuori ordine fino a riempire i gap
-- Più efficiente di GBN ma richiede più memoria
-
-> **Vincolo SR:** numero di sequenza ≥ **2 × window size** (per evitare confusione tra vecchi e nuovi pacchetti).
-
-**Confronto:**
-
-| Caratteristica | Go-Back-N | Selective Repeat |
-|----------------|-----------|------------------|
-| Buffering al destinatario | No | Sì |
-| In caso di perdita | Ritrasmette tutto da N | Ritrasmette solo il perso |
-| ACK | Cumulativo | Per singolo segmento |
-| Efficienza | Bassa (alta perdita) | Alta |
-| Vincolo seq number | seq ≥ N | seq ≥ 2N |
-
-### 6.8 Schemi e Appunti dalle Lavagne (Lezioni 10, 11 e 12)
-
-![Board Lezione 10 - Pagina 1](assets/board_images/board_L10_p1.png)
-*Figura 6.1 — Livello di trasporto: comunicazione punto-punto logica tra host terminali.*
-
-![Board Lezione 11 - Pagina 1](assets/board_images/board_L11_p1.png)
-*Figura 6.2 — Analisi temporale RDT nel caso critico di Timeout inferiore all'RTT: gestione dei duplicati.*
-
-![Board Lezione 12 - Pagina 1](assets/board_images/board_L12_p1.png)
-*Figura 6.3 — Perché l'affidabilità completa spetta allo strato di trasporto e non alla rete IP sottostante.*
+> [!CAUTION]
+> **Il tallone d'Achille del Selective Repeat:** 
+> Vi è un vincolo critico in Selective Repeat per evitare allucinazioni del destinatario di fronte a grossi ritardi. Immaginiamo che il destinatario confermi 3 vecchi pacchetti e si sposti su una nuova finestra, ma che i tre ACK vadano tutti perduti. Il mittente rinvierebbe la vecchia tornata di pacchetti usando gli stessi numeri di sequenza, e il ricevente confonderebbe la ritrasmissione stantia coi nuovi pacchetti attesi per il prosieguo, corrompendo per sempre il file!
+> Per evitare questa fatale omonimia (aliasing temporale), il numero di sequenza disponibile deve essere per forza vasto.
+> Esiste una regola aurea: **L'intero campo dei Numeri di Sequenza in uso deve essere pari ad almeno il doppio dell'ampiezza della Window Size ($Seq \ge 2N$)**.
 
 ---
 
 ## 7. Il Protocollo TCP
 <div align="right"><em><a href="#indice">Torna all'indice</a></em></div>
 
-### 7.1 Caratteristiche di TCP
+### 7.1 Caratteristiche Distintive di TCP
 
-- **Connection-oriented**: handshake prima della trasmissione che assicura la "connessione" tra i due processi
-- **Affidabile**: checksum, ritrasmissioni, ACK, timer, numeri di sequenza
-- **Full-duplex**: bidirezionale simultaneo. Se A comunica con B, allora anche B è connesso con A. È come avere **due flussi dati indipendenti** A→B e B→A
-- **Point-to-point**: singolo mittente e singolo destinatario. UDP permette il **multicasting**, TCP no
-- **Stream-oriented**: più segmenti possono far parte di un flusso (*stream*) più grande e ordinato. I datagrammi UDP sono invece per lo più **indipendenti** tra loro
+Rispetto all'immaturo UDP, **TCP (Transmission Control Protocol)** si distingue per le seguenti proprietà granitiche:
+- **Connection-oriented**: Impone una stretta di mano iniziale (handshake) prima di iniettare dati in rete, garantendo che i sistemi siano coordinati e pronti (buffer allocati).
+- **Affidabile (Reliable)**: Implementa internamente checksum, ack, ritrasmissioni chirurgiche e timer su modello *Selective Repeat/Pipelining* per annientare ogni traccia di pacchetto perduto.
+- **Full-duplex**: Il flusso è bi-direzionale contemporaneo. Quando A parla a B, i dati che A manda a B e i dati che B manda ad A viaggiano in parallelo sui medesimi segmenti.
+- **Point-to-point**: Una conversazione TCP è sempre e solo tra due endpoint monolitici. Esclude categoricamente i broadcast e multicast.
+- **Stream-oriented**: Apparentemente i pacchetti non esistono. TCP mostra l'informazione alle app sovrastanti come un flusso (stream) liquido e continuo di *byte*, celando la sua frantumazione retrostante.
 
-### 7.2 Buffer TCP
+### 7.2 L'Architettura dei Buffer TCP
 
+In TCP l'invio non è sincrono.
 ```
-Processo A (mittente)
-    │
-[Send-buffer] ← Applicazione scrive qui
-    │
-[Segmenti TCP] ─────────────────► Rete
-                                   │
-                              [Receive-buffer]
-                                   │
-                              Processo B legge
+Processo A (App)                      Processo B (App)
+       │                                     ▲
+ [Send-Buffer A]                       [Rcv-Buffer B]
+       │                                     │
+ Segmenti in Rete ═══════════════════►   Lettura lenta
 ```
+Il buffer disaccoppia provvidenzialmente i ritmi frenetici dell'OS dalla velocità esatta e ballerina del mezzo trasmissivo e dell'app ricevente, mitigando blocchi, strozzature (bottlenecks) e consentendo il prelievo intelligente.
 
-I buffer disaccoppiano la trasmissione dai ritardi dell'applicazione, dell'OS e della rete.
+### 7.3 MSS: Maximum Segment Size
 
-### 7.3 Maximum Segment Size (MSS)
-
+Quanta roba entra al massimo in un singolo segmento TCP?
+La formula parte dalle restrizioni fisiche (Link Layer):
 ```
-MSS + 40 byte = MTU
+MSS = MTU - (Header IP) - (Header TCP)
 ```
+In una rete Ethernet tipica l'**MTU** è 1500 byte. Rimuovendo i classici 20 byte del protocollo IPv4 e 20 byte dell'header TCP, il **Maximum Segment Size ammonta comunemente a 1460 byte** di solo payload.
 
-- **MTU** (Ethernet) = 1500 byte
-- Header TCP + IP = 40 byte
-- **MSS tipico = 1460 byte**
-
-### 7.4 Segmento TCP
+### 7.4 Il Segmento TCP (Anatomia)
 
 ```
  ├─────────────────────────────────────────────────────────┤
  │  Source Port (16)      |  Destination Port (16)         │
- │  Sequence Number (32)                                    │
- │  Acknowledgment Number (32)                              │
+ │  Sequence Number (32)                                   │
+ │  Acknowledgment Number (32)                             │
  │  HdrLen | Flags (CWR,ECE,URG,ACK,PSH,RST,SYN,FIN) | RcvWnd │
  │  Checksum (16)         |  Urgent Data Pointer (16)      │
- │  Options (variabile)                                     │
+ │  Options (variabile, es. Timestamp, Window scale)       │
  ├─────────────────────────────────────────────────────────┤
- │  Data (≤ MSS byte)                                       │
+ │  Payload Dati (≤ MSS byte)                              │
  └─────────────────────────────────────────────────────────┘
 ```
 
-**Campi principali:**
+I flag più cruciali a 1 bit dettano lo stato del motore di TCP:
+* **ACK**: Se attivato (quasi sempre dopo l'inizio), segnala che il campo `Acknowledgment Number` ha valenza.
+* **SYN**: Sincronizza i numeri di sequenza all'alba della connessione.
+* **FIN**: Denota la volontà irrevocabile di chiudere il dialogo.
+* **RST**: Trancia la connessione in emergenza (Reset) scartando i buffer in volo.
+* I campi **RcvWnd** (Receive Window per il controllo di flusso) e **Sequence/Ack Numbers** (per l'RDT) formano la trinità della sicurezza TCP.
 
-| Campo | Bit | Descrizione |
-|-------|-----|-------------|
-| Source/Dest Port | 16+16 | Porte sorgente e destinazione |
-| Sequence Number | 32 | Posizione del primo byte del segmento nel byte-stream |
-| Acknowledgment Number | 32 | Numero di sequenza del prossimo byte atteso |
-| Receive Window | 16 | Byte accettabili — per il **flow control** |
-| Header Length | 4 | Numero di parole 32-bit nell'header (variabile per Options) |
-| Checksum | 16 | Controllo integrità del segmento |
-| **ACK** flag | 1 | Indica che il campo Acknowledgment Number è valido |
-| **SYN** flag | 1 | Setup connessione (three-way handshake) |
-| **FIN** flag | 1 | Chiusura connessione |
-| **RST** flag | 1 | Reset connessione (terminazione anomala) |
-| **CWR/ECE** flags | 1+1 | Explicit Congestion Notification (ECN, opzionale) |
-| **PSH** flag | 1 | Passa immediatamente i dati all'applicazione (raro) |
-| **URG** flag | 1 | Il segmento contiene dati urgenti — puntatore dati urgenti valido (raro) |
-| Urgent Ptr | 16 | Posizione dell'ultimo byte dei dati urgenti |
-| Options | K bit | Negoziazione MSS, timestamp, ecc. |
+### 7.5 Numeri di Sequenza e Acknowledgment: L'arte del Byte-Stream
 
-### 7.5 Numeri di Sequenza e Acknowledgment
+> [!IMPORTANT]
+> L'errore più comune fra gli studenti è credere che il Numero di Sequenza si riferisca al "numero del pacchetto" (pacchetto 1, pacchetto 2, ecc). In TCP non è così. **TCP quantifica e numera ogni singolo byte trasmesso nel flusso di dati.**
 
-TCP tratta i dati come un **stream ordinato di byte**.
+* **Sequence Number**: Indica la posizione all'interno dello stream del **primissimo byte** trasportato dal payload di quel segmento. 
+  *(Es. un file di 500.000 byte con MSS di 1000 byte produrrà il Segmento 1 con `Seq=0`, e il Segmento 2 con `Seq=1000`)*.
+* **Acknowledgment Number**: Indica in ogni istante **la posizione del prossimo byte logico atteso** da parte del ricevente.
 
-**Sequence Number**: posizione nel byte-stream del primo byte del segmento.
+**L'arte del Piggybacking (Full-Duplex)**
+Se stiamo comunicando e tu mi mandi dei dati, io non consumo banda inviandoti un pacchetto di solo ACK. Se ho dei dati di risposta da mandarti, "incollerò" furtivamente il mio ACK di avvenuta ricezione nel nuovo pacchetto di dati che sto mandando a te. 
 
-**Esempio** (500.000 byte, MSS=1.000):
-- Segmento 1: seq=0
-- Segmento 2: seq=1.000
-- Segmento 3: seq=2.000 ... ecc.
+> *Esempio Telnet (A invia 'c' e B fa l'eco di 'c'):*
+> 1. $A \rightarrow B$: Il client invia il carattere (1 byte). Header: `Seq=42, Ack=79, Payload='c'`
+> 2. $B \rightarrow A$: Il server incapsula in sol colpo l'ACK, l'avanzamento d'invio, e il suo payload in eco. Header: `Seq=79, Ack=43` (*piggybacking*, si aspetta il byte 43 in arrivo dal client!), `Payload='c'`.
+> 3. $A \rightarrow B$: L'host conferma puro l'eco. Header: `Seq=43, Ack=80, Payload=Nessuno`.
 
-**Acknowledgment Number**: numero di sequenza del **prossimo byte atteso**.
+### 7.6 Stima RTT Perfetta e Timeout Infallibili
 
-**Esempio full-duplex** (invio di 'c' da A a B con echo):
-1. A→B: `seq=42, ack=79, data='c'`
-2. B→A: `seq=79, ack=43, data='c'` (echo + conferma)
-3. A→B: `seq=43, ack=80` (ACK puro)
+Il protocollo si sintonizza alla latenza globale del mondo calcolando l'RTT su base mobile per regolare il Timeout d'errore (che idealmente deve essere di pochissimo superiore al viaggio andata-ritorno).
 
-### 7.6 Stima del RTT e Timeout
+TCP stima un RTT inglobando la storia passata tramite una media esponenziale smorzata (per non impazzire ai primi lag accidentali del router):
+$$EstimatedRTT = (1-\alpha) \cdot EstimatedRTT + \alpha \cdot SampleRTT \quad (\alpha \approx 0.125)$$
+
+TCP tiene perfino conto dell'imprevedibilità del canale misurando la "deviazione" (DevRTT) dallo standard, come cuscinetto in caso di estrema volatilità della connessione.
+Il Timeout di reazione allo smarrimento si stabilizza su:
+$$TimeoutInterval = EstimatedRTT + 4 \cdot DevRTT$$
+Questa calibrazione chirurgica annienta sia i Timeout troppo prolungati che paralizzano la rete, sia le ritrasmissioni precipitate.
+
+### 7.7 Il Salvataggio Rapido: Fast Retransmit
+
+Aspettare inerme la scadenza del cronometro di un Timeout è inaccettabile e blocca intere comunicazioni per svariati decimi di secondo. TCP integra una tattica geniale chiamata **Fast Retransmit**.
+
+Se un pacchetto `N` si disintegra in strada ma il treno di pacchetti prosegue indisturbato, il ricevente incassa il pacchetto `N+1`, ma non è l'N. Quindi il ricevente cosa fa? Manda indietro immediatamente un **ACK duplicato** implorando incessantemente di spedirgli la sequenza per l'N. Se arrivano `N+2` e `N+3`, spara ancora il medesimo ACK vecchio.
+
+Quando il mittente in attesa scorge nel registro l'arrivo anomalo di **3 ACK duplicati identici**, realizza che è altamente probabile un inabissamento di rete. Sospende i timer e agisce in emergenza: **ritrasmette seduta stante** il segmento smarrito ancor prima che scada il fatidico timeout!
+
+*(Perché si attende l'accumulo di 3 ACK e non 1 o 2? Per scongiurare allarmi dovuti a semplici pacchetti scompaginati e rimescolati dal router senza vera perdita).*
+
+### 7.8 L'Odissea del Connection Management: Two-Army Problem
+
+Costruire un accordo a distanza tramite canali intrinsecamente pericolosi genera una paralisi teorica riassumibile nel famoso **Two-Army Problem** (Il dilemma dei due generali).
+
+*Due legioni devono attaccare una roccaforte, ma distano due crinali. Possono vincere solo se attaccano all'alba simultaneamente. Il Generale A invia un messaggero al B: "Attacchiamo all'alba, d'accordo?". Il Generale B accetta e rinvia il messaggero per dirgli di sì. B però tentenna: "Il messaggero è giunto ad A?". A dal canto suo teme: "Il mio ACK è giunto a B?". Così, non essendoci certezza definitiva della conferma ultima, nessuno attaccherà mai.*
+
+La logica impietosa afferma che non esiste alcun protocollo umano né artificiale totalmente esente da falle al 100% senza comunicazione continua. Tuttavia, TCP utilizza una soluzione "sufficientemente buona" per sfiorare l'eccellenza: l'iconico **Three-Way Handshake**.
+
+#### The Three-Way Handshake (L'Apertura)
+```
+CLIENT                                  SERVER
+  │── SYN=1, SEQ=client_isn ───────────────►│
+  │   "Voglio connettermi, inizio al seq X" │ (Server alloca memoria)
+  │                                         │
+  │◄─ SYN=1, ACK=1, SEQ=server_isn, ────────│
+  │   ACK_NUM=client_isn+1                  │
+  │   "Okay, ti riscontro l'X+1 e io ti     │ (Client alloca memoria
+  │    parlerò dal seq Y"                   │  ed è ufficialmente ESTABLISHED)
+  │                                         │
+  │── SYN=0, ACK=1, SEQ=client_isn+1 ──────►│
+  │   ACK_NUM=server_isn+1                  │ (Server è ufficialmente ESTABLISHED)
+  │   "Ottimo, riscontro l'Y+1"             │
+  │                                         │
+  └───────── CONNESSIONE APERTA ────────────┘
+```
+I seq originari (ISN) sono randomici, per eludere intromissioni. Se un malevolo inonda il server di richieste di SYN senza mai chiudere il passaggio 3 (ignorando il SYN-ACK), esaurisce la RAM del sistema operativo saturando tutte le code di handshake: **È il devastante SYN Flood (attacco DoS).**
+
+#### The Connection Teardown (La Chiusura a 4 vie)
+
+Concluso il suo corso vitale, TCP scioglie educatamente la collaborazione disattivando autonomamente entrambe le direttive. Il client alza bandiera col bit **FIN**. Il Server avalla la chiusura. Dopodiché tocca al server inoltrare un pacchetto **FIN** di chiusura e ottenere un ACK dal client.
 
 ```
-EstimatedRTT = (1-α)·EstimatedRTT + α·SampleRTT   (α = 0.125)
-DevRTT = (1-β)·DevRTT + β·|SampleRTT - EstimatedRTT|   (β = 0.25)
-TimeoutInterval = EstimatedRTT + 4·DevRTT
+CLIENT                                  SERVER
+  │── FIN=1 ───────────────────────────────►│  
+  │◄─ ACK=1 ────────────────────────────────│ (Server: chiude la strada client->server)
+  │                                         │  
+  │◄─ FIN=1 ────────────────────────────────│  
+  │── ACK=1 ───────────────────────────────►│ (Client: attesa forzata prima di sganciarsi, 
+  └───── CONGEDO COMPLETATO (TIME_WAIT) ────┘  evitando perdite finali degli ACK)
 ```
-
-- Valore iniziale: **1 secondo**
-- Aumenta quando il RTT oscilla
-
-### 7.7 Ritrasmissione Rapida (Fast Retransmit)
-
-1. Destinatario riceve segmento con seq > atteso → invia **ACK duplicato**
-2. Se mittente riceve **3 ACK duplicati** → ritrasmette immediatamente (**fast retransmit**)
-
-> Perché 3 e non 1? Perché 1 ACK duplicato può avere cause diverse dalla perdita (es. riordino).
-
-### 7.8 Three-Way Handshake (Stabilimento Connessione)
-
-```
-Client                              Server
-  │── SYN=1, SEQ=client_isn ───────►│  [SYN]
-  │◄─ SYN=1, ACK=1, ────────────────│  [SYN-ACK]
-  │   SEQ=server_isn,               │
-  │   ACK=client_isn+1              │
-  │── SYN=0, SEQ=client_isn+1 ─────►│  [ACK]
-  │   ACK=server_isn+1              │
-  │◄══════════ Connessione ════════►│
-```
-
-- **SYN**: nessun payload, SYN=1, numero di sequenza casuale (ISN)
-- **SYN-ACK**: server alloca buffer e variabili, risponde con il proprio ISN
-- **ACK**: client alloca buffer, eventualmente con payload
-
-> **SYN flood**: attacco DoS che sfrutta il three-way handshake lasciando connessioni half-open.
-
-### 7.9 Teardown della Connessione
-
-```
-Client                              Server
-  │── FIN=1 ──────────────────────►│
-  │◄─ ACK=1 ───────────────────────│
-  │◄─ FIN=1 ───────────────────────│
-  │── ACK=1 ──────────────────────►│
-  └────── Connessione rilasciata ───┘
-```
-
-ACK e FIN del server possono essere nello stesso segmento o separati. I timer gestiscono le perdite durante il teardown.
-
-### 7.10 Schemi e Appunti dalle Lavagne (Lezioni 13 e 16)
-
-![Board Lezione 13 - Pagina 1](assets/board_images/board_L13_p1.png)
-*Figura 7.1 — Flusso di byte TCP, numerazione progressiva dei segmenti e campo Sequence Number.*
-
-![Board Lezione 13 - Pagina 2](assets/board_images/board_L13_p2.png)
-*Figura 7.2 — Meccanismo degli ACK cumulativi e avanzamento della finestra.*
-
-![Board Lezione 13 - Pagina 3](assets/board_images/board_L13_p3.png)
-*Figura 7.3 — Diagramma temporale di sincronizzazione e scambio dati TCP.*
-
-![Board Lezione 16 - Pagina 1](assets/board_images/board_L16_p1.png)
-*Figura 7.4 — Esercitazione Wireshark su stream TCP: download file 10MB e analisi del throughput.*
+*I timer di Time-Wait al passo 4 proteggono dal disastro che il Server non udendo l'ultimo ACK reinvii di nuovo il FIN trovando la porta del client definitivamente sprangata (RST).*
 
 ---
 
 ## 8. Controllo di Flusso e Controllo della Congestione
 <div align="right"><em><a href="#indice">Torna all'indice</a></em></div>
 
-### 8.1 Flow Control (Controllo di Flusso)
+### 8.1 Flow Control (Controllo di Flusso o Speed-Matching)
 
-**Scopo:** Abbinare la velocità del mittente alla velocità di lettura del destinatario.
+**Lo scopo:** Evitare che l'entusiasmo della rete sfoci in un **overflow del Receive-Buffer** in casa del destinatario. TCP applica uno *speed-matching* bilanciando il tasso di emissione con il tasso vitale con cui l'applicazione di destinazione sta effettivamente leggendo la socket.
 
-**Meccanismo:**
+**Il meccanismo:**
+Nel segmento TCP viaggiano implicitamente comunicazioni in ogni pacchetto. L'host B inietta nell'header il parametro `Receive Window (rwnd)`, un valore che decreta ufficialmente quanto buffer vuoto e ricevente gli rimane:
+$$rwnd = RcvBuffer - (LastByteRcvd - LastByteRead)$$
 
-Sul **destinatario (B)**:
-```
-rwnd = RcvBuffer - (LastByteRcvd - LastByteRead)
-```
+L'host A (mittente) vincola il suo traffico totale non confermato in volo (`LastByteSent - LastByteAcked`) a essere rigorosamente minore del limite dinamico `rwnd`.
 
-Sul **mittente (A)**:
-```
-LastByteSent - LastByteAcked ≤ rwnd
-```
+> [!TIP]
+> **Lo stallo del Flow Control (Il rwnd a zero):**
+> Se il server notifica un amaro `rwnd = 0`, il client incrocia le braccia paralizzato in attesa che si svuoti il buffer. Non saprà mai se il buffer s'è liberato perché i pacchetti che avvisano sono allegati ai segmenti in corsa. Per sbloccare lo stallo, il mittente in stand-by inietta ostinatamente periodicamente minimi frammenti "sonda" (1 byte) provocando la rispedizione aggiornata della `rwnd`.
 
-Il campo **Receive Window** nel segmento TCP comunica `rwnd` al mittente.
+### 8.2 L'Abisso della Congestione
 
-### 8.2 Congestion Control (Controllo della Congestione)
+Mentre il Flow Control bada che le due parti umane non deraglino, il **Congestion Control** sorveglia che le viscere della terra — le immense dorsali infrastrutturali dei router internet (rete IP) — non esplodano sotto i giga di traffico simultaneo.
 
-**Il problema:** overflow nei buffer dei router.
+> [!IMPORTANT]
+> **Flow control**: Implora di rallentare perché l'App *ricevente* è sommersa.
+> **Congestion control**: Costringe brutalmente a rallentare perché i *Router intermedi IP* stanno collassando ed eliminando pacchetti.
 
-**Due approcci:**
-1. **End-to-end** (standard TCP): congestione inferita dagli end-system (perdite, ritardi)
-2. **Network-assisted** (opzionale): router forniscono feedback esplicito (flag CWR, ECE)
+Se un collo di bottiglia fisico, un link di capacità `R`, assorbe da più emittenti dati a tassi combinati di arrivo medi $\lambda > R/2$ i buffer all'interno dei router traboccano di latenza infinita, collassando nell'effetto a palla di neve (valanga) di congestione dove la pacchettizzazione in ingresso soffoca e innesca enormi ondate di *timeout e ritrasmissioni distruttive a catena* che bruciano irrimediabilmente la banda.
 
-### 8.3 Algoritmo di Jacobson — Rate Regulation
+### 8.3 Algoritmo di Jacobson — Rate Regulation TCP End-to-End
 
-Il mittente mantiene **cwnd (congestion window)**:
-```
-LastByteSent - LastByteAcked ≤ min{cwnd, rwnd}
-```
+In assenza di sussidi di router espliciti per gran parte dell'internet originario, TCP impiega una rilevazione puramente inferenziale, da orbo: **Approccio End-to-End**. Intuisce la presenza di congestione per la pura percezione che iniziano a manifestarsi all'improvviso i terribili *loss events* (i timer del Timeout esplodono o arrivano piogge di ACK duplicati).
 
-**Rilevamento della congestione** — *loss events*:
-- Timeout scade
-- 3 ACK duplicati ricevuti
+Regolando il motore del traffico, TCP limita la mole massima da gettare nella rete tramite la sua **Congestion Window (cwnd)**. Il vincolo generale e supremo diviene la combinazione del limite del server col limite della rete:
+$$\text{Traffico non-confermato} \le \min(cwnd, rwnd)$$
 
-**Rate adjustment:** Bandwidth probing — aumenta cwnd se ACK arrivano, decresce in caso di loss events.
+**Bandwidth Probing (Il test dei tassi):** TCP spinge progressivamente in alto la finestra per testare fin dove la capacità fisica di Internet possa espandersi intatta, e si auto-decapita drasticamente appena subodora la congestione.
 
-**3 Fasi dell'algoritmo:**
+L'algoritmo di Jacobson (standard TCP Reno) si erge su **3 imponenti Fasi Strutturali**:
 
-#### 8.3.1 Slow Start (Avvio Lento)
+#### 1. Slow Start (Fase di Avvio Lento)
+Inizio umile e feroce sondaggio esponenziale.
+- L'innesco avviene partendo cautamente con l'infinitesimo `cwnd = 1 MSS`.
+- A ciascun glorioso arrivo trionfante di ACK, `cwnd` è premiato duplicandosi e incamerando un incremento netto (`cwnd += 1 MSS`).
+- Raddoppiando per ogni RTT, innalza brutalmente la capacità con la **crescita esponenziale**, fin quando o va a infrangersi nella congestione, o urta una morbida soglia psicologica precauzionale, la `ssthresh` (Slow Start Threshold), passando automaticamente alla marcia lenta.
 
-- cwnd = 1 MSS
-- Dopo ogni ACK: `cwnd += 1 MSS` → **crescita esponenziale**
-- Quando cwnd ≥ ssthresh → passa a Congestion Avoidance
+#### 2. Congestion Avoidance / Additive Increase (Crescita Lineare e Prevenzione)
+Superata l'ignara soglia sicura, l'arroganza esponenziale cessa, per subentrare in una saggia cautela.
+- La `cwnd` prosegue la sua ascesa un millimetro alla volta: un microscopico MSS a ciascun RTT totale per evitare bruschi traumi (`+1 MSS per RTT`).
 
-#### 8.3.2 Additive Increase (Congestion Avoidance)
+**E SE ARRIVA IL COLLASSO? (I DUE LIVELLI D'ALLARME DI LOSS EVENT)**:
+- L'allarme apocalittico (Timeout totale per silenzio stampa). Il protocollo ammette il crollo. Abbassa miseramente l'asticella `ssthresh` a metà del valore e precipita a una ridicola `cwnd = 1 MSS` costringendo a un nuovo estenuante ciclo di Slow Start dall'abisso.
+- L'allarme gestibile (3 ACK duplicati). Non c'è un blocco silente, bensì solo frammentazione persa! Si salva in calcio d'angolo scivolando nell'apposita fase d'emergenza.
 
-- Dopo ogni RTT: `cwnd += 1 MSS` → **crescita lineare**
-- Loss event con **timeout**: `ssthresh = cwnd/2`, `cwnd = 1 MSS` → torna a Slow Start
-- Loss event con **3 ACK dup**: `ssthresh = cwnd/2`, `cwnd = ssthresh` → Fast Recovery
+#### 3. Fast Recovery (Ritrasmissione Rapida e Ripresa)
+Interviene salvando il salvabile in onore all'allarme di 3 ACK Duplicati.
+Sempre falciando l'asticella `ssthresh` a metà `cwnd`, preserva però saggiamente la velocità assunta al collasso ritoccandola: 
+`cwnd = ssthresh + 3 MSS`.
+Ritrasmette il pacchetto esatto e reinnesca istantaneamente l'innalzamento addizionale (Congestion Avoidance), senza punire spropositatamente il mittente fino a costringerlo al riavvio infame dello Slow Start.
 
-#### 8.3.3 Fast Recovery (TCP Reno, opzionale)
-
-- Dopo 3 ACK duplicati: `cwnd = ssthresh + 3 MSS`
-- Continua con aumento additivo (evita slow start)
-
-**Comportamento a "dente di sega":**
-```
-cwnd
-│     /\        /\
-│    /  \      /  \
-│   /    \    /    \
-│  /      \  /      \
-└──────────────────────► Tempo
-```
+La raffigurazione su grafico assume così gli iconici e caratteristici andamenti di una perenne catena dentata, comunemente battezzati **Il "dente di sega" di TCP (Sawtooth behavior)**.
 
 ---
 
