@@ -1598,6 +1598,13 @@ Per sfruttare la larghezza di banda, il mittente invia più pacchetti senza aspe
 
 Esistono due approcci principali:
 
+> [!NOTE]
+> **Definizione: Finestra vs Spazio dei Numeri di Sequenza**
+> È fondamentale non confondere questi due concetti chiave del Pipelining:
+> - **Dimensione della Finestra ($N$)**: Determina quanti pacchetti non confermati possono viaggiare "in volo" simultaneamente nella pipeline prima di doversi fermare. Serve a non intasare la rete.
+> - **Spazio dei Numeri di Sequenza**: È il numero totale di etichette identificative temporanee (rappresentate con $k$ bit, quindi da $0$ a $2^k-1$) da apporre sull'header dei pacchetti in volo.
+> Poiché i numeri ripartono da zero ciclicamente, **lo spazio dei Numeri di Sequenza deve essere sempre più grande della Finestra** per impedire che il ricevente possa confondere un vecchio pacchetto in ritardo con un pacchetto nuovo che porta lo stesso numero (effetto *Aliasing*). In GBN lo spazio deve essere $\geq N+1$, in Selective Repeat $\geq 2N$.
+
 #### Go-Back-N (GBN)
 
 Il mittente mantiene una **finestra scorrevole** di al massimo **N** pacchetti non ancora confermati.
