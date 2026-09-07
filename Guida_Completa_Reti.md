@@ -35,20 +35,26 @@
 
 ### 1.1 Cos'è una Rete di Calcolatori
 
-Una **rete di calcolatori** (computer network) è un insieme di dispositivi separati ma interconnessi che collaborano per svolgere un compito comune. Formalmente:
-
+Una **rete di calcolatori** (*computer network*) è un insieme di dispositivi separati ma interconnessi che collaborano per svolgere un compito comune:
 - È una **raccolta di dispositivi di calcolo autonomi interconnessi** che possono scambiare informazioni tra loro.
+- Il termine "autonomi" distingue le reti dai sistemi multiprocessore: ogni nodo ha il proprio sistema operativo e funziona indipendentemente.
 - La rete più importante ed estesa è **Internet**.
+
+> [Cambridge Dictionary] *"Computer networking: the process of connecting computers together so that they can share information."*
 
 **Utilizzi delle reti di calcolatori:**
 
-| Utilizzo | Descrizione |
-|----------|-------------|
-| **Accesso alle informazioni** | Navigazione web, ricerca, consultazione di risorse remote |
-| **Comunicazione persona-persona** | E-mail, messaggistica istantanea, videoconferenza |
-| **Commercio elettronico** | Acquisti online, servizi bancari, transazioni digitali |
-| **Intrattenimento** | Streaming, giochi online, musica, video |
-| **Internet delle Cose (IoT)** | Dispositivi intelligenti connessi (casa, industria, trasporti) |
+| Utilizzo | Descrizione | Modello |
+|----------|-------------|--------|
+| **Accesso alle informazioni** | Navigazione web, ricerca, consultazione di risorse remote | Client-Server |
+| **Comunicazione persona-persona** | E-mail, messaggistica istantanea, videoconferenza | Entrambi |
+| **Commercio elettronico** | Acquisti online, servizi bancari, transazioni digitali | Client-Server |
+| **Intrattenimento** | Streaming, giochi online, musica, video | Entrambi |
+| **Internet delle Cose (IoT)** | Dispositivi intelligenti connessi (casa, industria, trasporti) | Client-Server |
+
+**Accesso alle informazioni — modelli:**
+- **Client-server**: un processo client invia una richiesta al processo server che risponde con l'informazione
+- **Peer-to-peer**: non ci sono client e server fissi; ogni nodo può essere entrambi
 
 ### 1.2 Internet — La Rete delle Reti
 
@@ -70,20 +76,23 @@ Una **rete di calcolatori** (computer network) è un insieme di dispositivi sepa
 Una rete è descritta con la terminologia della **teoria dei grafi**:
 
 - **Nodi** (*nodes*): dispositivi connessi alla rete (router, switch, host)
-- **Link di comunicazione** (*communication links*): connessioni tra i nodi
-- **Cammino** (*path*): sequenza di nodi/link
-- **Host**: nodi terminali (foglie) che forniscono o utilizzano servizi
-- **Dispositivi di routing**: nodi intermedi che instradano i pacchetti
+- **Link di comunicazione** (*communication links*): connessioni fisiche o wireless tra i nodi
+- **Cammino** (*path*): sequenza di nodi e link da sorgente a destinazione
+- **Host** (end-system): nodi terminali (foglie) che forniscono o utilizzano servizi — laptop, smartphone, server, IoT devices
+- **Dispositivi di routing**: nodi intermedi che instradano i pacchetti — router, switch
+
+> Gli **host** sono idealmente le foglie del grafo di rete; i dispositivi intermedi (router, switch) non eseguono applicazioni utente ma si occupano solo dell'instradamento.
 
 **Principali dispositivi di rete:**
 
-| Dispositivo | Funzione |
-|-------------|----------|
-| **Router** | Instrada i pacchetti tra reti diverse |
-| **Switch** | Commuta i frame all'interno di una LAN |
-| **Hub** | Ripete il segnale su tutti i port (obsoleto) |
-| **Access Point** | Permette connessioni wireless a una rete cablata |
-| **Modem/ONT** | Adatta il segnale per linee telefoniche o fibra |
+| Dispositivo | Livello OSI | Funzione | Note |
+|-------------|-------------|----------|----- |
+| **Router** | Livello 3 (Rete) | Instrada i pacchetti tra reti diverse (basato su IP) | Cuore di Internet |
+| **Switch** | Livello 2 (Link) | Commuta i frame all'interno di una LAN (basato su MAC) | Self-learning |
+| **Hub** | Livello 1 (Fisico) | Ripete il segnale su tutti i port (obsoleto) | Causa collisioni |
+| **Access Point** | Livello 2 | Permette connessioni wireless a una rete cablata | IEEE 802.11 |
+| **Modem** | Livello 1 | Modulazione/demodulazione per linee telefoniche analogiche | ADSL |
+| **ONT** | Livello 1 | Terminale di rete ottica per fibra | No (de)modulazione |
 
 ### 1.4 Comunicazione dei Dati
 
@@ -112,21 +121,23 @@ La **comunicazione dei dati** coinvolge 5 elementi fondamentali:
 ### 1.5 Tipi di Connessione e Topologie di Rete
 
 **Tipi di connessione:**
-- **Point-to-point**: link dedicato tra due dispositivi
-- **Multipoint (broadcast)**: più dispositivi condividono un singolo link
+- **Point-to-point**: link dedicato tra due dispositivi (wireless o cablato)
+- **Multipoint (broadcast)**: più di due dispositivi condividono un singolo link (wireless o cablato)
 
 **Topologie di rete principali:**
 
-| Topologia | Descrizione | Pro | Contro |
+| Topologia | Link fisici | Pro | Contro |
 |-----------|-------------|-----|--------|
-| **Bus** | Host collegati a un cavo backbone centrale | Semplice, economico | Singolo punto di guasto |
-| **Ring** | Host in punto a punto a esattamente altri due | Semplice | Guasti bloccano la rete |
-| **Star** | Host collegati a un controller centrale | Robusta, scalabile | Singolo punto di guasto (controller) |
-| **Tree** | Più stelle integrate via bus | Versatile | Debolezza del bus |
-| **Mesh** | Host collegati in modo non gerarchico | Robusta, sicura | Costosa, non scalabile |
-| **Hybrid** | Mix di topologie | Flessibile | Complessità aumentata |
+| **Bus** | 1 backbone + n link (o solo 1 condiviso) | Semplice, economico; buona per reti piccole | Singolo punto di guasto; collisioni possibili |
+| **Ring** | n link duplex | Semplice, più performante del bus | Aggiungere nodi è difficile; un nodo guasto può bloccare la rete |
+| **Star** | 1 controller + n link duplex | Meno costosa, semplice, robusta, più scalabile | Controller raggiungibile da tutti; singolo punto di guasto |
+| **Tree** | Combinazione di star+bus | Versatile, scalabile, ben supportata da HW/SW | Difficile da configurare; debolezza del bus |
+| **Mesh** | Full: n(n-1)/2 link duplex; Partial: meno | Basso traffico, robusta, sicura, dedicata | Difficilmente scalabile; costosa (dispositivi con molte porte) |
+| **Hybrid** | Variabile | Flessibile, combinazione ottimale | Complessità aumentata |
 
-> **Nota:** Full Mesh richiede n(n-1)/2 link fisici duplex.
+> **Full Mesh:** n(n-1)/2 link fisici duplex. Con 10 nodi = 45 link!
+
+**Esempio Hybrid:** Star-backbone con 3 reti bus collegate tramite un controller centrale.
 
 ### 1.6 Categorie di Reti
 
@@ -139,73 +150,92 @@ La **comunicazione dei dati** coinvolge 5 elementi fondamentali:
 
 ### 1.7 Internet Service Providers (ISP)
 
-Un **ISP** fornisce servizi per l'accesso, l'utilizzo e la partecipazione a Internet.
+Un **ISP** (Internet Service Provider) è un'organizzazione che fornisce servizi per l'accesso, l'utilizzo e la partecipazione a Internet. Può essere commerciale, comunitaria, non-profit o privata (es. università).
 
 **Gerarchia degli ISP:**
-- **ISP di accesso**: coprono aree locali (es. Fastweb, TIM in Italia)
-- **ISP regionali/nazionali**: coprono aree più ampie
-- **IXP (Internet Exchange Point)**: punto neutrale tra ISP per lo scambio di traffico
+- **PoP (Point of Presence)**: gruppo di uno o più router usati dall'ISP per raggiungere i clienti
+- **ISP di accesso** (*Access ISP*): coprono aree locali (es. Fastweb, TIM in Italia)
+- **ISP regionali**: coprono aree più ampie (regione, nazione)
+- **ISP nazionali/globali**: backbone Internet
+- **IXP (Internet Exchange Point)**: punto neutrale dove ISP diversi si scambiano traffico (spesso non gestito dagli ISP stessi)
 
-**Tecnologie di accesso:**
+```
+[ISP Globale] ←──IXP──→ [ISP Globale]
+      │                        │
+[ISP Regionale]          [ISP Regionale]
+      │                        │
+[ISP di Accesso]         [ISP di Accesso]
+      │                        │
+  [Utenti]                [Utenti]
+```
 
-| Tecnologia | Velocità |
-|-----------|----------|
-| Analogica | 56 kbps |
-| ISDN | 128 kbps |
-| ADSL | 1–20 Mbps |
-| Doppino in rame | 10–100 Mbps |
-| **Fibra ottica** | 50 Mbps – 40 Gbps |
+**Tecnologie di accesso privato (via Modem/ONT → rete telefonica → ISP → Internet):**
+
+| Tecnologia | Velocità | Note |
+|-----------|----------|------|
+| Analogica | 56 kbps | Storica |
+| ISDN | 128 kbps | Digitale base |
+| ADSL | 1–20 Mbps | Doppino, asimmetrica |
+| Doppino in rame | 10–100 Mbps | Twisted-pair |
+| **Fibra ottica** | 50 Mbps – 40 Gbps | Via ONT, no (de)modulazione |
+
+> Le aziende (soprattutto medio/grandi) possono avere una connessione diretta/dedicata all'ISP, bypassando la rete telefonica.
 
 ### 1.8 Il Modello a Strati (Stack Protocollare)
 
-Le reti adottano un'**architettura a strati** per gestire la complessità.
+Le reti adottano un'**architettura a strati** per gestire la complessità. Ogni strato:
+- Offre **servizi** allo strato superiore
+- Usa i **servizi** dello strato inferiore
+- Comunica con lo strato pari (*peer*) sull'altro host tramite un **protocollo**
 
 **Modello TCP/IP (de facto — 5 strati):**
 
-```
-┌─────────────────────────┐
-│    Applicazione         │  HTTP, FTP, DNS, SMTP...
-├─────────────────────────┤
-│    Trasporto            │  TCP, UDP
-├─────────────────────────┤
-│    Rete (Network)       │  IP, DHCP, NAT
-├─────────────────────────┤
-│    Collegamento (Link)  │  Ethernet, Wi-Fi, ARP
-├─────────────────────────┤
-│    Fisico (Physical)    │  Cavi, fibra, onde radio
-└─────────────────────────┘
-```
+| Strato | Nome | Protocolli | Unità dati |
+|--------|------|------------|------------|
+| 5 | **Applicazione** | HTTP, FTP, DNS, SMTP, SSH | Messaggio |
+| 4 | **Trasporto** | TCP, UDP | Segmento / Datagramma |
+| 3 | **Rete (Network)** | IP, DHCP, NAT, ICMP | Datagramma IP |
+| 2 | **Collegamento (Link)** | Ethernet, Wi-Fi, ARP | Frame |
+| 1 | **Fisico (Physical)** | Cavi, fibra, onde radio | Bit |
 
 **Modello ISO/OSI (de iure — 7 strati):**
 
-```
-┌───────────────┐
-│  Applicazione │ (7)
-├───────────────┤
-│ Presentazione │ (6)
-├───────────────┤
-│   Sessione    │ (5)
-├───────────────┤
-│  Trasporto    │ (4)
-├───────────────┤
-│     Rete      │ (3)
-├───────────────┤
-│  Collegamento │ (2)
-├───────────────┤
-│    Fisico     │ (1)
-└───────────────┘
-```
+| Strato | Nome | Funzione |
+|--------|------|----------|
+| 7 | **Applicazione** | Interfaccia con l'utente, protocolli applicativi |
+| 6 | **Presentazione** | Formattazione dati, cifratura, compressione |
+| 5 | **Sessione** | Gestione delle sessioni di comunicazione (sincronizzazione) |
+| 4 | **Trasporto** | Consegna end-to-end, controllo flusso/congestione |
+| 3 | **Rete** | Indirizzamento e routing dei pacchetti |
+| 2 | **Collegamento** | Trasmissione frame tra nodi adiacenti, rilevamento errori |
+| 1 | **Fisico** | Trasmissione bit sul mezzo fisico |
 
-> In pratica si usa TCP/IP; ISO/OSI è usato come riferimento concettuale.
+> **Confronto:** In TCP/IP i livelli Presentazione e Sessione (5,6 OSI) sono **assorbiti nel livello Applicazione**. ISO/OSI è il modello *de iure* (standard formale), TCP/IP è il modello *de facto* (usato in pratica su Internet).
 
-**Principio di incapsulamento:**
+**Principio di incapsulamento (Encapsulation):**
+
+Ogni strato aggiunge il proprio header (e a volte trailer) ai dati provenienti dallo strato superiore:
 
 ```
-Applicazione: [ DATI ]
-Trasporto:    [ Header TCP | DATI ]                 → segmento
-Rete:         [ Header IP | Header TCP | DATI ]     → datagramma
-Link:         [ Header Eth | ... | DATI | Trailer ] → frame
+Applicazione:  [           MESSAGGIO           ]
+Trasporto:     [ TCP Hdr | MESSAGGIO           ]  → segmento
+Rete:          [ IP Hdr | TCP Hdr | MESSAGGIO  ]  → datagramma
+Collegamento:  [ ETH Hdr | ... | MESSAGGIO | CRC ] → frame
+Fisico:        01001101010110...                   → bit stream
 ```
+
+Il destinatario esegue il processo inverso (**decapsulamento**): ogni strato rimuove il proprio header e passa il payload allo strato superiore.
+
+**Comunicazione tra strati in un percorso completo:**
+```
+Host A                    Router                   Host B
+[App]                                              [App]
+[Transport]                                        [Transport]
+[Network]  ←──────────→  [Network]  ←──────────→  [Network]
+[Link]     ←──────────→  [Link]     ←──────────→  [Link]
+[Physical] ←──────────→  [Physical] ←──────────→  [Physical]
+```
+> I router operano solo fino al livello di rete (3); gli host operano su tutti e 5 i livelli.
 
 ### 1.9 Schemi e Appunti dalle Lavagne (Lezione 2)
 
@@ -230,110 +260,194 @@ I seguenti schemi riproducono fedelmente le lavagne manoscritte della lezione su
 
 ### 2.1 Applicazioni di Rete
 
-Un'**applicazione di rete** è composta da più programmi che girano su diversi host e comunicano attraverso la rete.
+Un'**applicazione di rete** è composta da più programmi che girano su diversi host (end-system) e comunicano attraverso la rete. I programmi non devono necessariamente essere scritti nello stesso linguaggio o girare sullo stesso OS.
 
-**Applicazioni comuni:** social network, Web, messaggistica, e-mail, giochi online, streaming, P2P, VoIP, accesso remoto (SSH).
+**Applicazioni comuni:** social network, Web, messaggistica, e-mail, giochi online, streaming (YouTube, Netflix), P2P (BitTorrent), VoIP (Skype), videoconferenza, motori di ricerca, accesso remoto (SSH, Telnet).
+
+> Le applicazioni di rete girano sugli **host** (end-system) e **non** sui dispositivi di rete intermedi (router, switch): questi non eseguono applicazioni utente. Questo approccio semplifica enormemente lo sviluppo.
 
 ### 2.2 Architetture delle Applicazioni di Rete
 
+L'**architettura applicativa** è progettata dallo sviluppatore e determina come l'applicazione è strutturata sui vari end-system:
+
 #### 2.2.1 Architettura Client-Server
 
-- C'è un host **sempre attivo** (il **server**) con indirizzo fisso e noto
+- C'è un host **sempre attivo** (il **server**) con indirizzo fisso e ben noto
 - I **client** richiedono servizi; non comunicano direttamente tra loro
-- Spesso si usano più server (data center) per gestire le richieste
+- Il client conosce sempre l'indirizzo del server; il server non conosce a priori i client
 
-**Scalabilità:** data center locali → server distribuiti nel mondo → data center distribuiti.
+**Organizzazione dei server per la scalabilità:**
+1. **Data center locale**: un singolo luogo con molti server
+2. **Server distribuiti nel mondo**: più data center in paesi diversi
+3. **Data center distribuiti**: organizzazione gerarchica globale
+
+> Il client è tipicamente **ignaro** dell'esistenza di più server e li percepisce come un unico server.
+
+**Esempio**: applicazione web — il browser (client) invia richieste al processo web server; il server è sempre attivo e raggiungibile da tutti i client.
 
 #### 2.2.2 Architettura Peer-to-Peer (P2P)
 
-- Non esistono server fissi sempre attivi
-- Le comunicazioni avvengono **direttamente tra coppie di host** (peer)
-- **Vantaggi:** scalabilità (ogni nuovo peer aggiunge capacità), basso costo
-- **Svantaggi:** sicurezza, performance dipende dalla disponibilità dei peer
+- Non esistono server fissi sempre attivi; le comunicazioni avvengono **direttamente tra coppie di host** (*peer*)
+- I peer non sono di proprietà di un service provider ma sono desktop, laptop e smartphone degli utenti
+- Ogni peer ha il proprio indirizzo (non fisso come il server)
+- È usata tipicamente per applicazioni ad alta intensità di traffico
+
+**Vantaggi:**
+- **Scalabilità**: ogni nuovo peer aggiunge workload MA anche capacità di servizio
+- **Costo basso**: non richiedono infrastrutture costose o grande banda centralizzata
+
+**Svantaggi:**
+- Problemi di **sicurezza** (comunicazione diretta tra client)
+- **Performance e affidabilità** dipendono dalla disponibilità dei peer
+
+#### 2.2.3 Architettura Ibrida (P2P + Client-Server)
+
+La maggior parte delle applicazioni P2P **pure** sono rare. Nella pratica si usano architetture **ibride** che combinano elementi di entrambe:
+
+**Esempi:**
+- **Messaggistica istantanea**: i server tracciano gli indirizzi IP degli utenti (C-S), ma i messaggi utente-utente viaggiano direttamente tra i peer (P2P)
+- **File-sharing**: il server può tenere traccia di tutti i file disponibili per velocizzare la ricerca (C-S), mentre il trasferimento avviene tra peer (P2P)
+- **VoIP/Videoconferenza**: server per la segnalazione, P2P per i media
 
 ### 2.3 Comunicazione tra Processi
 
-- **Processo client**: avvia la comunicazione
+In un'applicazione di rete, i **processi** che girano su macchine diverse (con OS potenzialmente diversi) comunicano attraverso la rete. Si definisce:
+- **Processo client**: avvia la comunicazione (invia messaggi per primo)
 - **Processo server**: attende di essere contattato
 
-#### 2.3.1 Socket
+> In P2P un processo può cambiare ruolo: è client quando scarica, server quando carica.
 
-Un **socket** è l'interfaccia software tra livello applicazione e livello di trasporto (come una cassetta delle lettere). Usata come **API** tra applicazione e rete.
+#### 2.3.1 Socket — L'interfaccia tra Applicazione e Rete
+
+Un **socket** è l'interfaccia software tra livello applicazione e livello di trasporto. Analogia: come una **cassetta delle lettere** — il processo mette il messaggio nella cassetta (socket) e la rete lo recapita.
+
+- È usato come **API** (Application Programming Interface) tra applicazione e rete
+- Lo sviluppatore ha controllo completo del lato applicazione della socket
+- Ha **poco controllo** sul lato trasporto: solo scelta del protocollo (TCP/UDP) e forse alcuni parametri (buffer, MSS)
+- Una volta scelto il protocollo, l'applicazione usa i servizi che quel protocollo fornisce
+
+```
+  Processo Applicativo
+  ─────────────────────────────────
+          Socket (API)
+  ─────────────────────────────────
+  Livello Trasporto (TCP/UDP)
+  ─────────────────────────────────
+  Livello Rete (IP)
+  ─────────────────────────────────
+  Livello Link + Fisico
+```
 
 #### 2.3.2 Indirizzamento dei Processi
 
-Per identificare il processo destinatario servono **due elementi**:
-1. **Indirizzo IP** (32 bit) — identifica l'host
-2. **Numero di porta** (16 bit) — identifica il processo sull'host
+Poiché più applicazioni possono girare su un singolo host, per identificare il processo destinatario servono **due elementi**:
+1. **Indirizzo IP** (32 bit) — identifica l'host sulla rete (livello di rete)
+2. **Numero di porta** (16 bit, 0-65535) — identifica il processo sull'host (livello di trasporto)
 
-**Porte well-known (0-1023):**
+**Porte well-known (0-1023)** — riservate a protocolli noti, gestite da IANA ([www.iana.org](http://www.iana.org)):
 
-| Porta | Protocollo |
-|-------|-----------|
-| 20, 21 | FTP |
-| 22 | SSH |
-| 25 | SMTP |
-| 53 | DNS |
-| 80 | HTTP |
-| 110 | POP3 |
-| 143 | IMAP |
-| 443 | HTTPS |
+| Porta | Protocollo | Uso |
+|-------|-----------|-----|
+| 20 | FTP | Trasferimento dati |
+| 21 | FTP | Controllo comandi |
+| 22 | SSH | Accesso remoto sicuro |
+| 23 | Telnet | Accesso remoto (non cifrato) |
+| 25 | SMTP | Invio email |
+| 53 | DNS | Risoluzione nomi |
+| 80 | HTTP | Web |
+| 110 | POP3 | Ricezione email |
+| 119 | NNTP | News groups |
+| 123 | NTP | Sincronizzazione orario |
+| 143 | IMAP | Gestione email avanzata |
+| 161 | SNMP | Gestione rete |
+| 443 | HTTPS | Web sicuro |
 
 ### 2.4 QoS — Servizi dello Strato di Trasporto
 
-| Servizio | Descrizione |
-|----------|-------------|
-| **Affidabilità** | Dati arrivano corretti e completi |
-| **Throughput** | Velocità garantita (bit/s) |
-| **Timing** | Bit arriva entro un intervallo di tempo |
-| **Sicurezza** | Cifratura e decifratura dei messaggi |
+Il livello di trasporto offre servizi di **Quality of Service (QoS)**:
 
-**Protocolli di trasporto:**
+| Servizio | Descrizione | Note |
+|----------|-------------|------|
+| **Affidabilità** | Dati arrivano corretti e completi all'altra estremità | Essenziale per email, FTP |
+| **Throughput** | Velocità garantita (bit/s) | Utile per streaming |
+| **Timing** | Ogni bit arriva entro un intervallo di tempo | Critico per VoIP, gaming |
+| **Sicurezza** | Cifratura e decifratura dei messaggi | TLS su TCP (livello app) |
+
+**Protocolli di trasporto e le loro scelte applicative:**
 
 | Protocollo | Caratteristiche | Uso tipico |
 |------------|-----------------|-----------|
-| **TCP** | Connection-oriented, affidabile, controllo flusso/congestione | Web, e-mail, FTP |
-| **UDP** | Connectionless, nessuna garanzia, veloce e leggero | DNS, streaming, VoIP |
+| **TCP** | Connection-oriented, affidabile, controllo flusso/congestione; handshake iniziale | Web, e-mail, FTP, SSH |
+| **UDP** | Connectionless, nessuna garanzia, veloce, overhead minimo (8B header) | DNS, streaming, VoIP, gaming |
+
+> **TLS/SSL**: tecnicamente la sicurezza è un problema del livello trasporto, ma protocolli sicuri come TLS sono spesso implementati sopra TCP a livello applicazione.
 
 ### 2.5 Protocolli del Livello Applicazione
 
 Un **protocollo applicativo** definisce:
-1. Tipi di messaggi (richieste e risposte)
-2. Sintassi dei messaggi (campi e delimitazione)
-3. Semantica dei campi
-4. Regole su quando/come inviare messaggi
+1. **Tipi di messaggi** scambiati (richieste e risposte)
+2. **Sintassi** dei messaggi (campi, delimitatori, encoding)
+3. **Semantica** dei campi (significato delle informazioni)
+4. **Regole** su quando e come i processi inviano/rispondono ai messaggi
 
-**Tabella principali protocolli:**
+**Tipi di protocolli:**
+- **Open protocols** (protocolli aperti): regole pubbliche, definite in RFC (es. HTTP, SMTP, DNS) — consentono interoperabilità
+- **Proprietary protocols** (protocolli proprietari): non pubblicati apertamente (es. protocolli interni di Skype, WhatsApp)
 
-| Applicazione | Protocollo | Descrizione |
-|--------------|------------|-------------|
-| Web | HTTP/HTTPS | Trasferimento ipertestuale |
-| E-mail invio | SMTP/SMTPS | Simple Mail Transfer Protocol |
-| E-mail ricezione | POP3, IMAP | Post Office / Internet Mail Access |
-| DNS | DNS | Sistema nomi di dominio |
-| Configurazione IP | DHCP | Configurazione automatica |
-| Trasferimento file | FTP/FTPS | File Transfer Protocol |
-| Accesso remoto | SSH / Telnet | Secure Shell / Telnet |
-| Gestione rete | SNMP | Simple Network Management |
+**Tabella principali protocolli applicativi:**
+
+| Applicazione | Protocollo | Trasporto | Nota |
+|--------------|------------|-----------|------|
+| Web | HTTP/HTTPS | TCP (o UDP/QUIC per H3) | Base del WWW |
+| E-mail invio | SMTP/SMTPS | TCP (porta 25) | Tra mail server |
+| E-mail ricezione | POP3, IMAP | TCP (110, 143) | Client-server |
+| DNS | DNS | UDP (porta 53) | Risoluzione nomi |
+| Configurazione IP | DHCP | UDP | Plug-and-play |
+| Trasferimento file | FTP/FTPS | TCP (20/21) | Storico |
+| Accesso remoto sicuro | SSH | TCP (22) | Cifrato |
+| Accesso remoto | Telnet | TCP (23) | Non cifrato (deprecato) |
+| Gestione rete | SNMP | UDP (161) | Dispositivi rete |
 
 ### 2.6 FTP — File Transfer Protocol
 
-**FTP** (prima versione 1971) trasferisce file tra host attraverso la rete. Versione base: trasferimento **in chiaro**. **FTPS**: versione sicura cifrata.
+**FTP** (prima versione 1971) trasferisce file tra host attraverso la rete. È uno dei protocolli più antichi di Internet.
 
-**Comandi FTP su Linux:**
+**Due versioni:**
+- **FTP base**: trasferimento **in chiaro** (username, password, file)
+- **FTPS** (FTP Secure): protegge credenziali e cifra il contenuto
 
+**Entrambe hanno due componenti:**
+1. Il protocollo che specifica i comandi
+2. Un'applicazione software client-side e server-side che implementa il protocollo
+
+**Setup su Linux:**
 ```bash
+# Installazione server FTP (vsftpd - very secure FTP daemon)
+sudo apt-get install vsftpd
+service vsftpd status         # controlla che il daemon sia in esecuzione
+
+# Installazione client FTP
 sudo apt-get install ftp
-ftp INDIRIZZO_SERVER
+ftp INDIRIZZO_SERVER          # username e password richiesti
+exit                          # chiude la connessione
 ```
+
+> Il server FTP è implementato come **daemon**: un programma che gira in background e aspetta che i client si connettano. È un approccio comune per i server di rete.
+
+**Comandi FTP principali:**
 
 | Comando | Descrizione |
 |---------|-------------|
+| `help` | Elenca tutti i comandi disponibili |
 | `ls` | Elenca file nella directory remota |
-| `cd` / `lcd` | Cambia dir remota / locale |
-| `get` / `put` | Scarica / carica file |
-| `mkdir` / `rmdir` | Crea / rimuove directory remota |
-| `delete` | Cancella file remoto |
+| `cd DIR` | Cambia directory remota |
+| `lcd DIR` | Cambia directory locale |
+| `pwd` | Stampa directory corrente sul server |
+| `get FILE` | Scarica file dal server |
+| `put FILE` | Carica file sul server |
+| `mkdir DIR` | Crea directory remota |
+| `rmdir DIR` | Rimuove directory remota |
+| `delete FILE` | Cancella file remoto |
 
 ### 2.7 Schemi e Appunti dalle Lavagne (Lezione 3)
 
@@ -350,61 +464,87 @@ ftp INDIRIZZO_SERVER
 
 ### 3.1 World Wide Web e HTTP
 
-**HTTP (HyperText Transfer Protocol)** è il protocollo alla base del World Wide Web.
+Fino ai primi anni '90, Internet era usata principalmente da ricercatori, accademici e studenti universitari (Telnet, FTP, email). Il **World Wide Web** è stata la prima applicazione Internet a raggiungere il grande pubblico.
 
-**Caratteristiche:**
-- **Client-server**: browser (client) invia richieste, server risponde
-- **Stateless**: il server non mantiene informazioni sull'interazione precedente
-- Piattaforma per YouTube, Gmail, social network, ecc.
+**HTTP (HyperText Transfer Protocol)** è il protocollo alla base del WWW. Definisce:
+- La **struttura dei messaggi** scambiati tra client e server
+- Come client e server **scambiano questi messaggi**
+- (Non definisce come le applicazioni client/server vanno implementate)
 
-| Versione | Anno | Note |
-|----------|------|------|
-| HTTP/1.0 | 1996 | Connessioni non persistenti di default |
-| HTTP/1.1 | 1997 | Connessioni persistenti, pipelining |
-| HTTP/2 | 2015 | Multiplexing, priorità, compressione header |
-| HTTP/3 | 2022 | Basato su UDP/QUIC, ~30% più veloce |
+**Caratteristiche fondamentali:**
+- **Client-server**: il browser (client) traduce le richieste dell'utente in messaggi HTTP; il server esegue la richiesta e risponde
+- **Stateless**: il server **non mantiene** informazioni sulle interazioni precedenti con un client specifico → semplifica enormemente il design del server
+  - Un tipico server gestisce **~1000 richieste HTTP/secondo**; grandi motori di ricerca gestiscono **centinaia di migliaia** di query/secondo
+- Piattaforma per YouTube, Gmail, social network, app mobili
+
+**Evoluzione di HTTP:**
+
+| Versione | Anno | Cambiamento principale |
+|----------|------|------------------------|
+| HTTP/1.0 | 1996 | Prima versione diffusa; connessioni **non persistenti** di default |
+| HTTP/1.1 | 1997 | Connessioni **persistenti** di default, pipelining |
+| HTTP/2 | 2015 | Multiplexing richieste/risposte sulla stessa connessione, priorità, compressione header (HPACK) |
+| HTTP/3 | 2022 | Basato su **UDP/QUIC** (Quick UDP Internet Connection); ~30% più veloce; ~30% del traffico HTTP nel 2024 |
 
 ### 3.2 URL — Uniform Resource Locator
 
-Struttura dell'URL:
+Le informazioni sul web sono chiamate **risorse** (o oggetti) e sono identificate da un **URL**:
+
 ```
 [protocollo]://[usrinfo@][host][:porta][/path][?query][#fragment]
 ```
 
-| Componente | Obbligatorio | Descrizione |
-|------------|-------------|-------------|
-| `[protocollo]` | Sì | HTTP, HTTPS, FTP, ecc. |
-| `[host]` | Sì | Nome o IP del server |
-| `[:porta]` | No | Porta (inferita dal protocollo se assente) |
-| `[/path]` | Sì | Percorso della risorsa |
-| `[?query]` | No | Parametri di richiesta |
-| `[#fragment]` | No | Elemento nella risorsa |
+| Componente | Obbligatorio | Descrizione | Esempio |
+|------------|-------------|-------------|--------|
+| `[protocollo]` | Sì | Protocollo di accesso | `http`, `https`, `ftp` |
+| `[usrinfo@]` | No | Username:password (deprecato per sicurezza) | `user:pass@` |
+| `[host]` | Sì | Nome o IP del server | `www.unina.it` |
+| `[:porta]` | No | Porta (inferita dal protocollo se assente) | `:8080` |
+| `[/path]` | Sì | Percorso della risorsa nel server | `/someDept/page.html` |
+| `[?query]` | No | Parametri di richiesta (preceduto da `?`) | `?title=SSC_Napoli` |
+| `[#fragment]` | No | Elemento/sezione nella risorsa (preceduto da `#`) | `#sezione2` |
 
-La maggior parte delle pagine = 1 file HTML + oggetti aggiuntivi (immagini, video, ecc.).
+**Esempio:**
+```
+https://en.wikipedia.org/w/index.php?title=SSC_Napoli
+# equivalente a:
+https://en.wikipedia.org/wiki/SSC_Napoli
+```
+
+La maggior parte delle pagine web = **1 file HTML base** + oggetti aggiuntivi referenziati (immagini JPEG, video, applet, ecc.)
 
 ### 3.3 HTTP e il Protocollo di Trasporto
 
-- **HTTP usa principalmente TCP** (affidabilità)
-- **HTTP/3 usa UDP/QUIC** (~30% più veloce)
-- **HTTP è stateless**: semplifica il design del server
+**HTTP usa principalmente TCP** per la sua affidabilità:
+- Il client inizia una connessione TCP col server (porta 80 di default)
+- Una volta stabilita, browser e server comunicano tramite le rispettive socket
+- Il client invia messaggi HTTP nella propria socket, il server li riceve dalla propria
+- TCP garantisce che le richieste/risposte HTTP arrivino integre a destinazione (**reliable data transfer**)
+
+**HTTP/3 usa UDP/QUIC** (Quick UDP Internet Connection):
+- Implementa affidabilità sopra UDP
+- Stima ~30% più veloce della comunicazione TCP-only
+- Circa il 30% del traffico HTTP è oggi su UDP [Wikipedia, 2024]
+
+**Vantaggio dell'architettura a strati:** le applicazioni HTTP **non devono preoccuparsi** di raggiungibilità, perdita dati, correzione errori — delegano tutto al livello di trasporto.
 
 ### 3.4 Connessioni HTTP: Persistenti vs. Non Persistenti
 
 #### 3.4.1 Connessioni Non Persistenti
 
-Una connessione TCP per ogni oggetto. Per 1 HTML + 10 immagini → **11 connessioni TCP separate**.
+Una connessione TCP per ogni oggetto. Esempio: 1 HTML + 10 JPEG → **11 connessioni TCP separate** (e 11 coppie di socket).
 
-**Tempo di risposta:**
+> HTTP definisce il **protocollo di comunicazione**, NON come i contenuti vengono visualizzati (quello è compito del browser).
+
+**Tempo di risposta per ogni oggetto (con TCP):**
 ```
-Totale = 2 RTT + tempo di trasmissione del file
+Totale ≈ 2 RTT + tempo di trasmissione del file
 ```
-- 1° RTT: TCP handshake (SYN → SYN-ACK → ACK)
-- 2° RTT: richiesta/risposta HTTP
+- **1° RTT**: TCP three-way handshake (SYN → SYN-ACK → ACK)
+- **2° RTT**: richiesta HTTP + risposta HTTP
 
 ```
 Client                    Server
-  │── SYN ──────────────►│
-  │◄─ SYN-ACK ───────────│
   │── ACK + req HTTP ────►│
   │◄─ risposta HTTP ──────│
 ```
@@ -427,6 +567,11 @@ La connessione TCP rimane aperta dopo ogni risposta:
 
 #### 3.5.1 Messaggio di Richiesta
 
+I messaggi HTTP sono scritti in **ASCII text**, leggibili dagli umani. I campi sono separati da:
+- `sp`: spazio ` `
+- `cr`: carriage return `\r`
+- `lf`: line feed `\n`
+
 ```
 GET /somedir/page.html HTTP/1.1\r\n
 Host: www.someschool.edu\r\n
@@ -434,17 +579,31 @@ Connection: close\r\n
 User-agent: Mozilla/5.0\r\n
 Accept-language: fr\r\n
 \r\n
+[corpo vuoto per GET]
 ```
+
+**Struttura del messaggio:**
+- **Linea di richiesta**: `METODO URL HTTP/Versione`
+- **Header lines**: parametri della richiesta (numero e tipo variabili; possono essere anche personalizzati)
+- **Corpo (body)**: specifico del metodo, contiene i dati
+
+**Analisi degli header dell'esempio:**
+- `Host: www.someschool.edu` — host dove risiede la risorsa (necessario perché un proxy potrebbe essere un intermediario)
+- `Connection: close` — connessione non persistente (chiudi dopo la risposta)
+- `User-Agent: Mozilla/5.0` — tipo di browser (il server può inviare versioni diverse dello stesso oggetto in base al tipo)
+- `Accept-Language: fr` — il client preferisce la versione francese (se esiste)
 
 **Metodi HTTP:**
 
-| Metodo | Descrizione | Body |
-|--------|-------------|------|
-| **GET** | Recupera una risorsa | Vuoto |
-| **POST** | Invia dati al server | Contiene i dati |
-| **HEAD** | Come GET senza risposta corpo | Vuoto |
-| **PUT** | Carica un oggetto nel server | Contiene l'oggetto |
-| **DELETE** | Cancella un oggetto | Vuoto |
+| Metodo | Descrizione | Body richiesta | Uso |
+|--------|-------------|----------------|-----|
+| **GET** | Recupera una risorsa dal server | Vuoto | Navigazione web |
+| **POST** | Invia dati al server (il body li contiene) | Contiene i dati | Form, upload |
+| **HEAD** | Come GET ma il server risponde senza corpo | Vuoto | Debug, verifica esistenza risorse |
+| **PUT** | Carica/sostituisce un oggetto su un percorso specifico | Contiene l'oggetto | Web publishing, REST API |
+| **DELETE** | Cancella un oggetto sul server | Vuoto | REST API |
+
+> **GET vs POST per i form**: un form HTML non usa necessariamente POST; spesso usa GET includendo i dati dell'utente nell'URL come query string (es. `?nome=Mario&email=mario@ex.it`).
 
 #### 3.5.2 Messaggio di Risposta
 
@@ -452,56 +611,105 @@ Accept-language: fr\r\n
 HTTP/1.1 200 OK\r\n
 Connection: close\r\n
 Date: Tue, 18 Aug 2015 15:44:04 GMT\r\n
+Server: Apache/2.2.3 (CentOS)\r\n
+Last-Modified: Tue, 18 Aug 2015 15:11:03 GMT\r\n
 Content-Length: 6821\r\n
 Content-Type: text/html\r\n
 \r\n
 (dati oggetto...)
 ```
 
-**Codici di stato più comuni:**
+**Struttura del messaggio di risposta:**
+- **Status line**: `HTTP/Versione CodiceStato Frase`
+- **Header lines**: metadati della risposta
+- **Corpo**: l'oggetto richiesto
+
+**Analisi degli header dell'esempio:**
+- `Connection: close` — il server chiuderà la connessione dopo questo messaggio
+- `Date:` — data/ora di creazione/invio della risposta HTTP (non dell'oggetto)
+- `Server:` — tipo di server web (analogo a User-Agent lato client)
+- `Last-Modified:` — data/ora dell'ultima modifica dell'oggetto (importante per il **caching**)
+- `Content-Length:` — numero di byte nel payload
+- `Content-Type:` — tipo MIME dell'oggetto (es. `text/html`) — questo è il tipo "ufficiale", NON l'estensione del file
+
+**Classi di codici di stato HTTP:**
+
+| Classe | Range | Significato |
+|--------|-------|-------------|
+| **1xx** | 100-199 | Informazionale: info sulla richiesta |
+| **2xx** | 200-299 | Successo: richiesta eseguita con successo |
+| **3xx** | 300-399 | Reindirizzamento: azioni aggiuntive richieste al client |
+| **4xx** | 400-499 | Errore client: richiesta non eseguibile per un problema del client |
+| **5xx** | 500-599 | Errore server: richiesta non eseguibile per un problema del server |
+
+**Codici più comuni:**
 
 | Codice | Messaggio | Descrizione |
 |--------|-----------|-------------|
-| **200** | OK | Richiesta riuscita |
-| **301** | Moved Permanently | Risorsa spostata (nuovo URL in Location) |
-| **400** | Bad Request | Richiesta malformata |
-| **404** | Not Found | Risorsa non trovata |
-| **505** | HTTP Version Not Supported | Versione HTTP non supportata |
+| **200** | OK | Richiesta riuscita, informazione nella risposta |
+| **301** | Moved Permanently | Risorsa spostata definitivamente; nuovo URL nell'header `Location` |
+| **400** | Bad Request | Richiesta non comprensibile dal server (errore generico client) |
+| **404** | Not Found | La risorsa richiesta non esiste su questo server |
+| **505** | HTTP Version Not Supported | Versione HTTP non supportata dal server |
 
 ### 3.6 Cookie
 
-**Cookie**: token digitale (ID alfanumerico) usato dai server per identificare un cliente specifico (HTTP è stateless).
+**Cookie**: token digitale (ID alfanumerico) usato dai server per identificare un cliente specifico, aggirando la statelessness di HTTP.
+
+**Motivazione:** la statelessness pura è una limitazione forte: il carrello Amazon dipende dal cliente, Netflix suggerisce contenuti in base alle preferenze, ecc.
 
 **4 componenti della tecnologia cookie:**
-1. Header `Set-cookie: ID` nella risposta HTTP
-2. Header `Cookie: ID` nelle richieste successive
-3. File cookie sul sistema del client (gestito dal browser)
-4. Database di back-end sul server
+1. Header `Set-cookie: ID` nella **risposta HTTP** del server (il server crea il cookie e lo invia)
+2. Header `Cookie: ID` nelle **richieste successive** del client (il client lo allega automaticamente)
+3. **File cookie** sul sistema del client (gestito dal browser)
+4. **Database di back-end** sul server (associa ID cookie alle info del cliente)
 
-**Utilizzi:** carrello acquisti, login automatico, raccomandazioni, sessioni.
+**Flusso completo (esempio Amazon):**
+```
+Client                          Server Amazon
+  │── HTTP request (senza cookie) ►│  Server crea ID=1678, entry nel DB
+  │◄─ HTTP response + Set-cookie: 1678 │
+  │  [browser salva cookie 1678]       │
+  │── HTTP request + Cookie: 1678 ►│  Server riconosce utente 1678
+  │◄─ HTTP response personalizzata │  traccia attività nel database
+```
 
-**Controversia:** monitoraggio dell'utente → invasione della privacy.
+**Utilizzi:** carrello acquisti, login automatico, raccomandazioni prodotti, sessioni utente, preferenze.
+
+**Attenzione — invasione della privacy:**
+- Combinando cookie e informazioni dell'account (nome, email, indirizzo, carta di credito), i siti sanno molto sull'utente
+- Alcune piattaforme vendono queste informazioni a terzi
+- La GDPR europea impone consenso esplicito prima di impostare cookie non essenziali
 
 ### 3.7 Web Caching (Proxy)
 
-Un **proxy server** soddisfa le richieste HTTP per conto del server originale.
+Un **web cache** (o **proxy server**) soddisfa le richieste HTTP per conto del server originale, mantenendo copie degli oggetti recentemente richiesti nel proprio storage.
 
 **Funzionamento:**
-1. Browser → prima richiesta alla cache
-2. **Hit**: oggetto trovato → restituisce dalla memoria locale
-3. **Miss**: recupera dal server originale, salva copia, invia al browser
+1. Browser invia tutte le richieste al proxy
+2. **Hit** (oggetto trovato nella cache): proxy risponde direttamente → risposta rapida, nessuna trasmissione verso Internet
+3. **Miss** (oggetto non trovato): proxy contatta il server originale, memorizza una copia locale, invia al browser
 
-La cache è contemporaneamente **server** (verso client) e **client** (verso server originale).
+La cache è contemporaneamente **server** (quando fornisce oggetti ai client) e **client** (quando richiede oggetti ai server originali).
 
-**Hit rate tipico:** 20–70%.
+**Due motivi per cui il web caching è utile:**
+1. **Riduzione del tempo di risposta**: connessione ad alta velocità tra client e cache — molto più veloce del server lontano su Internet
+2. **Riduzione del traffico**: meno richieste verso Internet, riduzione dei costi di banda
 
-**GET Condizionale** (evita cache obsoleta):
+**Hit rate tipico:** da 0.2 a 0.7 (20%-70% delle richieste servite localmente). Aumenta con più client che usano la cache.
+
+**Cache del browser:** il browser stesso mantiene copie locali degli oggetti visitati — stesso principio, ma solo per quell'utente. La copia locale potrebbe non essere aggiornata (errore frequente).
+
+**GET Condizionale** — meccanismo per evitare cache obsoleta:
 ```
-GET /oggetto.html HTTP/1.1
-If-Modified-Since: Tue, 18 Aug 2015 15:11:03 GMT
+Cache → Server:   GET /oggetto.html HTTP/1.1
+                   If-Modified-Since: Tue, 18 Aug 2015 15:11:03 GMT
+
+Se NON modificato: Server risponde  304 Not Modified  (nessun body, usa copia locale)
+Se modificato:     Server risponde  200 OK  + nuovo oggetto
 ```
-- Non modificato → `304 Not Modified` (nessun corpo, usa copia locale)
-- Modificato → `200 OK` + nuovo oggetto
+
+**Proxy istituzionali:** oltre alle prestazioni, i proxy possono essere usati per accedere a servizi istituzionali. Es: il proxy dell'UniNA (`proxy.unina.it`) fa sì che dal punto di vista del server originale tutte le richieste sembrino provenire dall'istituzione (utile per accesso a riviste scientifiche, risorse riservate, ecc.). Ci sono anche molti proxy commerciali/gratuiti su Internet.
 
 ### 3.8 Schemi e Appunti dalle Lavagne (Lezione 4)
 
@@ -515,116 +723,466 @@ If-Modified-Since: Tue, 18 Aug 2015 15:11:03 GMT
 
 ### 4.1 Architettura della Posta Elettronica
 
+La **posta elettronica** (e-mail) è una delle applicazioni Internet più antiche e importanti.
+
+**Differenza da HTTP:** nella posta elettronica la comunicazione avviene **anche tra server** (non solo client-server). Servono quindi due protocolli distinti:
+1. Tra **user agent e mail server** — POP3, IMAP, HTTP
+2. Tra **mail server e mail server** — SMTP
+
 **Componenti:**
-- **User agent**: applicazione email (Outlook, Thunderbird, K-9 Mail)
-- **Mail Server**: archivia email e mantiene caselle di posta
+- **User agent** (*client email*): applicazione per la gestione delle email (Outlook, Thunderbird, K-9 Mail, Pine)
+- **Mail Server**: server sempre attivo che archivia email e mantiene **caselle di posta** (*mailbox*) specifiche per ogni utente
+
+```
+ Alice's User Agent                          Bob's User Agent
+         │                                         │
+         │ SMTP                                    │ POP3/IMAP/HTTP
+         │                                         │
+   Alice's Mail Server ──── SMTP ──── Bob's Mail Server
+         (sender)                                 (receiver)
+```
+
+> Gli utenti non si scambiano le email direttamente (come avviene nella messaggistica istantanea). Si preferisce usare i mail server, più affidabili e specializzati.
 
 **Protocolli:**
-- **SMTP** (porta 25): tra mail server (invio)
-- **POP3** (porta 110) / **IMAP** / **HTTP**: tra user agent e mail server (ricezione)
+- **SMTP** (porta 25): tra mail server (invio) — client-side (sender) e server-side (receiver) su mail server
+- **POP3** (porta 110): ricezione da mail server a user agent
+- **IMAP**: ricezione avanzata da mail server a user agent
+- **HTTP**: accesso web (Gmail, Yahoo!, webmail istituzionale)
 
 ### 4.2 SMTP — Simple Mail Transfer Protocol
 
-Usa **TCP porta 25**. Processo di invio (Alice → Bob):
+SMTP usa **TCP porta 25**. È il protocollo principale tra mail server. Processo di invio (Alice → Bob):
 
-1. Alice compone il messaggio nell'user agent e lo invia
-2. User agent → mail server di Alice → coda messaggi
-3. Client SMTP di Alice apre connessione TCP al server SMTP di Bob
-4. Handshaking SMTP → invio messaggio
-5. Server di Bob deposita nella casella di Bob
-6. Bob legge con il proprio user agent
+1. Alice invoca il suo user agent, fornisce l'indirizzo email di Bob (`bob@someschool.edu`), compone il messaggio e istruisce l'user agent di inviarlo
+2. L'user agent di Alice invia il messaggio al **mail server di Alice**, che lo mette in una **coda di messaggi** (*message queue*)
+3. Il **client SMTP** di Alice (lato mail server) vede il messaggio nella coda, apre una **connessione TCP** al server SMTP di Bob (porta 25)
+4. Se il server di Bob è down, il client riproverà più tardi
+5. Dopo l'**handshake SMTP** (dove client e server si presentano), il client invia il messaggio nella connessione TCP
+6. Il server SMTP di Bob riceve il messaggio e lo deposita nella **mailbox di Bob**
+7. Bob invoca il suo user agent per leggere il messaggio quando preferisce
+
+> **Vantaggio dei mail server:** i server sono sempre attivi, certificati, e possono ritentare la consegna in caso di fallimento (un processo computazionalmente costoso che non conviene delegare all'user agent).
+
+**Handshake SMTP — esempio di sessione testuale:**
+```
+S: 220 hamburger.edu
+C: EHLO crepes.fr
+S: 250 Hello crepes.fr, pleased to meet you
+C: MAIL FROM: <alice@crepes.fr>
+S: 250 alice@crepes.fr ... Sender ok
+C: RCPT TO: <bob@hamburger.edu>
+S: 250 bob@hamburger.edu ... Recipient ok
+C: DATA
+S: 354 Enter mail, end with "." on a line by itself
+C: Do you like ketchup?
+C: How about pickles?
+C: .
+S: 250 Message accepted for delivery
+C: QUIT
+S: 221 hamburger.edu closing connection
+```
 
 ### 4.3 Accesso alle Email — POP3, IMAP, HTTP
 
-#### 4.3.1 POP3
+> Ricorda: SMTP è tra **mail server**. POP3/IMAP/HTTP sono tra **user agent e mail server**.
 
-3 fasi: **Autorizzazione** → **Transazione** → **Aggiornamento**.
-Limitazioni: solo download/cancellazione, nessuna organizzazione in cartelle remote.
+#### 4.3.1 POP3 — Post Office Protocol v3
 
-#### 4.3.2 IMAP
+Protocollo di accesso email estremamente semplice. TCP **porta 110**.
 
-Funzionalità avanzate:
-- Cartelle sul server
-- Ricerca in cartelle remote
-- Recupero parziale dei messaggi
-- Più client connessi contemporaneamente
+**3 fasi della sessione POP3:**
+
+| Fase | Descrizione |
+|------|-------------|
+| **Authorization** | L'user agent invia username e password per autenticarsi |
+| **Transaction** | L'user agent recupera messaggi, marca per cancellazione, ottiene statistiche |
+| **Update** | Dopo il comando `quit`, il server cancella i messaggi marcati |
+
+**Esempio di comandi POP3:**
+```
+C: USER alice
+S: +OK
+C: PASS secret
+S: +OK user successfully logged on
+C: LIST
+S: 1 498   (messaggio 1, 498 byte)
+S: 2 912   (messaggio 2, 912 byte)
+S: .
+C: RETR 1   (recupera messaggio 1)
+S: [dati del messaggio]
+S: .
+C: DELE 1   (marca per cancellazione)
+C: RETR 2
+S: [dati del messaggio]
+S: .
+C: DELE 2
+C: QUIT
+S: +OK POP3 server signing off
+```
+
+**Limitazioni POP3:** solo download o cancellazione. Non supporta nativamente: ricerca in cartelle remote, organizzazione in cartelle sul server, accesso da più dispositivi.
+
+#### 4.3.2 IMAP — Internet Mail Access Protocol
+
+Funzionalità avanzate rispetto a POP3:
+- **Gestione e creazione di cartelle** sul server
+- **Ricerca** in cartelle remote per messaggi con criteri specifici
+- Recupero **parziale dei messaggi** (es. solo header, solo allegati)
+- Supporto per **più client** connessi contemporaneamente allo stesso server
+
+Al contrario di POP3, con IMAP le email rimangono sul server (meglio per accesso da più dispositivi).
 
 #### 4.3.3 HTTP per la Posta
 
-Approccio mainstream (Gmail, Yahoo!, ecc.):
-- L'user agent è il browser web
-- Comunicazione via HTTP (non POP3/IMAP)
-- I mail server usano comunque SMTP tra loro
+Approccio mainstream introdotto da Hotmail negli anni '90, oggi dominante (Gmail, Yahoo!, UniNA Webmail):
+- L'**user agent è il browser web** (non un'applicazione dedicata)
+- La comunicazione tra utente e server avviene via **HTTP** (non POP3/IMAP)
+- I **mail server continuano a usare SMTP** per scambiarsi email tra loro
+
+**Confronto protocolli di accesso email:**
+
+| Protocollo | Porta | Pro | Contro |
+|------------|-------|-----|--------|
+| **POP3** | 110 | Semplice, scarica email localmente | No cartelle remote, no multi-device |
+| **IMAP** | 143 | Cartelle remote, multi-device, ricerca | Più complesso |
+| **HTTP** | 80/443 | Nessuna installazione, ovunque | Dipende dalla connessione |
 
 ### 4.4 Applicazioni P2P e BitTorrent
 
-**BitTorrent** (~150-170 milioni utenti nel 2023):
+A differenza di client-server, l'architettura P2P fa uso minimo (o nullo) di server centralizzati. Coppie di host (*peer*) intermittentemente connessi comunicano direttamente tra loro.
+
+**P2P per il file sharing:** applicazione naturale del P2P
+- In client-server: il server deve inviare il file a tutti i client (bottleneck sul server)
+- In P2P: ogni peer che riceve il file può condividerlo con altri peer → più scalabile
+
+**BitTorrent** — il protocollo P2P più popolare:
+- ~150-170 milioni di utenti nel 2023
 
 **Terminologia:**
-- **Torrent**: insieme dei peer che partecipano alla distribuzione di un file
-- **Chunk**: parte del file (tipicamente 256 KB)
-- **Tracker**: nodo che tiene traccia dei peer partecipanti (server)
+- **Torrent**: insieme dei peer che partecipano alla distribuzione di un file specifico
+- **Chunk**: parte del file (tipicamente **256 KB**)
+- **Tracker**: nodo infrastrutturale che tiene traccia dei peer nel torrent (essenzialmente un server)
 
-**Quando un peer si unisce:**
-1. Si registra con il tracker
-2. Riceve indirizzi IP di un sottoinsieme casuale di peer
-3. Tenta connessioni TCP con i peer della lista
+**Ciclo di vita di un peer:**
+1. Si unisce al torrent → non ha ancora nessun chunk
+2. Si registra con il **tracker** → riceve un sottoinsieme casuale di indirizzi IP dei peer attuali
+3. Tenta connessioni TCP simultane con tutti i peer della lista (**vicini**)
+4. Scarica chunk dai vicini e contemporaneamente carica chunk ai vicini
+5. Periodicamente aggiorna la lista dei chunk disponibili dai vicini
+6. Alla fine: può **uscire** (selfishly) o **restare** a fare seeding (altruistic)
 
-**Strategia di download — Rarest-first:**
-I chunk con meno copie disponibili vengono prioritizzati.
+**Strategia di download — Rarest-First:**
+- I chunk con **meno copie disponibili** tra i vicini vengono prioritizzati
+- Questo equalizza il numero di copie nel torrent e accelera la distribuzione
 
-**Strategia di upload — Trading:**
-- Priorità ai **4 migliori vicini** (velocità più alta, aggiornato ogni 10s)
-- Ogni 30s: un vicino casuale riceve chunk (**optimistic unchoking**)
+**Strategia di upload — Tit-for-Tat (Trading):**
+- **Top-4 unchoked**: priorità ai 4 vicini con il **rate di upload più alto** verso di noi
+  - La lista dei 4 best viene aggiornata ogni **10 secondi**
+- **Optimistic unchoking**: ogni **30 secondi**, viene scelto casualmente un vicino aggiuntivo e gli vengono inviati chunk
+  - Se lo scambio va bene, potrebbero entrare entrambi nelle rispettive liste top-4
+  - Permette a peer con rate compatibili di trovarsi
+
+> Il meccanismo tit-for-tat incentiva i peer a **contribuire**: chi carica di più ottiene download più veloci. I **free rider** (chi scarica senza caricare) vengono penalizzati.
 
 ### 4.5 DNS — Domain Name System
 
-#### 4.5.1 Cos'è il DNS
+#### 4.5.1 Cos'è il DNS e perché è distribuito
 
-Traduzione da **hostname** → **indirizzo IP** (es. `www.unina.it` → `143.225.15.50`).
+Il **Domain Name System (DNS)** risolve la necessità di identificare gli host in due modi complementari:
+- Gli **esseri umani** preferiscono nomi mnemonici (hostname): es. `www.unina.it`
+- I **dispositivi di rete** preferiscono indirizzi IP a lunghezza fissa e struttura gerarchica: es. `143.225.15.50`
 
-Caratteristiche del DNS:
-- **Distribuito**: database distribuito
-- **Gerarchico**: organizzato in livelli
-- Usa tipicamente **UDP porta 53**
+Il DNS è un **protocollo di livello applicazione** che gestisce la traduzione hostname → indirizzo IP in modalità client-server: un *DNS client* chiede a un *DNS server* la traduzione per un hostname specifico.
 
-#### 4.5.2 Gerarchia dello Spazio dei Nomi
+> I server DNS sono tipicamente macchine UNIX che eseguono il software **BIND** (Berkeley Internet Name Domain), in ascolto su **porta UDP 53**.
 
-Organizzata da **ICANN** (~250 TLD):
-- **TLD Generici**: `.com`, `.org`, `.edu`, `.net`...
-- **TLD Nazionali (ccTLD)**: `.it`, `.uk`, `.us`...
+**Perché un DNS centralizzato sarebbe impossibile?**
 
-**Root server**: 13 server (a–m.root-servers.net), altamente replicati.
+Un singolo repository centralizzato non è praticabile per tre motivi fondamentali:
+1. **Volume enorme di host**: miliardi di dispositivi connessi
+2. **Distanza geografica**: latenze insopportabili tra utenti lontani
+3. **Single point of failure**: un guasto blocca tutta Internet
 
-#### 4.5.3 Resource Record DNS
+Per questo il DNS è **distribuito e decentralizzato**.
 
-| Campo | Descrizione |
-|-------|-------------|
-| **NAME** | Dominio (chiave di ricerca) |
-| **TTL** | Durata record (es. 86400 s = 1 giorno) |
-| **CLASS** | `IN` (Internet) |
-| **TYPE** | Tipo di record |
-| **RDATA** | Valore |
+---
 
-**Tipi di record:**
+#### 4.5.2 Gerarchia dello Spazio dei Nomi DNS
+
+Lo spazio dei nomi DNS è organizzato da **ICANN** (Internet Corporation for Assigning Names and Numbers) in una struttura ad albero invertito con circa **250 TLD (Top-Level Domain)**.
+
+```
+                        . (root)
+          ┌──────────────┼──────────────┐
+         com            edu             it       ...
+     ┌────┴────┐     ┌───┴───┐      ┌───┴───┐
+  google    amazon  mit    unina  google  amazon
+               |          |
+             maps        dei
+```
+
+**Tipi di TLD:**
+- **Generici (gTLD)**: `.com`, `.org`, `.edu`, `.net`, `.aero`, ...
+- **Nazionali (ccTLD)**: `.it`, `.uk`, `.us`, `.tv`, ...
+- Tutti gestiti da **registrar** nominati da ICANN
+
+**Nomi di dominio — sintassi:**
+- I nomi si leggono **dal basso verso l'alto** verso la root: es. `eng.mit.edu`
+- **Percorso assoluto**: termina con un punto finale (es. `eng.mit.edu.`) → path dalla foglia alla radice
+- **Percorso relativo**: interpretato rispetto a un dominio di riferimento
+- Ogni dominio controlla l'allocazione dei sottodomini sotto di sé
+- La creazione di un nuovo sottodominio richiede il **permesso del dominio padre**
+- I nomi **non seguono confini geografici o fisici**
+- È possibile registrarsi sotto più TLD (es. `ibm.com` e `ibm.us`)
+
+> **Cyber-squatting**: pratica di acquistare domini solo per rivenderli successivamente a prezzi elevati alle aziende interessate.
+
+---
+
+#### 4.5.3 Zone DNS e Name Server
+
+Lo spazio dei nomi DNS è suddiviso in **zone** (partizioni non sovrapposte). La suddivisione è a discrezione dell'amministratore della zona.
+
+**Ogni zona contiene uno o più name server:**
+- **Name server primario** (*primary*): ha il database autoritativo per la zona
+- **Name server secondario** (*secondary*): copia di backup del primario, per ridondanza
+
+```
+          Zona A
+    ┌─────────────────┐
+    │   . (root)      │
+    │    com          │
+    └────────┬────────┘
+             │
+          Zona B
+    ┌─────────────────┐
+    │   example.com   │
+    │  ┌───┐  ┌────┐  │
+    │  │www│  │mail│  │
+    └──┴───┴──┴────┴──┘
+```
+
+**Root server:** Ci sono **13 root server** (da `a.root-servers.net` a `m.root-servers.net`), altamente replicati in tutto il mondo. Essendo molto occupati, di norma restituiscono informazioni sulle **zone inferiori** (cioè i riferimenti ai TLD server), non record individuali.
+
+---
+
+#### 4.5.4 Resource Record DNS
+
+Ogni entry nel database DNS è un **Resource Record (RR)** con 5 campi:
+
+| Campo | Nome | Descrizione |
+|-------|------|-------------|
+| `NAME` | Domain Name | Il dominio a cui il record si applica; è la **chiave di ricerca** principale per le query DNS. Normalmente esistono più record per ciascun dominio, distribuiti su server diversi. |
+| `TTL` | Time To Live | Durata del record in secondi. Lunga per host stabili (es. `86400` = 1 giorno), breve per host volatili (es. `60` = 1 minuto). Valore massimo: 2³¹−1 ≈ 68 anni. |
+| `CLASS` | Classe | Sempre `IN` (Internet) per i record Internet; altri codici raramente usati. |
+| `TYPE` | Tipo | Indica il tipo di record (vedi tabella sotto). |
+| `RDATA` | Value | Il valore effettivo; dipende dal tipo di record: può essere un dominio, un valore numerico o una stringa ASCII. |
+
+**Tipi di record DNS:**
+
+| Tipo | Descrizione | Uso |
+|------|-------------|-----|
+| **A** | Indirizzo IPv4 a 32 bit per un'interfaccia dell'host | Mappatura hostname → IP |
+| **AAAA** | Indirizzo IPv6 (equivalente di A per IPv6) | Mappatura hostname → IPv6 |
+| **NS** | Name Server: fornisce il nome del name server autorevole per il dominio | Delegazione della zona |
+| **MX** | Mail eXchange: indica l'host che accetta email per il dominio | Instradamento email |
+| **CNAME** | Canonical Name: permette alias; la risoluzione DNS procede col nuovo nome | Alias hostname |
+| **PTR** | Pointer: alias usato per **reverse lookup** (IP → nome); la risoluzione NON procede, viene restituito il nome | Reverse DNS |
+| **SOA** | Start of Authority: informazioni sul server della zona, email dell'amministratore, numeri di serie | Metadati zona |
+
+**Esempio di insieme di record per il dominio `cs.vu.nl`:**
+```
+cs.vu.nl.    86400  IN  SOA   ns1.cs.vu.nl. admin.vu.nl. 2024010101 3600 900 604800 86400
+cs.vu.nl.    86400  IN  NS    ns1.cs.vu.nl.
+cs.vu.nl.    86400  IN  NS    ns2.cs.vu.nl.
+cs.vu.nl.    86400  IN  MX    10 mail.cs.vu.nl.
+www.cs.vu.nl 86400  IN  A     130.37.20.20
+ftp.cs.vu.nl 86400  IN  CNAME www.cs.vu.nl.
+ns1.cs.vu.nl 86400  IN  A     130.37.20.1
+```
+
+---
+
+#### 4.5.5 DNS Resolver (Local DNS Server)
+
+Il **local DNS server** (o **DNS resolver**) è un tipo speciale di server DNS che:
+- **Non appartiene strettamente** alla gerarchia dei name server
+- È tipicamente gestito dagli **ISP** o dalle organizzazioni locali
+- Quando un host si connette a un ISP, l'ISP gli fornisce l'indirizzo IP del local DNS server
+
+**Funzionamento del resolver:**
+- Quando un host esegue una query DNS, la invia al **local DNS server**
+- Il local DNS server agisce da **proxy**, inoltrandola alla gerarchia DNS
+- Restituisce la risposta finale all'host (risposta completa o errore)
+
+**Resolver pubblici noti:**
+| Provider | Indirizzo primario | Indirizzo secondario |
+|----------|--------------------|----------------------|
+| Google Public DNS | `8.8.8.8` | `8.8.4.4` |
+| Cloudflare | `1.1.1.1` | `1.0.0.1` |
+| OpenDNS | `208.67.222.222` | `208.67.220.220` |
+
+---
+
+#### 4.5.6 Risoluzione dei Nomi DNS: Query Ricorsive e Iterative
+
+Il processo di risoluzione avviene in due modalità che spesso coesistono nella stessa richiesta.
+
+**Query ricorsiva:** il client chiede al server di fornire la risposta completa, e il server si occupa di tutta la risoluzione iterativa (il client riceve o la risposta finale o un errore).
+
+**Query iterativa:** il server risponde con il "meglio che sa" — se non ha la risposta, restituisce l'indirizzo di un altro server DNS da contattare; il client poi contatta direttamente il prossimo server.
+
+**Schema tipico di una risoluzione (esempio: `www.amazon.com`):**
+
+```
+  Host (client)             Local DNS server            Root Server
+      │                           │                          │
+      │── query ricorsiva ────────►│                          │
+      │   "www.amazon.com?"        │── query iterativa ──────►│
+      │                           │   "www.amazon.com?"      │
+      │                           │◄──────────────────────── │
+      │                           │   "Non so, vai su        │
+      │                           │    TLD server .com"      │
+      │                           │                      TLD Server (.com)
+      │                           │── query iterativa ──────►│
+      │                           │   "www.amazon.com?"      │
+      │                           │◄─────────────────────────│
+      │                           │   "Non so, vai su        │
+      │                           │    ns1.amazon.com"       │
+      │                           │                      Authoritative DNS
+      │                           │── query iterativa ──────►│ (amazon.com)
+      │                           │   "www.amazon.com?"      │
+      │                           │◄─────────────────────────│
+      │                           │   "205.251.242.103"      │
+      │◄── risposta completa ─────│                          │
+      │    "205.251.242.103"       │                          │
+```
+
+**Regola pratica:**
+- I **local DNS server** gestiscono le query ricorsive (servizio per i loro host)
+- I **server occupati** (root, TLD) gestiscono quasi sempre solo query **iterative** (non ricorsive), per non sovraccaricarsi
+
+**Processo di risoluzione — algoritmo:**
+1. L'host invia la query al **local name server**
+2. Se il dominio rientra nella giurisdizione (zona) del server locale → viene restituito un **record autoritativo**
+3. Altrimenti, il local server gestisce la query ricorsivamente:
+   - Se ha l'indirizzo → lo restituisce
+   - Se ha l'indirizzo del name server per una zona inferiore → lo usa per una query diretta
+   - Il processo continua iterativamente fino a trovare l'indirizzo
+
+> **I root server** sono consultati solo **in assenza di qualsiasi informazione** su un certo dominio.
+
+---
+
+#### 4.5.7 Record Autoritativi vs. Cached
+
+I record DNS si distinguono in due categorie fondamentali:
 
 | Tipo | Descrizione |
 |------|-------------|
-| **A** | Indirizzo IPv4 |
-| **AAAA** | Indirizzo IPv6 |
-| **NS** | Name Server del dominio |
-| **MX** | Mail eXchange |
-| **CNAME** | Alias per nome canonico |
-| **PTR** | Reverse lookup (IP → nome) |
-| **SOA** | Start of Authority |
+| **Autoritativo** | Proviene direttamente dal name server che gestisce la zona; è sempre aggiornato e affidabile |
+| **Cached (in cache)** | Proveniente da una risposta precedente, memorizzato temporaneamente; **scade alla scadenza del TTL** |
 
-#### 4.5.4 DNS Resolver (Local DNS Server)
+**Caching DNS — ottimizzazione delle prestazioni:**
+- **Tutte le risposte DNS vengono messe in cache** dal local DNS server
+- Se arriva una richiesta per `cs.mit.edu` e il server ha già in cache l'indirizzo del name server per `mit.edu`, può interrogare direttamente quel server senza passare dai root
+- I root server vengono interrogati **solo** in assenza di qualsiasi informazione su un certo dominio
+- I record cached hanno un TTL che, alla scadenza, li rende invalidi
 
-Gestito dagli ISP. Il **Google Public DNS** è `8.8.8.8` e `8.8.4.4`.
+> **Prestazioni:** La caching riduce drasticamente il numero di query ai root server e accelera le risoluzioni per i domini frequentemente visitati.
 
-**Caching DNS:** i record vengono memorizzati con scadenza = TTL.
+---
 
-**Round-Robin DNS:** per siti trafficati (Google, Amazon), il DNS ruota l'ordine di risposta tra più IP per distribuire il carico.
+#### 4.5.8 Aliasing DNS (CNAME) e Host Aliasing
+
+Il DNS fornisce un **servizio di aliasing** che permette di associare nomi complicati/lunghi (nomi *canonici*) a nomi più semplici/corti (*alias*).
+
+**Host aliasing:** host con hostname complicati possono essere associati ad alias più mnemonici.
+
+Esempio:
+```
+# Il nome canonico (reale):
+relay1.west-coast.enterprise.com.   IN  A      192.0.2.1
+
+# L'alias (più semplice):
+www.enterprise.com.   IN  CNAME  relay1.west-coast.enterprise.com.
+```
+
+Quando si risolve `www.enterprise.com`:
+1. Il DNS trova il record CNAME → ottiene il nome canonico `relay1.west-coast.enterprise.com`
+2. Risolve il nome canonico → ottiene l'IP `192.0.2.1`
+3. **Differenza con PTR**: con CNAME la risoluzione prosegue con il nuovo nome; con PTR la risoluzione si ferma e viene restituito il nome.
+
+> Un'applicazione può invocare il DNS per ottenere sia il nome canonico per un alias sia il corrispondente IP.
+
+---
+
+#### 4.5.9 DNS e Distribuzione del Carico (Round-Robin DNS)
+
+Il DNS può essere usato per la **distribuzione del carico** tra server replicati.
+
+- Siti molto trafficati (Google, Amazon, CNN, ecc.) sono replicati su **più server**, ognuno su un end-system diverso con un IP diverso
+- Il database DNS contiene l'**insieme di indirizzi IP** per lo stesso hostname canonico
+- Quando i client eseguono una query DNS per quel nome, il server **ruota l'ordine** in cui gli indirizzi vengono restituiti → i client tendono a usare IP diversi → il carico si distribuisce
+
+```
+# Esempio: amazon.com con 3 server replicati
+amazon.com.   IN  A  205.251.242.103
+amazon.com.   IN  A  205.251.242.104
+amazon.com.   IN  A  205.251.242.105
+# Il DNS ruota l'ordine ad ogni risposta
+```
+
+---
+
+#### 4.5.10 Strumento pratico: `nslookup`
+
+`nslookup` è un tool da riga di comando che permette di eseguire manualmente le query DNS che normalmente gestisce il local DNS server.
+
+**Utilizzo base:**
+```bash
+# Query A record (hostname → IP)
+nslookup www.unina.it
+
+# Query con server DNS specifico
+nslookup www.unina.it 8.8.8.8
+
+# Reverse lookup (IP → hostname)
+nslookup 143.225.15.50
+
+# Query di tipo specifico
+nslookup -type=MX unina.it
+nslookup -type=NS unina.it
+nslookup -type=SOA unina.it
+```
+
+**Interpretazione dell'output:**
+```
+Server:   127.0.0.53          ← Il default server è il router locale (porta 53)
+Address:  127.0.0.53#53
+
+Non-authoritative answer:      ← I record sono cached (non vengono dal server autoritativo)
+Name:     www.unina.it
+Address:  143.225.15.50
+```
+
+> I record **non-authoritativi** (cached) **non provengono** dal DNS server che gestisce la zona; il local server ha gestito tutta la risoluzione tramite query iterative e ha messo in cache il risultato.
+
+---
+
+#### 4.5.11 Riepilogo: Caratteristiche Principali del DNS
+
+| Caratteristica | Dettaglio |
+|----------------|-----------|
+| **Trasporto** | UDP, porta 53 (TCP per trasferimenti di zona) |
+| **Architettura** | Distribuita, gerarchica, decentralizzata |
+| **Root server** | 13 (a–m.root-servers.net), altamente replicati |
+| **Gestione** | ICANN per TLD; registrar per sottodomini |
+| **Caching** | Tutti i record vengono cachati con scadenza TTL |
+| **Query ricorsive** | Gestite dai local DNS server per i loro client |
+| **Query iterative** | Usate dai server occupati (root, TLD) |
+| **Software tipico** | BIND (Berkeley Internet Name Domain) su UNIX |
 
 ### 4.6 Schemi e Appunti dalle Lavagne (Lezione 7)
 
@@ -695,9 +1253,25 @@ int sockfd = socket(int domain, int type, int protocol);
 
 ```c
 int val = bind(int socket, const struct sockaddr *address, socklen_t address_len);
+// socket: file descriptor della socket
+// address: puntatore a sockaddr con IP e porta
+//   address.sin_addr spesso impostato a INADDR_ANY: accetta connessioni da tutti gli indirizzi
+// address_len: sizeof(struct sockaddr)
 // Ritorna 0 su successo, -1 su errore
-// Obbligatorio per i server, opzionale per i client
 ```
+
+> `bind()` è **obbligatorio per i server** (devono essere raggiungibili su una porta nota). Per i client è **opzionale** (l'OS assegna automaticamente una porta libera).
+
+### 5.4.1 Chiusura della Socket
+
+```c
+#include <unistd.h>
+int val = close(int socket);
+// socket: file descriptor della socket da chiudere
+// val: 0 su successo, -1 su errore
+```
+
+> Le socket seguono la filosofia Unix "tutto è un file": `close()` rilascia il file descriptor proprio come per i file normali.
 
 ### 5.5 Programmazione Socket UDP
 
@@ -824,6 +1398,23 @@ int main() {
 
 > **Socket TCP identificata da 4 elementi:** IP sorgente, porta sorgente, IP destinazione, porta destinazione.
 
+> **Socket UDP identificata da 2 elementi:** IP destinazione + porta destinazione. Questo permette a un server UDP di ricevere messaggi da più client sulla stessa socket; con TCP serve una socket diversa per ogni client.
+
+**Riepilogo funzioni socket:**
+
+| Funzione | UDP/TCP | Descrizione |
+|----------|---------|-------------|
+| `socket()` | Entrambi | Crea una socket |
+| `bind()` | Entrambi | Associa socket a IP:porta (obbligatorio per server) |
+| `sendto()` | UDP | Invia datagramma (include indirizzo destinazione) |
+| `recvfrom()` | UDP | Riceve datagramma (ottiene indirizzo sorgente) |
+| `connect()` | TCP | Avvia connessione (client-side) |
+| `listen()` | TCP | Apre coda connessioni (server-side, max = backlog) |
+| `accept()` | TCP | Crea socket client-specific (server-side) |
+| `send()` | TCP | Invia dati su connessione esistente |
+| `read()` | TCP | Riceve dati da connessione esistente |
+| `close()` | Entrambi | Chiude la socket |
+
 ### 5.7 Schemi e Appunti dalle Lavagne (Lezioni 8 e 9)
 
 ![Board Lezione 08 - Pagina 1](assets/board_images/board_L08_p1.png)
@@ -932,42 +1523,67 @@ Verifica: 0100101011000010 + 1011010100111101 = 1111111111111111 ✅
 
 ### 6.7 Trasferimento Affidabile dei Dati
 
-3 garanzie per un canale affidabile:
+**Obiettivo:** il livello di trasporto deve fornire affidabilità anche su canali inaffidabili (che possono corrompere, perdere, duplicare, riordinare pacchetti).
+
+**3 garanzie per un canale affidabile:**
 1. Nessun bit corrotto
 2. Nessun bit perso o duplicato
 3. Tutti i bit nell'esatto ordine di invio
 
 #### 6.7.1 Stop-and-Wait — Corruzioni
 
-**ACK**: messaggio ricevuto integro. **NCK**: errore, ripetere.
-**Soluzione NCK corrotto:** aggiungere **numero di sequenza** (1 bit bastano in stop-and-wait).
+**ACK** (*Positive Acknowledgment*): messaggio ricevuto integro. **NCK** (*Negative ACK*): errore, ripetere.
+
+**Problema ACK/NCK corrotti:** se l'ACK arriva corrotto, il mittente non sa se ritrasmettere (rischio di duplicati).
+**Soluzione:** aggiungere **numero di sequenza** al pacchetto (in stop-and-wait basta **1 bit**: 0 o 1).
 
 #### 6.7.2 Stop-and-Wait — Perdita di Pacchetti
 
 **Timeout:** se non arriva ACK entro il timeout, ritrasmette.
 - Timeout troppo lungo → rallenta la comunicazione
-- Timeout troppo corto → pacchetti si sovrappongono
-- Deve essere > RTT
+- Timeout troppo corto → pacchetti si sovrappongono, ritrasmissioni inutili
+- Deve essere > RTT (ma è difficile stimarlo esattamente)
 
-**Prestazioni stop-and-wait:** terribili.
-- Esempio: 1 Gbps, RTT=30ms, pacchetto=1000B → trasmissione dura 0.008ms → mittente aspetta il **99.97%** del tempo.
+**Prestazioni stop-and-wait:** **terribili** su link veloci con latenza elevata.
+
+> **Esempio numerico:** link da 1 Gbps, RTT=30ms, pacchetto=1000B (8000 bit)
+> - Tempo di trasmissione = 8000 bit / 10^9 bit/s = **0.008 ms**
+> - Utilization = 0.008 / (30 + 0.008) ≈ **0.00027 = 0.027%**
+> - Il mittente aspetta il **99.97%** del tempo! Throughput effettivo = 27 kbps su un link da 1 Gbps.
 
 #### 6.7.3 Pipelining
 
-Il mittente invia più pacchetti senza aspettare gli ACK.
+Il mittente invia **più pacchetti** senza aspettare gli ACK — la "pipeline" è riempita di pacchetti in volo.
 
-**Go-Back-N (GBN):** finestra di N pacchetti non-acknowledged; il destinatario scarta tutti i pacchetti fuori ordine.
+**Conseguenze:** necessità di numeri di sequenza più grandi e buffering dei pacchetti (sia lato mittente sia destinatario).
+
+**Go-Back-N (GBN):** finestra di N pacchetti non-acknowledged.
+- Il destinatario **non bufferizza** i pacchetti fuori ordine: li scarta
+- Ogni pacchetto out-of-order causa un re-invio dell'ultimo ACK corretto (**ACK cumulativo**)
 
 ```
 Window: [base, nextseqnum-1] = trasmessi ma non ACK
-        [nextseqnum, base+N-1] = possono essere inviati
+        [nextseqnum, base+N-1] = possono essere inviati senza aspettare
+        [base+N, ...] = non possono essere inviati ancora
 ```
 
-**Svantaggio:** in caso di perdita, ritrasmette il pacchetto perso **e tutti i successivi**.
+**Svantaggio GBN:** in caso di perdita, ritrasmette il pacchetto perso **e tutti i successivi** nella finestra.
 
-**Selective Repeat (SR):** ritrasmette **solo** i pacchetti persi/corrotti; i fuori-ordine vengono bufferizzati.
+**Selective Repeat (SR):** ritrasmette **solo** i pacchetti persi/corrotti.
+- Il destinatario **bufferizza** i pacchetti fuori ordine fino a riempire i gap
+- Più efficiente di GBN ma richiede più memoria
 
-> **Vincolo SR:** numero di sequenza ≥ 2 × window size.
+> **Vincolo SR:** numero di sequenza ≥ **2 × window size** (per evitare confusione tra vecchi e nuovi pacchetti).
+
+**Confronto:**
+
+| Caratteristica | Go-Back-N | Selective Repeat |
+|----------------|-----------|------------------|
+| Buffering al destinatario | No | Sì |
+| In caso di perdita | Ritrasmette tutto da N | Ritrasmette solo il perso |
+| ACK | Cumulativo | Per singolo segmento |
+| Efficienza | Bassa (alta perdita) | Alta |
+| Vincolo seq number | seq ≥ N | seq ≥ 2N |
 
 ### 6.8 Schemi e Appunti dalle Lavagne (Lezioni 10, 11 e 12)
 
@@ -987,11 +1603,11 @@ Window: [base, nextseqnum-1] = trasmessi ma non ACK
 
 ### 7.1 Caratteristiche di TCP
 
-- **Connection-oriented**: handshake prima della trasmissione
+- **Connection-oriented**: handshake prima della trasmissione che assicura la "connessione" tra i due processi
 - **Affidabile**: checksum, ritrasmissioni, ACK, timer, numeri di sequenza
-- **Full-duplex**: bidirezionale simultaneo
-- **Point-to-point**: singolo mittente e singolo destinatario
-- **Stream-oriented**: più segmenti possono far parte di un flusso più grande
+- **Full-duplex**: bidirezionale simultaneo. Se A comunica con B, allora anche B è connesso con A. È come avere **due flussi dati indipendenti** A→B e B→A
+- **Point-to-point**: singolo mittente e singolo destinatario. UDP permette il **multicasting**, TCP no
+- **Stream-oriented**: più segmenti possono far parte di un flusso (*stream*) più grande e ordinato. I datagrammi UDP sono invece per lo più **indipendenti** tra loro
 
 ### 7.2 Buffer TCP
 
@@ -1039,13 +1655,20 @@ MSS + 40 byte = MTU
 | Campo | Bit | Descrizione |
 |-------|-----|-------------|
 | Source/Dest Port | 16+16 | Porte sorgente e destinazione |
-| Sequence Number | 32 | Posizione nel byte-stream |
-| Acknowledgment Number | 32 | Prossimo byte atteso |
-| Receive Window | 16 | Byte accettabili (flow control) |
-| Header Length | 4 | Numero di parole 32-bit nell'header |
-| Checksum | 16 | Controllo integrità |
-| ACK flag | 1 | Indica ACK valido |
-| SYN/FIN/RST | 1 ciascuno | Setup/teardown/reset connessione |
+| Sequence Number | 32 | Posizione del primo byte del segmento nel byte-stream |
+| Acknowledgment Number | 32 | Numero di sequenza del prossimo byte atteso |
+| Receive Window | 16 | Byte accettabili — per il **flow control** |
+| Header Length | 4 | Numero di parole 32-bit nell'header (variabile per Options) |
+| Checksum | 16 | Controllo integrità del segmento |
+| **ACK** flag | 1 | Indica che il campo Acknowledgment Number è valido |
+| **SYN** flag | 1 | Setup connessione (three-way handshake) |
+| **FIN** flag | 1 | Chiusura connessione |
+| **RST** flag | 1 | Reset connessione (terminazione anomala) |
+| **CWR/ECE** flags | 1+1 | Explicit Congestion Notification (ECN, opzionale) |
+| **PSH** flag | 1 | Passa immediatamente i dati all'applicazione (raro) |
+| **URG** flag | 1 | Il segmento contiene dati urgenti — puntatore dati urgenti valido (raro) |
+| Urgent Ptr | 16 | Posizione dell'ultimo byte dei dati urgenti |
+| Options | K bit | Negoziazione MSS, timestamp, ecc. |
 
 ### 7.5 Numeri di Sequenza e Acknowledgment
 
