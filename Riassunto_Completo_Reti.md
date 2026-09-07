@@ -1,4 +1,4 @@
-﻿# Riassunto Approfondito: Reti di Calcolatori (Capitoli 1-4)
+# Riassunto Approfondito: Reti di Calcolatori (Capitoli 1-4)
 ---
 
 ## 1. Introduzione alle Reti di Calcolatori
@@ -33,21 +33,21 @@ Il funzionamento delle reti è astratto in un modello a strati (stack protocolla
 
 ```mermaid
 graph TD
-    subgraph Host Sorgente (Client)
+    subgraph HostSorgente [Host Sorgente Client]
     App[5. Applicazione: Messaggio] --> Trans[4. Trasporto: Segmento]
     Trans --> Rete[3. Rete: Datagramma]
     Rete --> Link[2. Collegamento: Frame]
     Link --> Fis[1. Fisico: Segnali Elettrici/Ottici]
     end
     
-    subgraph Core Network (Router)
+    subgraph CoreNetwork [Core Network Router]
     R_Rete[3. Rete: IP]
     R_Link[2. Collegamento: MAC]
     R_Fis[1. Fisico]
     R_Fis --> R_Link --> R_Rete --> R_Link --> R_Fis
     end
     
-    subgraph Host Destinazione (Server)
+    subgraph HostDestinazione [Host Destinazione Server]
     D_App[5. Applicazione: Messaggio] 
     D_Trans[4. Trasporto: Segmento]
     D_Rete[3. Rete: Datagramma]
