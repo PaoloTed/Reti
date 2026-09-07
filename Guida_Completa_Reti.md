@@ -1777,208 +1777,314 @@ La raffigurazione su grafico assume così gli iconici e caratteristici andamenti
 
 ### 9.1 Funzioni del Livello di Rete
 
-**Host-to-host delivery:**
-- **All'host mittente**: incapsula segmenti in datagrammi, li invia
-- **All'host destinatario**: riceve datagrammi, estrae segmenti, li consegna al trasporto
+Il livello di rete si occupa della **host-to-host delivery**: riceve i segmenti dal livello di trasporto dell'host mittente, li incapsula in **datagrammi IP**, e li consegna all'host destinatario attraverso una catena di router intermedi. A ogni nodo intermedio (router), il datagramma viene decapsulato, esaminato e inoltrato verso il nodo successivo del percorso — questa operazione è detta **hop**.
 
-Protocolli principali: **IP, DHCP, NAT**.
+> [!NOTE]
+> Mentre il livello di trasporto opera solo negli host terminali (edge), il livello di rete opera in **tutti i nodi della rete**: host, router e switch di livello 3. Il software di routing gira nei router intermedi; gli host terminali ne hanno solo la porzione necessaria per formare e inviare i datagrammi.
 
-### 9.2 Servizi del Livello di Rete
+I principali protocolli a questo livello sono: **IP** (Internet Protocol), **DHCP** (Dynamic Host Configuration Protocol), **NAT** (Network Address Translation) e **ICMP** (Internet Control Message Protocol, usato ad es. da `ping` e `traceroute`).
 
-**Servizi che Internet potrebbe offrire** (ma tipicamente non offre):
-- Consegna garantita, con ritardo limitato, in ordine, con banda minima, con sicurezza
+### 9.2 Best-Effort: il Contratto di Internet
 
-**Servizio offerto da Internet:** **Best-effort**
-- La rete fa del suo meglio
-- Nessuna garanzia su ordine, consegna, ritardo, banda
-- Funziona bene con sufficiente banda (Netflix, VoIP, conferenze, ecc.)
+Potenzialmente, Internet potrebbe offrire svariati servizi agli utenti, tra cui:
+- **Consegna garantita** del pacchetto.
+- **Consegna con ritardo massimo garantito** (es. entro 100 ms).
+- **Consegna in ordine** dei pacchetti.
+- **Banda minima garantita** (Quality of Service, QoS).
+- **Sicurezza** (cifratura e autenticazione a livello rete).
 
-### 9.3 Router: Forwarding e Routing
+In realtà, Internet offre **un solo servizio**: il **Best-Effort** (*fare del proprio meglio*).
+- I pacchetti possono arrivare fuori ordine, in ritardo, duplicati, o non arrivare affatto.
+- Non c'è alcuna garanzia su ritardo, banda o ordine.
+- Questo modello semplice — con una larghezza di banda sufficiente — si è dimostrato straordinariamente efficace nella pratica. Applicazioni come Netflix, VoIP, videoconferenze, e streaming funzionano bene anche su un canale best-effort.
 
-**1. Forwarding (Piano dei Dati):**
-- Azione locale: trasferisce pacchetto dall'input link all'output link appropriato
-- Operazione **veloce** (nanoseccondi), implementata in **hardware**
+### 9.3 Router: Forwarding vs Routing
 
-**2. Routing (Piano di Controllo):**
-- Processo globale: determina percorsi end-to-end
-- Operazione **lenta** (secondi), implementata via **software**
+Il router svolge due funzioni concettualmente distinte, che operano a velocità completamente diverse:
 
-**Forwarding table:** associa indirizzi di destinazione a interfacce di output.
+| | **Forwarding (Piano dei Dati)** | **Routing (Piano di Controllo)** |
+|---|---|---|
+| **Ambito** | Locale (al singolo router) | Globale (intera rete) |
+| **Operazione** | Trasferisce ogni pacchetto dall'input port all'output port corretto tramite una *forwarding table* | Costruisce e aggiorna la forwarding table decidendo i percorsi end-to-end |
+| **Velocità** | Molto veloce — nanoseccondi (hardware dedicato, ASIC) | Lenta — secondi (software del routing processor) |
+| **Analogia** | L'autista che gira a destra o sinistra all'incrocio | Il navigatore GPS che ha calcolato il percorso ottimale |
 
-**Creazione delle tabelle:**
-- **Distribuita**: ogni router ha un componente di routing (approccio tradizionale)
-- **Centralizzata**: controller remoto calcola e distribuisce → **SDN (Software-Defined Networking)**
+**Come vengono create le forwarding table?**
+- **Approccio Distribuito**: ogni router esegue algoritmi di routing (es. OSPF, BGP) e scambia informazioni coi vicini. È l'approccio tradizionale e più diffuso.
+- **Approccio Centralizzato (SDN)**: un controller software remoto calcola e distribuisce centralmente le forwarding table a tutti i router. È la base del **Software-Defined Networking (SDN)**, dove la logica di rete è separata dall'hardware.
 
-### 9.4 Tipi di Router
+### 9.4 Tipi di Router e Architettura Interna
 
-| Tipo | Descrizione | Esempio |
-|------|-------------|---------|
-| **Home router** | Uso domestico | TP-Link AX6600 |
-| **Business router** | Uso aziendale | Cisco RV016 |
-| **Edge router** | Connette LAN ↔ ISP | Juniper MX2020 |
-| **Core router** | Backbone Internet | Cisco CRS-1 |
+**Tipi di router per contesto d'uso:**
 
-### 9.5 Componenti di un Router
+| Tipo | Descrizione | Esempio Commerciale |
+|------|-------------|---------------------|
+| **Home router** | Uso domestico, spesso include NAT, DHCP, WiFi | TP-Link AX6600 |
+| **Business router** | Uso aziendale, gestione di più sottoreti e connettività ridondante | Cisco RV016 |
+| **Edge router** | Connette la rete di un'organizzazione all'ISP | Juniper MX2020 |
+| **Core / Backbone router** | Cuore di Internet, gestisce traffico di enormi proporzioni | Cisco CRS-1 |
+
+**Architettura interna di un router:**
 
 ```
 Input Links ──► [Input Port 1...N] ──► [Switch Fabric] ──► [Output Port 1...N] ──► Output Links
-                       │                                           │
-                  [Forwarding Table]              [Routing Processor]
+                      │                                            │
+                [Forwarding Table]               [Routing Processor]
 ```
 
-- **Input ports**: lookup della forwarding table, preparano il switching
-- **Switch fabric**: connette input a output ports
-- **Output ports**: trasmettono i pacchetti sul link in uscita
-- **Routing processor**: calcola/aggiorna la forwarding table
+I quattro componenti chiave sono:
+- **Input Ports**: Ogni porta fisica esegue il lookup nella forwarding table per determinare l'output port di destinazione. *Ogni porta ha una copia locale della forwarding table* per non creare colli di bottiglia sul bus centrale.
+- **Switch Fabric**: Connette fisicamente le input ports alle output ports. Esistono 3 tecnologie di switching:
+  1. **Via memoria**: Il pacchetto viene scritto in memoria e il routing processor ne determina la copia nell'output port (metodo lento, usato nei router di prima generazione).
+  2. **Via bus condiviso**: Il pacchetto attraversa un bus comune verso l'output port (un pacchetto alla volta, adatto a reti locali).
+  3. **Via rete a crossbar** (crossbar switch): I punti di incrocio tra input e output possono essere aperti/chiusi, permettendo la trasmissione **parallela** di più pacchetti contemporaneamente (metodo moderno e più performante).
+- **Output Ports**: Accodano e trasmettono i pacchetti sul link fisico di uscita.
+- **Routing Processor**: Esegue gli algoritmi di routing, gestisce e aggiorna la forwarding table.
 
-### 9.6 Longest Prefix Matching
+**Accodamento e perdita di pacchetti:**
+Poiché lo switching richiede tempo, input e output ports hanno buffer (code) per pacchetti in attesa. Quando la velocità dei pacchetti in arrivo supera la capacità di switching o di trasmissione, i buffer possono saturarsi e i nuovi pacchetti vengono **scartati** (drop-tail, in modalità FIFO). Questo è lo scenario descritto nella board L14: i router operano in store-and-forward.
 
-**Forwarding table esempio:**
+**Politiche di Packet Scheduling per i pacchetti in coda:**
 
-| Prefisso IP | Interfaccia |
-|-------------|-------------|
-| 11001000 00010111 00010*** ******** | 0 |
-| 11001000 00010111 00011000 ******** | 1 |
-| 11001000 00010111 00011*** ******** | 2 |
-| Otherwise | 3 |
+| Politica | Descrizione |
+|----------|-------------|
+| **FIFO** | Serviti nell'ordine di arrivo. Semplice ma non differenzia il traffico. |
+| **Priority Queuing** | Le classi di traffico ad alta priorità (es. VoIP) vengono servite prima. Dentro ogni classe vale il FIFO. |
+| **Round-Robin (WFQ)** | I pacchetti sono divisi in classi, servite a turno secondo un peso. Garantisce equità tra i flussi. |
 
-**Regola:** Se un IP corrisponde a più voci, vince la voce con il **prefisso più lungo**.
+### 9.5 Longest Prefix Matching (LPM)
 
-**Esempio:** IP `...00011000 10101010` → corrisponde a interfaccia 1 (24 bit match) e 2 (21 bit match) → **interfaccia 1 vince**.
+Un router non associa un singolo IP di destinazione a un'interfaccia, ma associa **prefissi** di indirizzi IP (blocchi di subnet) a interfacce. Quando un pacchetto arriva, il router cerca il prefisso che corrisponde ai bit più significativi dell'IP di destinazione.
 
-### 9.7 Schemi e Appunti dalle Lavagne (Lezioni 14 e 15)
+**La regola aurea:** Se un indirizzo IP corrisponde a più voci nella forwarding table (perché i blocchi IP possono sovrapporsi in CIDR), vince sempre la voce col **prefisso più lungo** (il più specifico).
+
+| Prefisso IP (binary) | Interfaccia |
+|----------------------|-------------|
+| `11001000 00010111 00010*** ********` | 0 |
+| `11001000 00010111 00011000 ********` | 1 |
+| `11001000 00010111 00011*** ********` | 2 |
+| `otherwise` | 3 |
+
+**Esempio pratico:** L'IP `11001000 00010111 00011000 10101010` corrisponde sia all'interfaccia 1 (i primi 24 bit fanno match) che all'interfaccia 2 (i primi 21 bit fanno match). Vince l'interfaccia 1, perché il suo match è più lungo (24 > 21 bit).
+
+> [!TIP]
+> Il lookup LPM è un'operazione critica che deve avvenire a velocità elevatissima (nanoseccondi per connessioni Gigabit). Si usano strutture dati specializzate come i **Trie** (alberi di prefissi) implementate in hardware dedicato (es. memorie TCAM).
+
+La stessa logica di **match-plus-action** viene applicata anche da Firewall (dove l'azione è filtrare il pacchetto) e da NAT (dove l'azione è riscrivere l'indirizzo).
+
+### 9.6 Schemi e Appunti dalle Lavagne (Lezioni 14 e 15)
 
 ![Board Lezione 14 - Pagina 1](assets/board_images/board_L14_p1.png)
-*Figura 9.1 — Architettura interna del router: commutazione store-and-forward e buffer di memoria.*
-
-![Board Lezione 14 - Pagina 2](assets/board_images/board_L14_p2.png)
-*Figura 9.2 — Fenomeni di accodamento in ingresso/uscita e perdita di pacchetti per overflow.*
-
-![Board Lezione 14 - Pagina 3](assets/board_images/board_L14_p3.png)
-*Figura 9.3 — Gestione della fabric di commutazione ad alta velocità.*
+*Figura 9.1 — Architettura interna del router: store-and-forward e buffer di memoria.*
 
 ![Board Lezione 15 - Pagina 1](assets/board_images/board_L15_p1.png)
-*Figura 9.4 — Regola del Longest Matching Prefix calcolata bit a bit in binario.*
+*Figura 9.2 — Regola del Longest Matching Prefix calcolata bit a bit in binario.*
 
 ![Board Lezione 15 - Pagina 2](assets/board_images/board_L15_p2.png)
-*Figura 9.5 — Esempio pratico di disaggregazione delle rotte su tabella di inoltro.*
+*Figura 9.3 — Longest Prefix Rule: risoluzione delle ambiguità tra blocchi sovrapposti con CIDR.*
 
 ---
 
 ## 10. Indirizzamento IP, DHCP, NAT e IPv6
 <div align="right"><em><a href="#indice">Torna all'indice</a></em></div>
 
-### 10.1 Indirizzo IP (IPv4)
+### 10.1 L'Indirizzo IP (IPv4)
 
-- **32 bit** (4 byte), scritto in **notazione decimale con punti**
-- ~2³² ≈ **4 miliardi** di indirizzi possibili
+Un **indirizzo IPv4** è un numero di **32 bit** (4 byte) usato per identificare in modo univoco ogni interfaccia di rete su Internet. Si rappresenta in *notazione decimale puntata* (*dotted-decimal notation*), dove ogni byte è scritto in decimale separato da un punto:
 
 ```
 193.32.216.9 = 11000001 00100000 11011000 00001001
 ```
 
-- L'IP è associato all'**interfaccia** (non all'host)
-- Un host ha tipicamente 1 interfaccia, un router ne ha più
+Con 32 bit, lo spazio di indirizzamento è di circa $2^{32} \approx$ **4 miliardi** di indirizzi.
 
-### 10.2 Subnetting
+> [!IMPORTANT]
+> L'indirizzo IP è **associato all'interfaccia di rete**, non all'host o al router in sé. Un laptop con una scheda di rete WiFi e una Ethernet ha **due interfacce** e potenzialmente due indirizzi IP diversi. Un router, avendo molte porte fisiche, ha molte interfacce e quindi molti IP.
 
-Le reti sono organizzate gerarchicamente in **sottoreti**:
-- Prima parte dell'IP = subnet (parte di rete)
-- Seconda parte = host (interfaccia specifica)
+### 10.2 Subnetting e Subnet Mask
 
-**Subnet mask:** specifica quali bit appartengono alla subnet.
+Assegnare indirizzi IP in modo casuale sarebbe un disastro: le forwarding table dei router sarebbero enormi, non si saprebbe dove "cercare" gli host, e lo spazio di indirizzamento verrebbe sprecato. La soluzione è l'**indirizzamento gerarchico**: Internet è organizzata in sottoreti (subnet) annidate, proprio come la numerazione telefonica internazionale (+39 per l'Italia, poi il prefisso della città, poi il numero locale).
+
+Un indirizzo IP è diviso in due parti:
+- **Parte di rete (Net ID / Prefisso)**: i bit più a sinistra, identifica la subnet.
+- **Parte host (Host ID)**: i bit più a destra, identifica la singola interfaccia nella subnet.
+
+La **subnet mask** è una sequenza di bit che specifica dove finisce la parte di rete e dove inizia quella host. È sempre composta da una sequenza contigua di `1` seguita da `0`:
 
 ```
 IP:          193.32.216.9  = 11000001 00100000 11011000 00001001
 Subnet Mask: 255.255.255.0 = 11111111 11111111 11111111 00000000
-Notazione:   193.32.216.0/24
+Notazione CIDR: 193.32.216.0/24  (il /24 indica 24 bit di prefisso)
 ```
 
-**Esempi subnet mask valide:**
+> [!CAUTION]
+> Una subnet mask deve avere i bit `1` **obbligatoriamente contigui e tutti a sinistra**. Una maschera come `255.255.10.0` (`11111111 11111111 00001010 00000000`) **non è una subnet mask valida** perché ha bit `1` non contigui!
 
-| Notazione | Binary | Tipo |
-|-----------|--------|------|
-| 255.255.255.0 (/24) | 11111111 11111111 11111111 00000000 | ✅ Valida |
-| 255.255.128.0 (/17) | 11111111 11111111 10000000 00000000 | ✅ Valida |
-| 255.255.10.0 | 11111111 11111111 00001010 00000000 | ❌ NON valida (bit non contigui) |
+**Esempi di validità:**
 
-**Determinare stessa subnet:** confrontare i prefissi.
+| Dotted-Decimal | Binario | Valida? |
+|----------------|---------|---------|
+| `255.255.255.0` | `11111111 11111111 11111111 00000000` | ✅ `/24` |
+| `255.255.128.0` | `11111111 11111111 10000000 00000000` | ✅ `/17` |
+| `255.224.0.0` | `11111111 11100000 00000000 00000000` | ✅ `/11` |
+| `255.255.10.0` | `11111111 11111111 00001010 00000000` | ❌ Non valida |
+| `63.255.255.0` | `00111111 11111111 11111111 00000000` | ❌ Non valida |
+
+**Come stabilire se due host sono nella stessa subnet?** Basta confrontare i loro prefissi (i bit coperti dalla subnet mask). Se i bit del prefisso sono identici, appartengono alla stessa subnet.
 
 | IP 1 | Subnet Mask | IP 2 | Risultato |
 |------|-------------|------|-----------|
-| 231.23.11.117 | /24 | 231.23.11.9 | Stessa subnet |
-| 110.32.100.10 | /11 | 110.64.100.11 | Subnet diverse |
+| `231.23.11.117` | `/24` | `231.23.11.9` | ✅ Stessa subnet (i 24 bit di sinistra coincidono) |
+| `10.54.32.1` | `/17` | `10.54.60.203` | ✅ Stessa subnet |
+| `110.32.100.10` | `/11` | `110.64.100.11` | ❌ Subnet diverse |
 
-**Comandi Linux:**
+> [!NOTE]
+> Host in subnet diverse possono comunque comunicare, passando attraverso un router (che funge da **gateway**). L'amministratore di rete può però decidere di filtrare o bloccare questo traffico inter-subnet (tramite firewall).
+
+### 10.3 Il Datagramma IPv4 (Struttura dell'Header)
+
+Il datagramma IP è il "pacchetto" del livello di rete. Il suo header contiene campi cruciali:
+
+```
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+├─────────────────────────────────────────────────────────────────┤
+│ Ver(4) │ IHL(4) │  TOS (8)   │        Datagram Length (16)      │
+├─────────────────────────────────────────────────────────────────┤
+│       Identifier (16)        │ Flags(3) │  Frag Offset (13)     │
+├─────────────────────────────────────────────────────────────────┤
+│    TTL (8)    │  Protocol(8) │         Header Checksum (16)     │
+├─────────────────────────────────────────────────────────────────┤
+│                    Source IP Address (32)                        │
+├─────────────────────────────────────────────────────────────────┤
+│                  Destination IP Address (32)                     │
+├─────────────────────────────────────────────────────────────────┤
+│                   Options (variabile)                            │
+├─────────────────────────────────────────────────────────────────┤
+│                     Data (Payload)                               │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Campi notevoli:**
+- **TTL (Time To Live)**: Ogni router che processa il datagramma decrementa il TTL di 1. Quando raggiunge 0, il datagramma viene scartato e viene inviato un messaggio ICMP al mittente. Previene loop infiniti nella rete.
+- **Protocol**: Indica il protocollo del livello superiore (6 = TCP, 17 = UDP). Elenco completo su IANA.
+- **Header Checksum**: Solo sull'header (a differenza del checksum TCP/UDP che copre anche i dati). Deve essere ricalcolato ad ogni hop perché il TTL cambia!
+- **Identification, Flags, Fragment Offset**: Usati per la **frammentazione**: se un datagramma è troppo grande per il link successivo (superando l'MTU), il router lo spezza in frammenti. La riassemblatura avviene solo a destinazione (non nei router intermedi, per non appesantirne il carico).
+
+### 10.4 Classful vs Classless Addressing (CIDR)
+
+**Classful Addressing (obsoleto):** Le reti erano divise in classi rigide:
+- Classe A (`/8`): es. `10.0.0.0/8` → oltre 16 milioni di host.
+- Classe B (`/16`): es. `172.16.0.0/16` → 65.535 host.
+- Classe C (`/24`): es. `192.168.1.0/24` → 254 host.
+
+Il problema era lo spreco enorme. Un'organizzazione con 300 host riceveva una Classe B con 65.535 IP, sprecando 65.235 indirizzi!
+
+**Classless Inter-Domain Routing (CIDR — pronuncia "cider"):** L'approccio moderno assegna blocchi di dimensione arbitraria nella forma `a.b.c.d/X`, dove X è scelto in base alle reali esigenze. Con 300 host si assegna un `/23` (512 IP), sprecandone solo 212. I blocchi CIDR supportano anche l'**address aggregation**: un ISP che gestisce un blocco `/20` può pubblicizzare ai router Internet una sola voce nella forwarding table, semplificando enormemente il routing globale.
+
+### 10.5 DHCP — Dynamic Host Configuration Protocol
+
+**DHCP** automatizza il processo di assegnazione degli indirizzi IP agli host che si connettono alla rete. È un protocollo **applicativo** (usa UDP, porta 67 server / porta 68 client) ma svolge un ruolo infrastrutturale cruciale. È **plug-and-play**: un nuovo host si collega e la rete si occupa di tutto.
+
+Oltre all'IP, DHCP fornisce all'host:
+- La **subnet mask**.
+- L'indirizzo del **default gateway** (il router per uscire dalla subnet locale).
+- L'indirizzo del **server DNS locale**.
+- Un **lease time** (tempo di validità dell'assegnazione, dopo il quale l'IP può essere riassegnato).
+
+**Il processo DHCP in 4 passi (DORA):**
+
+```
+Nuovo Host                               Server DHCP
+    │                                          │
+    │─── DHCP Discover ────────────────────────►│  Broadcast (src: 0.0.0.0, dst: 255.255.255.255)
+    │    "Esiste un server DHCP? Ho bisogno     │  → "Chi sono? Ho bisogno di un IP!"
+    │     di un indirizzo!"                     │
+    │                                          │
+    │◄── DHCP Offer ────────────────────────────│  Broadcast (offerta: IP=223.1.2.4,
+    │    "Ti offro l'IP 223.1.2.4, per 86400s" │  mask, GW, DNS, lease)
+    │                                          │
+    │─── DHCP Request ─────────────────────────►│  "Accetto la tua offerta"
+    │    (ancora broadcast, può esserci più      │  (ancora broadcast: possono esserci
+    │     di un server DHCP)                    │   più server DHCP attivi)
+    │                                          │
+    │◄── DHCP ACK ──────────────────────────────│  "Confermato! L'IP è tuo."
+    │                                          │
+    └────────── Connesso! ──────────────────────┘
+```
+
+> [!TIP]
+> **Relay DHCP**: Se il server DHCP si trova in una subnet diversa dall'host richiedente, i broadcast non arrivano a destinazione (i router non propagano i broadcast). Si configura il router di confine come **DHCP Relay Agent**: intercetta il Discover, lo incapsula in un datagramma unicast e lo inoltrata al server DHCP corretto, e viceversa.
+
+**Comandi Linux per vedere la configurazione DHCP ricevuta:**
 ```bash
-ifconfig          # Vedi configurazione interfacce
-ip addr           # Alternativa moderna a ifconfig
-ipconfig          # Windows
+ip addr    # Vedi IP e maschera di subnet
+ip route   # Vedi il gateway predefinito (default gateway)
 ```
 
-### 10.3 DHCP — Dynamic Host Configuration Protocol
+### 10.6 NAT — Network Address Translation
 
-**DHCP** assegna automaticamente IP agli host. Fornisce anche:
-- Subnet mask
-- Gateway predefinito
-- Indirizzo DNS locale
+**Il problema:** Con ~4 miliardi di indirizzi IPv4 e miliardi di dispositivi connessi, gli indirizzi pubblici scarseggiano. Esporre ogni dispositivo domestico (stampante, smart TV, termostato...) con un IP pubblico univoco è impraticabile e anche indesiderabile per la sicurezza.
 
-Formalmente è un protocollo **applicativo**. È **plug-and-play**.
+**La soluzione:** Il **NAT** (o IP Masquerading) permette a un'intera rete locale privata di condividere un **singolo IP pubblico** per comunicare con Internet. Il router NAT funge da intermediario trasparente.
 
-**4 passi DHCP:**
-
-```
-Nuovo Host                           Server DHCP
-  │── DHCP Discover ─────────────────►│ Broadcast (src: 0.0.0.0, dst: 255.255.255.255)
-  │◄── DHCP Offer ─────────────────────│ Offre configurazione (yiaddr)
-  │── DHCP Request ───────────────────►│ Accetta l'offerta
-  │◄── DHCP ACK ────────────────────────│ Conferma
-```
-
-**Relay DHCP:** se il server DHCP è in un'altra subnet, un router configurato come relay agent inoltra i messaggi.
-
-```bash
-ip addr    # Vedi IP e maschera (Linux)
-ip route   # Vedi gateway predefinito
-```
-
-### 10.4 NAT — Network Address Translation
-
-**NAT** permette di condividere un singolo IP pubblico per un'intera rete locale.
-
-**Indirizzi privati riservati:**
-- `10.0.0.0/8`
+**Indirizzi privati riservati (non instradabili su Internet pubblico):**
+- `10.0.0.0/8` (oltre 16 milioni di indirizzi privati)
 - `172.16.0.0/12`
-- `192.168.0.0/16`
+- `192.168.0.0/16` (il più comune nelle reti domestiche)
+- `127.0.0.0/8` (loopback, indica "questa macchina stessa", tipicamente `127.0.0.1`)
+- `0.0.0.0` (indica la rete corrente o "qualunque indirizzo")
+- `255.255.255.255` (broadcast a tutta la subnet)
 
-**Come funziona:**
-1. Host interno (`192.168.1.5:4321`) → router NAT
-2. Router sostituisce IP+porta sorgente con IP pubblico + porta casuale (es. `203.1.2.3:5001`)
-3. Aggiunge mappatura alla **NAT translation table**
-4. Quando il server risponde a `203.1.2.3:5001`, il router reinoltra all'host interno
+**Come funziona il NAT:**
 
-### 10.5 IPv6
+```
+LAN (privata)                                  WAN (Internet)
+192.168.1.5:4321 ──►  Router NAT ──►  203.1.2.3:5001 ──► Server remoto
+                      │ NAT Table │
+                      │ 192.168.1.5:4321 ↔ 203.1.2.3:5001 │
+Server remoto ──►  203.1.2.3:5001 ──►  Router NAT ──►  192.168.1.5:4321
+```
 
-**Motivazione:** esaurimento indirizzi IPv4.
+1. Il pacchetto dell'host interno (`192.168.1.5:4321`) arriva al router NAT.
+2. Il router **sostituisce** IP sorgente + porta con il suo IP pubblico + una porta casuale nuova (es. `203.1.2.3:5001`).
+3. La mappatura `192.168.1.5:4321 ↔ 203.1.2.3:5001` viene registrata nella **NAT Translation Table**.
+4. Quando il server risponde a `203.1.2.3:5001`, il router consulta la tabella e smista la risposta all'host interno corretto.
+
+> [!WARNING]
+> Siccome la porta è a 16 bit, un router NAT può teoricamente gestire oltre **60.000 connessioni simultanee** con un singolo IP pubblico. La tecnica si chiama **PAT (Port Address Translation)** o **NAPT**.
+>
+> Il NAT è controverso: viola il principio end-to-end di Internet (i server esterni non possono avviare connessioni verso host interni, cosa necessaria per es. i giochi online o VoIP P2P). La soluzione definitiva a lungo termine è IPv6.
+
+### 10.7 IPv6
+
+**Motivazione storica:** Nel 1990 ci si rese conto che lo spazio IPv4 (4 miliardi) si sarebbe esaurito. L'IETF (Internet Engineering Task Force) ha sviluppato **IPv6**, portando gli indirizzi a **128 bit** ($2^{128} \approx 3.4 \times 10^{38}$ indirizzi — abbastanza per assegnare un IP ad ogni granello di sabbia sul pianeta Terra).
+
+**Oltre agli indirizzi, IPv6 ha migliorato strutturalmente IPv4:**
 
 | Caratteristica | IPv4 | IPv6 |
 |---------------|------|------|
-| Indirizzo | 32 bit | **128 bit** (~3.4×10³⁸) |
-| Notazione | x.x.x.x | x:x:x:x:x:x:x:x (esadecimale) |
-| Checksum | Presente | **Rimosso** |
-| Header | Variabile | Fisso 40 byte |
-| NAT | Necessario | Non necessario |
+| Lunghezza indirizzo | 32 bit | **128 bit** |
+| Notazione | `192.168.1.1` (decimale puntato) | `2001:db8:85a3::8a2e:370:7334` (esadecimale con gruppi da 16 bit) |
+| Header | Variabile (min 20 byte, con Options) | **Fisso a 40 byte** (le opzioni sono nei "next header") |
+| Checksum header | Presente | **Rimosso** (ridondante: già calcolato dai link layer) |
+| Frammentazione | Nei router | **Solo negli host** (i router scartano il datagramma e mandano "Packet Too Big") |
+| NAT | Necessario | **Non necessario** (abbastanza indirizzi per tutti) |
+| Flow Labeling | Non presente | Presente (per identificare flussi di traffico, es. streaming) |
 
-**Esempio indirizzo IPv6:**
+**Formato indirizzo IPv6:**
 ```
 2001:0db8:85a3:0000:0000:8a2e:0370:7334
-# Abbreviato:
+# Regole di abbreviazione:
+# 1. Si possono omettere gli zeri iniziali di ogni gruppo: 0db8 → db8
+# 2. Una singola sequenza di gruppi tutti zero si abbrevia con "::" (usabile una sola volta)
 2001:db8:85a3::8a2e:370:7334
 ```
 
-**Transizione IPv4→IPv6:** si usano **tunnel** (datagrammi IPv6 incapsulati in IPv4).
+**Transizione IPv4 → IPv6 (Tunneling):**
+Il passaggio non può avvenire con un "Flag Day" globale (troppi dispositivi). La strategia adottata è il **tunneling**: i datagrammi IPv6 vengono **incapsulati dentro datagrammi IPv4** per attraversare le porzioni della rete ancora in IPv4, e vengono poi decapsulati all'uscita del "tunnel" da un router IPv6-capable.
 
-### 10.6 Schemi e Appunti dalle Lavagne (Lezione 17)
+### 10.8 Schemi e Appunti dalle Lavagne (Lezione 17)
 
 ![Board Lezione 17 - Pagina 1](assets/board_images/board_L17_p1.png)
 *Figura 10.1 — Calcolo in binario delle maschere di sottorete e separazione NetID / HostID.*
@@ -1987,7 +2093,7 @@ ip route   # Vedi gateway predefinito
 *Figura 10.2 — Individuazione dell'indirizzo di rete (tutti 0) e dell'indirizzo di broadcast (tutti 1).*
 
 ![Board Lezione 17 - Pagina 3](assets/board_images/board_L17_p3.png)
-*Figura 10.3 — Esercizio svolto di subnetting: partizionamento dell'indirizzo 193.32.216.0 / 24.*
+*Figura 10.3 — Esercizio svolto di subnetting: partizionamento dell'indirizzo 193.32.216.0/24.*
 
 ![Board Lezione 17 - Pagina 4](assets/board_images/board_L17_p4.png)
 *Figura 10.4 — Tabella di riepilogo con range di host assegnabili per ciascuna sottorete.*
