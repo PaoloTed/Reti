@@ -1580,13 +1580,13 @@ Il protocollo più semplice per implementare l'RDT è lo **Stop-and-Wait**: il m
 #### Prestazioni dello Stop-and-Wait: un disastro annunciato
 
 **Scenario tipico** (due host coast-to-coast USA):
-- Link $R$ = 1 Gbps
+- Link **R** = 1 Gbps
 - RTT = 30 ms
-- Pacchetto $L$ = 1000 byte = 8000 bit
+- Pacchetto **L** = 1000 byte = 8000 bit
 
-$$t_{trasm} = \frac{L}{R} = \frac{8000}{10^9} = 0.000008 \text{ s} = \textbf{8 µs}$$
+> **t_trasm** = L / R = 8000 / 10^9 = 0.000008 s = **8 µs**
 
-$$U_{mittente} = \frac{t_{trasm}}{RTT + t_{trasm}} = \frac{0.000008}{0.030008} \approx \textbf{0.00027 = 0.027\%}$$
+> **U_mittente** = t_trasm / (RTT + t_trasm) = 0.000008 / 0.030008 ≈ **0.00027 (0.027%)**
 
 Il mittente lavora solo lo 0.027% del tempo, con un **throughput effettivo di soli 27 kbps** su un link da 1 Gbps. La soluzione è il Pipelining.
 
@@ -1600,7 +1600,7 @@ Esistono due approcci principali:
 
 #### Go-Back-N (GBN)
 
-Il mittente mantiene una **finestra scorrevole** di al massimo $N$ pacchetti non ancora confermati.
+Il mittente mantiene una **finestra scorrevole** di al massimo **N** pacchetti non ancora confermati.
 
 **Regole lato mittente:**
 - Può inviare i pacchetti nella finestra `[base, base+N-1]` senza aspettare.
@@ -1619,7 +1619,7 @@ Il mittente mantiene una **finestra scorrevole** di al massimo $N$ pacchetti non
 Il mittente ritrasmette **solo i pacchetti specificamente persi** (identificati dal loro timeout individuale).
 
 **Regole lato mittente:**
-- Finestra di dimensione $N$, come GBN.
+- Finestra di dimensione **N**, come GBN.
 - **Timer individuale** per ogni pacchetto inviato ma non ancora ACK-ato.
 - In caso di Timeout su `n`, ritrasmette **solo** `n`.
 
@@ -1630,7 +1630,7 @@ Il mittente ritrasmette **solo i pacchetti specificamente persi** (identificati 
 
 > [!CAUTION]
 > **Vincolo fondamentale di SR:** Per evitare che il ricevente scambi un pacchetto *ritrasmesso* con uno *nuovo* (aliasing), il numero di sequenza deve essere sufficientemente grande:
-> $$\text{Seq. Space} \ge 2 \times \text{Window Size} \quad \Rightarrow \quad \text{Seq} \ge 2N$$
+> > **Seq. Space ≥ 2 × Window Size  ⇒  Seq ≥ 2N**
 
 **Confronto riepilogativo:**
 
@@ -1692,7 +1692,7 @@ Il buffer lato mittente accumula i dati che l'applicazione ha scritto ma che non
 
 La dimensione massima del payload di un segmento TCP è determinata dall'**MTU del link layer** (es. 1500 byte per Ethernet), sottraendo gli header:
 
-$$MSS = MTU - \text{Header IP (20B)} - \text{Header TCP (20B)} = 1500 - 40 = \textbf{1460 byte}$$
+> **MSS** = MTU - Header IP (20B) - Header TCP (20B) = 1500 - 40 = **1460 byte**
 
 TCP non spedisce un segmento per ogni byte scritto dall'applicazione; accumula dati nel buffer e forma segmenti fino a MSS byte (o li invia prima se lo richiede il timing o l'applicazione).
 
@@ -1761,13 +1761,13 @@ TCP non spedisce un segmento per ogni byte scritto dall'applicazione; accumula d
 
 TCP stima continuamente l'RTT per calibrare il timeout di ritrasmissione. Il valore campionato (`SampleRTT`) è volatile (varia col traffico e la congestione), quindi si usa una **media mobile esponenziale ponderata (EWMA)**:
 
-$$EstimatedRTT = (1 - \alpha) \cdot EstimatedRTT + \alpha \cdot SampleRTT \quad (\alpha = 0.125)$$
+> **EstimatedRTT** = (1 - α) × EstimatedRTT + α × SampleRTT    *(con α = 0.125)*
 
 Si misura anche la variabilità dell'RTT:
-$$DevRTT = (1 - \beta) \cdot DevRTT + \beta \cdot |SampleRTT - EstimatedRTT| \quad (\beta = 0.25)$$
+> **DevRTT** = (1 - β) × DevRTT + β × |SampleRTT - EstimatedRTT|    *(con β = 0.25)*
 
 Il timeout viene impostato con un margine proporzionale alla variabilità:
-$$TimeoutInterval = EstimatedRTT + 4 \cdot DevRTT$$
+> **TimeoutInterval** = EstimatedRTT + 4 × DevRTT
 
 > [!TIP]
 > Il valore iniziale del timeout (prima di ricevere qualsiasi SampleRTT) è **1 secondo**. Se scade un timeout, il valore di `TimeoutInterval` viene **raddoppiato** ad ogni ritrasmissione successiva (exponential backoff) per evitare di sovraccaricare una rete già congestionata.
@@ -1870,12 +1870,12 @@ TCP gestisce due problemi distinti di regolazione del traffico che spesso vengon
 
 **Il meccanismo:** In ogni segmento TCP inviato da B verso A, B include nel campo **Receive Window (`rwnd`)** il numero di byte liberi nel suo buffer di ricezione:
 
-$$rwnd = RcvBuffer - (LastByteRcvd - LastByteRead)$$
+> **rwnd** = RcvBuffer - (LastByteRcvd - LastByteRead)
 
 dove `RcvBuffer` è la dimensione totale del buffer, `LastByteRcvd` è l'ultimo byte ricevuto dalla rete, e `LastByteRead` è l'ultimo byte letto dall'applicazione.
 
 Il mittente A si impegna a mantenere sempre:
-$$LastByteSent - LastByteAcked \le rwnd$$
+> **LastByteSent - LastByteAcked ≤ rwnd**
 
 cioè il numero di byte "in volo" (inviati ma non ancora confermati) non supera mai lo spazio libero nel buffer di B.
 
@@ -1897,9 +1897,9 @@ Quando B notifica `rwnd = 0`, A smette di inviare. Ma se B poi libera del buffer
 
 TCP regola il proprio tasso di invio tramite la **Congestion Window (`cwnd`)**. Il vincolo complessivo del mittente diventa:
 
-$$LastByteSent - LastByteAcked \le \min(cwnd, rwnd)$$
+> **LastByteSent - LastByteAcked ≤ min(cwnd, rwnd)**
 
-Il rate approssimativo di invio è $\approx cwnd / RTT$ byte/sec. L'algoritmo di Jacobson controlla `cwnd` attraverso tre fasi:
+Il rate approssimativo di invio è **≈ cwnd / RTT** byte/sec. L'algoritmo di Jacobson controlla `cwnd` attraverso tre fasi:
 
 #### Fase 1: Slow Start
 
@@ -2111,7 +2111,7 @@ Un **indirizzo IPv4** è un numero di **32 bit** (4 byte) usato per identificare
 193.32.216.9 = 11000001 00100000 11011000 00001001
 ```
 
-Con 32 bit, lo spazio di indirizzamento è di circa $2^{32} \approx$ **4 miliardi** di indirizzi.
+Con 32 bit, lo spazio di indirizzamento è di circa **2^32 ≈** **4 miliardi** di indirizzi.
 
 > [!IMPORTANT]
 > L'indirizzo IP è **associato all'interfaccia di rete**, non all'host o al router in sé. Un laptop con una scheda di rete WiFi e una Ethernet ha **due interfacce** e potenzialmente due indirizzi IP diversi. Un router, avendo molte porte fisiche, ha molte interfacce e quindi molti IP.
@@ -2273,7 +2273,7 @@ Server remoto ──►  203.1.2.3:5001 ──►  Router NAT ──►  192.168
 
 ### 10.7 IPv6
 
-**Motivazione storica:** Nel 1990 ci si rese conto che lo spazio IPv4 (4 miliardi) si sarebbe esaurito. L'IETF (Internet Engineering Task Force) ha sviluppato **IPv6**, portando gli indirizzi a **128 bit** ($2^{128} \approx 3.4 \times 10^{38}$ indirizzi — abbastanza per assegnare un IP ad ogni granello di sabbia sul pianeta Terra).
+**Motivazione storica:** Nel 1990 ci si rese conto che lo spazio IPv4 (4 miliardi) si sarebbe esaurito. L'IETF (Internet Engineering Task Force) ha sviluppato **IPv6**, portando gli indirizzi a **128 bit** (**2^128 ≈ 3.4 × 10^38** indirizzi — abbastanza per assegnare un IP ad ogni granello di sabbia sul pianeta Terra).
 
 **Oltre agli indirizzi, IPv6 ha migliorato strutturalmente IPv4:**
 
@@ -3116,8 +3116,8 @@ traceroute italia.it 3000
 **Analisi della Frammentazione IP in Wireshark:**
 - Con datagrammi da 3000 byte su una rete con MTU di 1500 byte, il datagramma IP viene suddiviso in 3 frammenti:
   1. **Frammento 1:** `Offset = 0`, flag `More Fragments (MF) = 1`, lunghezza 1500 byte (20B header IP + 1480B payload).
-  2. **Frammento 2:** `Offset = 185` (poiché $185 \times 8 = 1480$ byte), flag `MF = 1`, lunghezza 1500 byte.
-  3. **Frammento 3:** `Offset = 370` ($370 \times 8 = 2960$ byte), flag `MF = 0` (ultimo frammento), lunghezza residua (~68 byte).
+  2. **Frammento 2:** `Offset = 185` (poiché $185 × 8 = 1480$ byte), flag `MF = 1`, lunghezza 1500 byte.
+  3. **Frammento 3:** `Offset = 370` ($370 × 8 = 2960$ byte), flag `MF = 0` (ultimo frammento), lunghezza residua (~68 byte).
 - Tutti i frammenti condividono lo stesso identico valore nel campo **Identification** dell'header IPv4.
 
 ---
@@ -3271,7 +3271,7 @@ Esaminiamo il terzo ottetto per ciascuna rotta:
 *Spiegare perché i grandi router degli ISP operano con prefissi aggregati (es. `189.103.176.0/20`) anziché su singoli indirizzi IP.*
 
 **Risposta Svolta:**
-1. **Scalabilità delle tabelle di routing:** Lo spazio di indirizzamento IPv4 comprende $2^{32} \approx 4.3$ miliardi di indirizzi. Se ogni host o server richiedesse una voce separata nella tabella di routing, la dimensione delle tabelle saturerebbe la memoria ad altissima velocità dei router (memorie TCAM - Ternary Content-Addressable Memory).
+1. **Scalabilità delle tabelle di routing:** Lo spazio di indirizzamento IPv4 comprende $2^{32} ≈ 4.3$ miliardi di indirizzi. Se ogni host o server richiedesse una voce separata nella tabella di routing, la dimensione delle tabelle saturerebbe la memoria ad altissima velocità dei router (memorie TCAM - Ternary Content-Addressable Memory).
 2. **Aggregazione delle rotte (Route Summarization / Supernetting):** Il CIDR consente a un ISP di annunciare al resto del mondo un unico blocco aggregato (es. `/20`, che comprende $2^{12} = 4096$ indirizzi IP individuali). I router della dorsale internet devono solo memorizzare questo singolo prefisso.
 3. **Riduzione dell'overhead di elaborazione:** Prefissi aggregati riducono drasticamente sia la complessità della ricerca (lookup) per ogni pacchetto in transito sia il traffico di segnalazione dei protocolli di routing (BGP), che altrimenti dovrebbero propagare aggiornamenti continui per la caduta o l'accensione di singoli host.
 
