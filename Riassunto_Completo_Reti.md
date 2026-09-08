@@ -29,7 +29,9 @@ Internet è definita come "la rete delle reti" perché unisce reti locali dispar
 Gli ISP si scambiano traffico gratuitamente o a pagamento presso infrastrutture terze chiamate **IXP (Internet Exchange Point)**.
 
 ### Lo Stack Protocollare
-Il funzionamento delle reti è astratto in un modello a strati (stack protocollare), in cui ogni livello fornisce un servizio specifico al livello superiore imbustando i dati (principio di **Incapsulamento**).
+Il funzionamento delle reti è astratto in un modello a strati (stack protocollare), in cui ogni livello fornisce un servizio specifico al livello superiore imbustando i dati (principio di **Incapsulamento**). Durante questo processo, ogni strato aggiunge informazioni aggiuntive:
+- **Header**: Dati di controllo aggiunti all'inizio del payload (es. indirizzi, porte, metadati di instradamento).
+- **Trailer**: Dati di controllo aggiunti alla fine, usati principalmente a livello Link per il controllo degli errori (es. CRC).
 
 ```mermaid
 graph TD

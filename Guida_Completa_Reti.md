@@ -214,7 +214,9 @@ Le reti adottano un'**architettura a strati** per gestire la complessità. Ogni 
 
 **Principio di incapsulamento (Encapsulation):**
 
-Ogni strato aggiunge il proprio header (e a volte trailer) ai dati provenienti dallo strato superiore:
+Ogni strato aggiunge informazioni di controllo ai dati provenienti dallo strato superiore tramite l'uso di header e, a volte, di trailer:
+- **Header (Intestazione)**: Viene inserito all'inizio del pacchetto e contiene i metadati di controllo essenziali per il protocollo (es. indirizzi IP, porte, numeri di sequenza). Serve a garantire che il dato venga instradato ed elaborato correttamente dal livello peer corrispondente.
+- **Trailer (Coda)**: Viene inserito alla fine del pacchetto (tipicamente solo al livello di collegamento, es. nel frame Ethernet) e contiene solitamente un codice per il controllo o la rilevazione degli errori (come il CRC - Cyclic Redundancy Check), garantendo l'integrità del dato trasmesso.
 
 ```
 Applicazione:  [           MESSAGGIO           ]
